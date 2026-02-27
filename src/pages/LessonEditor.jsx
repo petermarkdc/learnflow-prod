@@ -10,8 +10,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   ArrowLeft, Save, Plus, Eye, Loader2,
-  Type, Code, Image as ImageIcon, Link as LinkIcon, Heading, Minus
+  Type, Code, Image as ImageIcon, Link as LinkIcon, Heading, Minus,
+  Table, Video, Paperclip, Info, AlertTriangle, Lightbulb, Indent
 } from 'lucide-react';
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import ContentBlockEditor from '../components/editor/ContentBlockEditor';
 import QuizEditor from '../components/editor/QuizEditor';
 import ContentRenderer from '../components/viewer/ContentRenderer';
@@ -24,8 +27,14 @@ const BLOCK_TYPES = [
   { type: 'text', icon: Type, label: 'Text' },
   { type: 'code', icon: Code, label: 'Code' },
   { type: 'image', icon: ImageIcon, label: 'Image' },
+  { type: 'video', icon: Video, label: 'Video' },
+  { type: 'attachment', icon: Paperclip, label: 'Attachment' },
   { type: 'link', icon: LinkIcon, label: 'Link' },
+  { type: 'table', icon: Table, label: 'Table' },
   { type: 'divider', icon: Minus, label: 'Divider' },
+  { type: 'note', icon: Info, label: 'Note' },
+  { type: 'warning', icon: AlertTriangle, label: 'Warning' },
+  { type: 'tip', icon: Lightbulb, label: 'Tip' },
 ];
 
 export default function LessonEditor() {
@@ -40,6 +49,8 @@ export default function LessonEditor() {
     content: [],
     quiz: [],
     estimated_time: '',
+    is_subtopic: false,
+    parent_lesson_id: '',
   });
   const [activeTab, setActiveTab] = useState('edit');
 
@@ -62,6 +73,8 @@ export default function LessonEditor() {
         content: lesson.content || [],
         quiz: lesson.quiz || [],
         estimated_time: lesson.estimated_time || '',
+        is_subtopic: lesson.is_subtopic || false,
+        parent_lesson_id: lesson.parent_lesson_id || '',
       });
     }
   }, [lesson]);
@@ -202,16 +215,29 @@ export default function LessonEditor() {
                     className="mt-1.5 text-lg"
                   />
                 </div>
-                <div className="w-48">
-                  <Label htmlFor="time">Estimated Time (minutes)</Label>
-                  <Input
-                    id="time"
-                    type="number"
-                    value={formData.estimated_time}
-                    onChange={(e) => setFormData({ ...formData, estimated_time: e.target.value })}
-                    placeholder="15"
-                    className="mt-1.5"
-                  />
+                <div className="flex items-center justify-between gap-4 flex-wrap">
+                  <div className="w-48">
+                    <Label htmlFor="time">Estimated Time (minutes)</Label>
+                    <Input
+                      id="time"
+                      type="number"
+                      value={formData.estimated_time}
+                      onChange={(e) => setFormData({ ...formData, estimated_time: e.target.value })}
+                      placeholder="15"
+                      className="mt-1.5"
+                    />
+                  </div>
+                  <div className="flex items-center gap-3 bg-slate-50 rounded-xl p-3">
+                    <Indent className="w-4 h-4 text-slate-500" />
+                    <div>
+                      <p className="text-sm font-medium text-slate-700">Sub-topic</p>
+                      <p className="text-xs text-slate-500">Indent in sidebar</p>
+                    </div>
+                    <Switch
+                      checked={formData.is_subtopic}
+                      onCheckedChange={(v) => setFormData({ ...formData, is_subtopic: v })}
+                    />
+                  </div>
                 </div>
               </div>
 
