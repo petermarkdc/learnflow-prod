@@ -114,30 +114,32 @@ export default function LessonEditor() {
       ...(type === 'code' && { language: 'javascript' }),
       ...(type === 'heading' && { level: 2 }),
     };
-    setFormData({ ...formData, content: [...formData.content, newBlock] });
+    setFormData(prev => ({ ...prev, content: [...prev.content, newBlock] }));
   };
 
   const updateBlock = (index, updatedBlock) => {
-    const newContent = [...formData.content];
-    newContent[index] = updatedBlock;
-    setFormData({ ...formData, content: newContent });
+    setFormData(prev => {
+      const newContent = [...prev.content];
+      newContent[index] = updatedBlock;
+      return { ...prev, content: newContent };
+    });
   };
 
   const deleteBlock = (index) => {
-    setFormData({
-      ...formData,
-      content: formData.content.filter((_, i) => i !== index),
-    });
+    setFormData(prev => ({
+      ...prev,
+      content: prev.content.filter((_, i) => i !== index),
+    }));
   };
 
   const handleDragEnd = (result) => {
     if (!result.destination) return;
-    
-    const items = [...formData.content];
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-    
-    setFormData({ ...formData, content: items });
+    setFormData(prev => {
+      const items = [...prev.content];
+      const [reorderedItem] = items.splice(result.source.index, 1);
+      items.splice(result.destination.index, 0, reorderedItem);
+      return { ...prev, content: items };
+    });
   };
 
   if (lessonLoading && lessonId) {
