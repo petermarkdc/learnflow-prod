@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { 
   ArrowLeft, Save, Plus, GripVertical, Edit, Trash2, 
-  BookOpen, Upload, Loader2, Eye 
+  BookOpen, Upload, Loader2, Eye, Users, Globe, Lock, Indent
 } from 'lucide-react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { toast } from "sonner";
@@ -41,6 +41,8 @@ export default function CourseEditor() {
     category: '',
     difficulty: 'beginner',
     is_published: false,
+    access_type: 'free',
+    course_code: '',
   });
   const [uploading, setUploading] = useState(false);
 
@@ -65,6 +67,8 @@ export default function CourseEditor() {
         category: course.category || '',
         difficulty: course.difficulty || 'beginner',
         is_published: course.is_published || false,
+        access_type: course.access_type || 'free',
+        course_code: course.course_code || '',
       });
     }
   }, [course]);
@@ -292,6 +296,55 @@ export default function CourseEditor() {
                 </div>
               </div>
 
+              {/* Access Type */}
+              <div>
+                <Label>Access Type</Label>
+                <div className="mt-2 grid grid-cols-3 gap-3">
+                  {[
+                    { value: 'public', icon: Globe, label: 'Public', desc: 'No login needed', color: 'border-green-400 bg-green-50' },
+                    { value: 'free', icon: Users, label: 'Free', desc: 'Login required', color: 'border-blue-400 bg-blue-50' },
+                    { value: 'paid', icon: Lock, label: 'Private', desc: 'Invite / code only', color: 'border-amber-400 bg-amber-50' },
+                  ].map(opt => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => setFormData({ ...formData, access_type: opt.value })}
+                      className={`flex flex-col items-center gap-1 p-3 rounded-xl border-2 transition-all text-center ${
+                        formData.access_type === opt.value ? opt.color + ' border-2' : 'border-slate-200 hover:border-slate-300'
+                      }`}
+                    >
+                      <opt.icon className="w-5 h-5 text-slate-700" />
+                      <span className="text-sm font-semibold text-slate-900">{opt.label}</span>
+                      <span className="text-xs text-slate-500">{opt.desc}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Course Code (for paid) */}
+              {formData.access_type === 'paid' && (
+                <div>
+                  <Label>Course Code</Label>
+                  <div className="flex gap-2 mt-1.5">
+                    <Input
+                      value={formData.course_code}
+                      onChange={(e) => setFormData({ ...formData, course_code: e.target.value.toUpperCase() })}
+                      placeholder="e.g., PYTH2024"
+                      className="font-mono tracking-widest uppercase font-bold"
+                      maxLength={12}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setFormData({ ...formData, course_code: Math.random().toString(36).substr(2, 6).toUpperCase() })}
+                    >
+                      Generate
+                    </Button>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-1">Students enter this code to self-enroll.</p>
+                </div>
+              )}
+
               {/* Publish Toggle */}
               <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
                 <div>
@@ -353,7 +406,10 @@ export default function CourseEditor() {
                                   <span className="text-sm font-medium text-slate-400 w-8">
                                     {String(index + 1).padStart(2, '0')}
                                   </span>
-                                  <span className="flex-1 font-medium text-slate-700 truncate">
+                                  {lesson.is_subtopic && (
+                                    <Indent className="w-4 h-4 text-slate-400 flex-shrink-0" />
+                                  )}
+                                  <span className={`flex-1 font-medium text-slate-700 truncate ${lesson.is_subtopic ? 'text-sm pl-1' : ''}`}>
                                     {lesson.title}
                                   </span>
                                   <div className="flex gap-1">
@@ -428,7 +484,17 @@ export default function CourseEditor() {
                       {formData.is_published ? 'Published' : 'Draft'}
                     </span>
                   </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Access</span>
+                    <span className="font-medium capitalize">{formData.access_type}</span>
+                  </div>
                 </div>
+                <Link to={createPageUrl('CourseStudents') + `?id=${courseId}`} className="mt-4 block">
+                  <Button variant="outline" size="sm" className="w-full">
+                    <Users className="w-4 h-4 mr-2" />
+                    Manage Students
+                  </Button>
+                </Link>
               </div>
             )}
           </div>
