@@ -14,7 +14,6 @@ import {
   Table, Video, Paperclip, Info, AlertTriangle, Lightbulb, Indent
 } from 'lucide-react';
 import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import ContentBlockEditor from '../components/editor/ContentBlockEditor';
 import QuizEditor from '../components/editor/QuizEditor';
 import ContentRenderer from '../components/viewer/ContentRenderer';
