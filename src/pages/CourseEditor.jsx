@@ -402,22 +402,26 @@ export default function CourseEditor() {
                                 <div
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
-                                  className={`flex items-center gap-3 p-3 bg-slate-50 rounded-xl border ${
-                                    snapshot.isDragging ? 'shadow-lg border-indigo-300' : 'border-transparent'
-                                  }`}
+                                  className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${
+                                    snapshot.isDragging ? 'shadow-lg border-indigo-300 bg-white' : 'border-transparent bg-slate-50'
+                                  } ${lesson.is_subtopic ? 'ml-6' : ''}`}
                                 >
                                   <div {...provided.dragHandleProps} className="cursor-grab text-slate-400">
                                     <GripVertical className="w-5 h-5" />
                                   </div>
-                                  <span className="text-sm font-medium text-slate-400 w-8">
+                                  <span className="text-sm font-medium text-slate-400 w-6 flex-shrink-0">
                                     {String(index + 1).padStart(2, '0')}
                                   </span>
-                                  {lesson.is_subtopic && (
-                                    <Indent className="w-4 h-4 text-slate-400 flex-shrink-0" />
-                                  )}
-                                  <span className={`flex-1 font-medium text-slate-700 truncate ${lesson.is_subtopic ? 'text-sm pl-1' : ''}`}>
+                                  <span className={`flex-1 font-medium text-slate-700 truncate ${lesson.is_subtopic ? 'text-sm' : ''}`}>
                                     {lesson.title}
                                   </span>
+                                  <button
+                                    title={lesson.is_subtopic ? 'Remove sub-topic indent' : 'Make sub-topic (indent)'}
+                                    onClick={() => toggleSubtopic(lesson)}
+                                    className={`p-1 rounded hover:bg-slate-200 transition-colors flex-shrink-0 ${lesson.is_subtopic ? 'text-indigo-500' : 'text-slate-300 hover:text-slate-500'}`}
+                                  >
+                                    <Indent className="w-4 h-4" />
+                                  </button>
                                   <div className="flex gap-1">
                                     <Link to={createPageUrl('LessonEditor') + `?id=${lesson.id}`}>
                                       <Button variant="ghost" size="icon" className="h-8 w-8">
