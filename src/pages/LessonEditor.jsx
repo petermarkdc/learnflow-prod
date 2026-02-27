@@ -14,6 +14,7 @@ import {
   Table, Video, Paperclip, Info, AlertTriangle, Lightbulb, Indent
 } from 'lucide-react';
 import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ContentBlockEditor from '../components/editor/ContentBlockEditor';
 import QuizEditor from '../components/editor/QuizEditor';
 import ContentRenderer from '../components/viewer/ContentRenderer';
@@ -244,16 +245,36 @@ export default function LessonEditor() {
                       className="mt-1.5"
                     />
                   </div>
-                  <div className="flex items-center gap-3 bg-slate-50 rounded-xl p-3">
-                    <Indent className="w-4 h-4 text-slate-500" />
-                    <div>
-                      <p className="text-sm font-medium text-slate-700">Sub-topic</p>
-                      <p className="text-xs text-slate-500">Indent in sidebar</p>
+                  <div className="flex flex-col gap-3 flex-1">
+                    <div className="flex items-center gap-3 bg-slate-50 rounded-xl p-3">
+                      <Indent className="w-4 h-4 text-slate-500" />
+                      <div>
+                        <p className="text-sm font-medium text-slate-700">Sub-topic</p>
+                        <p className="text-xs text-slate-500">Indent in sidebar</p>
+                      </div>
+                      <Switch
+                        checked={formData.is_subtopic}
+                        onCheckedChange={(v) => setFormData(prev => ({ ...prev, is_subtopic: v, parent_lesson_id: v ? prev.parent_lesson_id : '' }))}
+                      />
                     </div>
-                    <Switch
-                      checked={formData.is_subtopic}
-                      onCheckedChange={(v) => setFormData({ ...formData, is_subtopic: v })}
-                    />
+                    {formData.is_subtopic && (
+                      <div>
+                        <Label className="text-xs text-slate-500 mb-1 block">Parent Lesson</Label>
+                        <Select
+                          value={formData.parent_lesson_id}
+                          onValueChange={(v) => setFormData(prev => ({ ...prev, parent_lesson_id: v }))}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select parent lesson" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {parentLessonOptions.map(l => (
+                              <SelectItem key={l.id} value={l.id}>{l.title}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
