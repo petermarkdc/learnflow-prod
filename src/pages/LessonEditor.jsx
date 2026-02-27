@@ -339,8 +339,32 @@ export default function LessonEditor() {
               <div className="bg-white rounded-2xl border p-6">
                 <QuizEditor
                   questions={formData.quiz}
-                  onChange={(quiz) => setFormData({ ...formData, quiz })}
+                  onChange={(quiz) => setFormData(prev => ({ ...prev, quiz }))}
                 />
+              </div>
+
+              {/* Bottom Save Bar */}
+              <div className="bg-white rounded-2xl border p-4 flex items-center gap-3 justify-end">
+                <Button
+                  variant="outline"
+                  onClick={() => { setSaveAndNew(true); saveMutation.mutate(); }}
+                  disabled={saveMutation.isPending}
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Save & Add New Lesson
+                </Button>
+                <Button
+                  onClick={() => { setSaveAndNew(false); saveMutation.mutate(); }}
+                  disabled={saveMutation.isPending}
+                  className="bg-indigo-600 hover:bg-indigo-700"
+                >
+                  {saveMutation.isPending ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <Save className="w-4 h-4 mr-2" />
+                  )}
+                  Save Lesson
+                </Button>
               </div>
             </div>
 
