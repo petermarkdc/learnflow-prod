@@ -115,11 +115,19 @@ export default function CourseEditor() {
 
   const handleDragEnd = (result) => {
     if (!result.destination) return;
-    
+
     const items = [...sortedLessons];
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
-    
+
+    // Detect if dragged to "subtopic" zone based on x offset
+    const offsetX = result.combine ? 0 : (result.draggableId && result.destination?.droppableId === 'lessons-subtopic' ? 1 : 0);
+    const isNowSubtopic = result.destination?.droppableId === 'lessons-subtopic';
+
+    if (isNowSubtopic !== reorderedItem.is_subtopic) {
+      base44.entities.Lesson.update(reorderedItem.id, { is_subtopic: isNowSubtopic });
+    }
+
     reorderMutation.mutate(items);
   };
 
