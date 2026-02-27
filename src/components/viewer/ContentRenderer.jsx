@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import CodeBlock from '../editor/CodeBlock';
-import { ExternalLink } from 'lucide-react';
-import { cn } from "@/lib/utils";
+import VideoPlayer from './VideoPlayer';
+import { ExternalLink, Paperclip, Info, AlertTriangle, Lightbulb } from 'lucide-react';
 
 export default function ContentRenderer({ blocks = [] }) {
   const renderBlock = (block, index) => {
     switch (block.type) {
-      case 'heading':
+      case 'heading': {
         const HeadingTag = `h${block.level || 2}`;
         const headingStyles = {
           1: 'text-4xl font-bold text-slate-900 mb-6 mt-8',
@@ -20,27 +20,24 @@ export default function ContentRenderer({ blocks = [] }) {
             {block.content}
           </HeadingTag>
         );
+      }
 
       case 'text':
         return (
-          <div key={index} className="prose prose-slate max-w-none mb-4">
+          <div key={index} className="prose prose-slate max-w-none mb-4" style={block.color ? { color: block.color } : {}}>
             <ReactMarkdown
               components={{
-                p: ({ children }) => <p className="text-slate-700 leading-relaxed mb-4">{children}</p>,
-                strong: ({ children }) => <strong className="font-semibold text-slate-900">{children}</strong>,
+                p: ({ children }) => <p className="leading-relaxed mb-4" style={block.color ? { color: block.color } : {}}>{children}</p>,
+                strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
                 em: ({ children }) => <em className="italic">{children}</em>,
                 code: ({ children }) => (
-                  <code className="px-1.5 py-0.5 rounded bg-slate-100 text-pink-600 text-sm font-mono">
-                    {children}
-                  </code>
+                  <code className="px-1.5 py-0.5 rounded bg-slate-100 text-pink-600 text-sm font-mono">{children}</code>
                 ),
                 ul: ({ children }) => <ul className="list-disc list-inside space-y-1 mb-4">{children}</ul>,
                 ol: ({ children }) => <ol className="list-decimal list-inside space-y-1 mb-4">{children}</ol>,
-                li: ({ children }) => <li className="text-slate-700">{children}</li>,
+                li: ({ children }) => <li>{children}</li>,
                 blockquote: ({ children }) => (
-                  <blockquote className="border-l-4 border-indigo-500 pl-4 py-2 my-4 bg-indigo-50 rounded-r-lg">
-                    {children}
-                  </blockquote>
+                  <blockquote className="border-l-4 border-indigo-500 pl-4 py-2 my-4 bg-indigo-50 rounded-r-lg">{children}</blockquote>
                 ),
               }}
             >
@@ -49,14 +46,43 @@ export default function ContentRenderer({ blocks = [] }) {
           </div>
         );
 
+      case 'note':
+        return (
+          <div key={index} className="my-4 flex gap-3 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+            <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="font-semibold text-blue-800 text-sm mb-1">Note</p>
+              <p className="text-blue-700 text-sm leading-relaxed">{block.content}</p>
+            </div>
+          </div>
+        );
+
+      case 'warning':
+        return (
+          <div key={index} className="my-4 flex gap-3 p-4 bg-red-50 border border-red-200 rounded-xl">
+            <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="font-semibold text-red-800 text-sm mb-1">Warning</p>
+              <p className="text-red-700 text-sm leading-relaxed">{block.content}</p>
+            </div>
+          </div>
+        );
+
+      case 'tip':
+        return (
+          <div key={index} className="my-4 flex gap-3 p-4 bg-green-50 border border-green-200 rounded-xl">
+            <Lightbulb className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="font-semibold text-green-800 text-sm mb-1">Tip</p>
+              <p className="text-green-700 text-sm leading-relaxed">{block.content}</p>
+            </div>
+          </div>
+        );
+
       case 'code':
         return (
           <div key={index} className="mb-6">
-            <CodeBlock
-              code={block.content || ''}
-              language={block.language || 'javascript'}
-              showLineNumbers={true}
-            />
+            <CodeBlock code={block.content || ''} language={block.language || 'javascript'} showLineNumbers={true} />
           </div>
         );
 
@@ -64,18 +90,29 @@ export default function ContentRenderer({ blocks = [] }) {
         return (
           <figure key={index} className="my-6">
             <div className="rounded-xl overflow-hidden border border-slate-200 bg-slate-50">
-              <img
-                src={block.url}
-                alt={block.alt || ''}
-                className="w-full h-auto object-contain max-h-[500px]"
-              />
+              <img src={block.url} alt={block.alt || ''} className="w-full h-auto object-contain max-h-[500px]" />
             </div>
-            {block.alt && (
-              <figcaption className="text-center text-sm text-slate-500 mt-2">
-                {block.alt}
-              </figcaption>
-            )}
+            {block.alt && <figcaption className="text-center text-sm text-slate-500 mt-2">{block.alt}</figcaption>}
           </figure>
+        );
+
+      case 'video':
+        return <VideoPlayer key={index} url={block.url} caption={block.alt} />;
+
+      case 'attachment':
+        return (
+          <div key={index} className="my-4">
+            <a
+              href={block.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition-colors text-sm font-medium"
+              download
+            >
+              <Paperclip className="w-4 h-4" />
+              {block.content || block.filename || 'Download Attachment'}
+            </a>
+          </div>
         );
 
       case 'link':
@@ -92,10 +129,39 @@ export default function ContentRenderer({ blocks = [] }) {
           </a>
         );
 
-      case 'divider':
+      case 'table': {
+        const td = block.table_data;
+        if (!td) return null;
         return (
-          <hr key={index} className="my-8 border-slate-200" />
+          <div key={index} className="my-6 overflow-x-auto rounded-xl border border-slate-200">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-slate-100">
+                  {td.headers?.map((h, i) => (
+                    <th key={i} className="px-4 py-3 text-left font-semibold text-slate-800 border-b border-slate-200">
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {td.rows?.map((row, ri) => (
+                  <tr key={ri} className={ri % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                    {row.map((cell, ci) => (
+                      <td key={ci} className="px-4 py-3 text-slate-700 border-b border-slate-100">
+                        {cell}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         );
+      }
+
+      case 'divider':
+        return <hr key={index} className="my-8 border-slate-200" />;
 
       default:
         return null;
