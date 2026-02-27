@@ -8,8 +8,9 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { 
   BookOpen, Clock, ChevronRight, CheckCircle2, Circle, 
-  Play, Edit, Copy, Trash2, ArrowLeft, BarChart3 
+  Play, Edit, Copy, Trash2, ArrowLeft, Lock, Globe, Users
 } from 'lucide-react';
+import AccessGate from '../components/course/AccessGate';
 import { motion } from 'framer-motion';
 import { cn } from "@/lib/utils";
 import {
@@ -63,9 +64,31 @@ export default function CourseView() {
     enabled: !!courseId && !!user?.email,
   });
 
+  const { data: enrollment } = useQuery({
+    queryKey: ['enrollment', courseId, user?.email],
+    queryFn: () => base44.entities.Enrollment.filter({ course_id: courseId, user_email: user.email, status: 'active' }).then(r => r[0]),
+    enabled: !!courseId && !!user?.email,
+  });
+
   const sortedLessons = [...lessons].sort((a, b) => (a.order_index || 0) - (b.order_index || 0));
   const completedSet = new Set(progress?.completed_lessons || []);
   const isTeacher = user?.role === 'teacher' || user?.role === 'admin';
+
+  // Access check
+  const hasAccess = () => {
+    if (isTeacher) return true;
+    if (!course) return false;
+    if (course.access_type === 'public') return true;
+    if (course.access_type === 'free') return !!user;
+    if (course.access_type === 'paid') return !!enrollment;
+    return !!user;
+  };
+
+  const accessBadgeMap = {
+    public: { label: 'Public', icon: Globe, color: 'bg-green-100 text-green-700' },
+    free: { label: 'Free', icon: Users, color: 'bg-blue-100 text-blue-700' },
+    paid: { label: 'Private', icon: Lock, color: 'bg-amber-100 text-amber-700' },
+  };
 
   const duplicateCourseMutation = useMutation({
     mutationFn: async () => {
@@ -147,6 +170,9 @@ export default function CourseView() {
     ? Math.round((completedSet.size / sortedLessons.length) * 100)
     : 0;
 
+  const accessGranted = hasAccess();
+  const accessBadge = accessBadgeMap[course.access_type || 'free'];
+
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Hero */}
@@ -169,7 +195,7 @@ export default function CourseView() {
 
           <div className="flex flex-wrap items-start justify-between gap-6">
             <div className="flex-1 min-w-[300px]">
-              <div className="flex gap-2 mb-3">
+              <div className="flex gap-2 mb-3 flex-wrap">
                 {course.difficulty && (
                   <Badge className={cn("text-xs", difficultyColors[course.difficulty])}>
                     {course.difficulty}
@@ -177,6 +203,12 @@ export default function CourseView() {
                 )}
                 {!course.is_published && (
                   <Badge variant="secondary">Draft</Badge>
+                )}
+                {accessBadge && (
+                  <Badge className={cn("text-xs flex items-center gap-1", accessBadge.color)}>
+                    <accessBadge.icon className="w-3 h-3" />
+                    {accessBadge.label}
+                  </Badge>
                 )}
               </div>
               <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
@@ -211,21 +243,36 @@ export default function CourseView() {
                 </div>
               )}
 
-              {nextLesson && (
-                <Link to={createPageUrl('LessonView') + `?id=${nextLesson.id}`}>
-                  <Button className="w-full h-12 bg-indigo-600 hover:bg-indigo-700 text-lg mb-3">
-                    <Play className="w-5 h-5 mr-2" />
-                    {completedSet.size > 0 ? 'Continue Learning' : 'Start Course'}
-                  </Button>
-                </Link>
+              {accessGranted ? (
+                nextLesson && (
+                  <Link to={createPageUrl('LessonView') + `?id=${nextLesson.id}`}>
+                    <Button className="w-full h-12 bg-indigo-600 hover:bg-indigo-700 text-lg mb-3">
+                      <Play className="w-5 h-5 mr-2" />
+                      {completedSet.size > 0 ? 'Continue Learning' : 'Start Course'}
+                    </Button>
+                  </Link>
+                )
+              ) : (
+                <div className="mb-3">
+                  <AccessGate
+                    course={course}
+                    user={user}
+                    onAccessGranted={() => queryClient.invalidateQueries(['enrollment'])}
+                  />
+                </div>
               )}
 
               {isTeacher && (
-                <div className="flex gap-2 pt-3 border-t mt-3">
+                <div className="flex gap-2 pt-3 border-t mt-3 flex-wrap">
                   <Link to={createPageUrl('CourseEditor') + `?id=${course.id}`} className="flex-1">
                     <Button variant="outline" className="w-full">
                       <Edit className="w-4 h-4 mr-1" />
                       Edit
+                    </Button>
+                  </Link>
+                  <Link to={createPageUrl('CourseStudents') + `?id=${course.id}`}>
+                    <Button variant="outline" title="Manage students">
+                      <Users className="w-4 h-4" />
                     </Button>
                   </Link>
                   <Button 
@@ -270,6 +317,16 @@ export default function CourseView() {
       <div className="max-w-5xl mx-auto px-4 py-12">
         <h2 className="text-2xl font-bold text-slate-900 mb-6">Course Content</h2>
         
+        {!accessGranted && !isTeacher && (
+          <div className="mb-6">
+            <AccessGate
+              course={course}
+              user={user}
+              onAccessGranted={() => queryClient.invalidateQueries(['enrollment'])}
+            />
+          </div>
+        )}
+
         <div className="space-y-3">
           {sortedLessons.map((lesson, index) => {
             const isCompleted = completedSet.has(lesson.id);
@@ -281,10 +338,12 @@ export default function CourseView() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
               >
-                <Link to={createPageUrl('LessonView') + `?id=${lesson.id}`}>
+                <Link to={(accessGranted || isTeacher) ? createPageUrl('LessonView') + `?id=${lesson.id}` : '#'}
+                  className={(accessGranted || isTeacher) ? '' : 'pointer-events-none opacity-60'}>
                   <div className={cn(
                     "flex items-center gap-4 p-4 bg-white rounded-xl border border-slate-200",
-                    "hover:border-indigo-200 hover:shadow-md transition-all group"
+                    (accessGranted || isTeacher) && "hover:border-indigo-200 hover:shadow-md transition-all group",
+                    lesson.is_subtopic && "ml-6 border-l-2 border-l-slate-200"
                   )}>
                     <div className={cn(
                       "w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0",
