@@ -51,6 +51,7 @@ export default function LessonEditor() {
     is_subtopic: false,
     parent_lesson_id: '',
   });
+  const [saveAndNew, setSaveAndNew] = useState(false);
   const [activeTab, setActiveTab] = useState('edit');
 
   const { data: lesson, isLoading: lessonLoading } = useQuery({
@@ -64,6 +65,18 @@ export default function LessonEditor() {
     queryFn: () => base44.entities.Course.filter({ id: lesson?.course_id || courseId }).then(res => res[0]),
     enabled: !!(lesson?.course_id || courseId),
   });
+
+  const effectiveCourseId = lesson?.course_id || courseId;
+
+  const { data: allCourseLessons = [] } = useQuery({
+    queryKey: ['lessons', effectiveCourseId],
+    queryFn: () => base44.entities.Lesson.filter({ course_id: effectiveCourseId }),
+    enabled: !!effectiveCourseId,
+  });
+
+  const parentLessonOptions = allCourseLessons
+    .filter(l => !l.is_subtopic && l.id !== lessonId)
+    .sort((a, b) => (a.order_index || 0) - (b.order_index || 0));
 
   useEffect(() => {
     if (lesson) {
@@ -100,7 +113,10 @@ export default function LessonEditor() {
       queryClient.invalidateQueries(['lesson']);
       queryClient.invalidateQueries(['lessons']);
       toast.success('Lesson saved!');
-      if (!lessonId) {
+      if (saveAndNew) {
+        setSaveAndNew(false);
+        navigate(createPageUrl('LessonEditor') + `?courseId=${result.course_id || effectiveCourseId}`);
+      } else if (!lessonId) {
         navigate(createPageUrl('LessonEditor') + `?id=${result.id}`);
       }
     },
