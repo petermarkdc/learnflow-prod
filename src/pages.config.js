@@ -47,8 +47,26 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import Home from './pages/Home';
+import CourseView from './pages/CourseView';
+import LessonView from './pages/LessonView';
+import CourseEditor from './pages/CourseEditor';
+import LessonEditor from './pages/LessonEditor';
+import Dashboard from './pages/Dashboard';
+import __Layout from './Layout.jsx';
 
-export const pagesConfig = {
-	Pages: {}
+
+export const PAGES = {
+    "Home": Home,
+    "CourseView": CourseView,
+    "LessonView": LessonView,
+    "CourseEditor": CourseEditor,
+    "LessonEditor": LessonEditor,
+    "Dashboard": Dashboard,
 }
 
+export const pagesConfig = {
+    mainPage: "Home",
+    Pages: PAGES,
+    Layout: __Layout,
+};
