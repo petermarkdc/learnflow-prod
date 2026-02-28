@@ -329,8 +329,8 @@ export default function CourseEditor() {
                 </div>
               </div>
 
-              {/* Course Code (for paid) */}
-              {formData.access_type === 'paid' && (
+              {/* Course Code - always visible */}
+              {(
                 <div>
                   <Label>Course Code</Label>
                   <div className="flex gap-2 mt-1.5">
