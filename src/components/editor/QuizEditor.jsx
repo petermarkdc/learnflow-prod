@@ -55,9 +55,19 @@ export default function QuizEditor({ questions = [], onChange, maxQuestions, lab
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <HelpCircle className="w-5 h-5 text-indigo-600" />
-          <h3 className="text-lg font-semibold text-slate-900">Quiz Questions</h3>
+          <h3 className="text-lg font-semibold text-slate-900">{label} Questions</h3>
+          {maxQuestions && (
+            <span className="text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
+              {questions.length}/{maxQuestions}
+            </span>
+          )}
         </div>
-        <Button onClick={addQuestion} variant="outline" size="sm">
+        <Button
+          onClick={addQuestion}
+          variant="outline"
+          size="sm"
+          disabled={maxQuestions ? questions.length >= maxQuestions : false}
+        >
           <Plus className="w-4 h-4 mr-1" />
           Add Question
         </Button>
