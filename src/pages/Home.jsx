@@ -62,7 +62,9 @@ export default function Home() {
     return acc;
   }, {});
 
-  const filteredCourses = courses.filter(course => {
+  const sortedCourses = [...courses].sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
+
+  const filteredCourses = sortedCourses.filter(course => {
     const matchesSearch = !search || 
       course.title?.toLowerCase().includes(search.toLowerCase()) ||
       course.description?.toLowerCase().includes(search.toLowerCase());
