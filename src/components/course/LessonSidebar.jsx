@@ -101,11 +101,14 @@ export default function LessonSidebar({
                         {String(displayNum).padStart(2, '0')}
                       </span>
                     )}
-                    <span className={cn(
-                      "font-medium truncate",
-                      isSubtopic ? "text-xs text-slate-500" : "text-sm",
-                      isCurrent ? "text-indigo-700" : "text-slate-700"
-                    )}>
+                    <span
+                      title={lesson.title}
+                      className={cn(
+                        "font-medium truncate group-hover:whitespace-normal group-hover:overflow-visible",
+                        isSubtopic ? "text-xs text-slate-500" : "text-sm",
+                        isCurrent ? "text-indigo-700" : "text-slate-700"
+                      )}
+                    >
                       {lesson.title}
                     </span>
                   </div>
