@@ -77,6 +77,9 @@ export default function CourseEditor() {
     enabled: !!courseId,
   });
 
+  // Only owner or admin can edit this course
+  const isOwner = !courseId || !user || user.role === 'admin' || (course && course.created_by === user?.email);
+
   const { data: lessons = [], isLoading: lessonsLoading } = useQuery({
     queryKey: ['lessons', courseId],
     queryFn: () => base44.entities.Lesson.filter({ course_id: courseId }),
