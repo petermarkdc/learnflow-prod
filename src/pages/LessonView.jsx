@@ -199,7 +199,7 @@ export default function LessonView() {
             </div>
 
             <div className="flex items-center gap-2">
-              {isTeacher && (
+              {isOwner && (
                 <>
                   <Link to={createPageUrl('LessonEditor') + `?id=${lessonId}`}>
                     <Button variant="ghost" size="sm">
