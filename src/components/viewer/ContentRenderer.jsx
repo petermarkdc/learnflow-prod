@@ -15,8 +15,9 @@ export default function ContentRenderer({ blocks = [] }) {
           3: 'text-2xl font-semibold text-slate-800 mb-3 mt-5',
           4: 'text-xl font-semibold text-slate-800 mb-2 mt-4',
         };
+        const slugId = block.content?.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '') || '';
         return (
-          <HeadingTag key={index} className={headingStyles[block.level || 2]}>
+          <HeadingTag key={index} id={slugId} className={headingStyles[block.level || 2]}>
             {block.content}
           </HeadingTag>
         );
