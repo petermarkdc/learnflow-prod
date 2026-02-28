@@ -25,7 +25,10 @@ import { useQuery } from '@tanstack/react-query';
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showNewLessonDialog, setShowNewLessonDialog] = useState(false);
+  const [selectedCourseId, setSelectedCourseId] = useState('');
   const location = useLocation();
+  const navigate = useNavigate ? useNavigate() : null;
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => setUser(null));
