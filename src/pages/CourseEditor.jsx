@@ -199,8 +199,9 @@ export default function CourseEditor() {
       queryClient.invalidateQueries(['lessons']);
       setTransferLesson(null);
       setTransferCourseId('');
-      toast.success('Lesson transferred!');
+      toast.success('Lesson transferred successfully!');
     },
+    onError: () => toast.error('Failed to transfer lesson.'),
   });
 
   // Fetch teacher's other courses for transfer
