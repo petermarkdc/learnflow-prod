@@ -11,6 +11,19 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Search, BookOpen, GraduationCap, Plus, Filter } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+const ALL_CATEGORIES = [
+  { value: 'web-development', label: 'Web Development' },
+  { value: 'programming-basics', label: 'Programming Basics' },
+  { value: 'devops', label: 'DevOps' },
+  { value: 'data-science', label: 'Data Science' },
+  { value: 'mobile-development', label: 'Mobile Development' },
+  { value: 'robotics', label: 'Robotics' },
+  { value: 'arduino', label: 'Arduino' },
+  { value: 'raspberry-pi', label: 'Raspberry Pi' },
+  { value: 'other', label: 'Other' },
+  ...(() => { try { return JSON.parse(localStorage.getItem('learnhub_custom_categories') || '[]'); } catch { return []; } })(),
+];
+
 export default function Home() {
   const [user, setUser] = useState(null);
   const [search, setSearch] = useState('');
