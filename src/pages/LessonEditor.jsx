@@ -354,7 +354,7 @@ export default function LessonEditor() {
               <div className="bg-white rounded-2xl border p-4 flex items-center gap-3 justify-end">
                 <Button
                   variant="outline"
-                  onClick={() => { setSaveAndNew(true); saveMutation.mutate(); }}
+                  onClick={() => setShowSaveNewConfirm(true)}
                   disabled={saveMutation.isPending}
                 >
                   <Plus className="w-4 h-4 mr-2" />
@@ -373,6 +373,27 @@ export default function LessonEditor() {
                   Save Lesson
                 </Button>
               </div>
+
+              {/* Save & New Confirmation Dialog */}
+              <AlertDialog open={showSaveNewConfirm} onOpenChange={setShowSaveNewConfirm}>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Save and create new lesson?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This will save the current lesson and open a blank editor for a new lesson in the same course.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      className="bg-indigo-600 hover:bg-indigo-700"
+                      onClick={() => { setShowSaveNewConfirm(false); setSaveAndNew(true); saveMutation.mutate(); }}
+                    >
+                      Save & Continue
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
 
             {/* Sidebar */}
