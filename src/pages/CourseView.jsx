@@ -73,6 +73,8 @@ export default function CourseView() {
   const sortedLessons = [...lessons].sort((a, b) => (a.order_index || 0) - (b.order_index || 0));
   const completedSet = new Set(progress?.completed_lessons || []);
   const isTeacher = user?.role === 'teacher' || user?.role === 'admin';
+  // Only the course owner (or admin) can edit/delete/duplicate
+  const isOwner = user?.role === 'admin' || (course && course.created_by === user?.email);
 
   // Access check
   const hasAccess = () => {
