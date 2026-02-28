@@ -39,6 +39,11 @@ export default function Home() {
     queryFn: () => base44.entities.Course.filter({ is_published: true }),
   });
 
+  const { data: users = [] } = useQuery({
+    queryKey: ['users'],
+    queryFn: () => base44.entities.User.list(),
+  });
+
   const { data: lessons = [] } = useQuery({
     queryKey: ['lessons'],
     queryFn: () => base44.entities.Lesson.list(),
