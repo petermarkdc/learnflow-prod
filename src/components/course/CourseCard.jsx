@@ -20,7 +20,7 @@ const categoryLabels = {
   'other': 'Other',
 };
 
-export default function CourseCard({ course, lessonCount, progress, author }) {
+export default function CourseCard({ course, lessonCount, progress }) {
   const progressPercent = progress?.completed_lessons?.length > 0 && lessonCount > 0
     ? Math.round((progress.completed_lessons.length / lessonCount) * 100)
     : 0;
@@ -68,23 +68,9 @@ export default function CourseCard({ course, lessonCount, progress, author }) {
           )}
 
           {course.description && (
-            <p className="text-sm text-slate-600 line-clamp-2 mb-3">
+            <p className="text-sm text-slate-600 line-clamp-2 mb-4">
               {course.description}
             </p>
-          )}
-
-          {/* Author */}
-          {author && (
-            <div className="flex items-center gap-2 mb-3">
-              {author.avatar_url ? (
-                <img src={author.avatar_url} alt={author.full_name} className="w-6 h-6 rounded-full object-cover" />
-              ) : (
-                <div className="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-xs font-semibold flex-shrink-0">
-                  {author.full_name?.[0]?.toUpperCase() || '?'}
-                </div>
-              )}
-              <span className="text-xs text-slate-500 truncate">{author.full_name || author.email}</span>
-            </div>
           )}
 
           {/* Stats */}

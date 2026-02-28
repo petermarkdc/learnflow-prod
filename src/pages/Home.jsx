@@ -39,11 +39,6 @@ export default function Home() {
     queryFn: () => base44.entities.Course.filter({ is_published: true }),
   });
 
-  const { data: users = [] } = useQuery({
-    queryKey: ['users'],
-    queryFn: () => base44.entities.User.list(),
-  });
-
   const { data: lessons = [] } = useQuery({
     queryKey: ['lessons'],
     queryFn: () => base44.entities.Lesson.list(),
@@ -56,8 +51,6 @@ export default function Home() {
       : [],
     enabled: !!user?.email,
   });
-
-  const usersMap = users.reduce((acc, u) => { acc[u.email] = u; return acc; }, {});
 
   const lessonCounts = lessons.reduce((acc, lesson) => {
     acc[lesson.course_id] = (acc[lesson.course_id] || 0) + 1;
@@ -203,7 +196,6 @@ export default function Home() {
                   course={course}
                   lessonCount={lessonCounts[course.id] || 0}
                   progress={progressMap[course.id]}
-                  author={usersMap[course.created_by]}
                 />
               </motion.div>
             ))}
