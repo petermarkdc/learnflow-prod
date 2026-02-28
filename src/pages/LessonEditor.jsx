@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   ArrowLeft, Save, Plus, Eye, Loader2,
   Type, Code, Image as ImageIcon, Link as LinkIcon, Heading, Minus,
-  Table, Video, Paperclip, Info, AlertTriangle, Lightbulb, Indent
+  Table, Video, Paperclip, Info, AlertTriangle, Lightbulb, Indent, List, ListOrdered
 } from 'lucide-react';
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -29,6 +29,8 @@ import { toast } from "sonner";
 const BLOCK_TYPES = [
   { type: 'heading', icon: Heading, label: 'Heading' },
   { type: 'text', icon: Type, label: 'Text' },
+  { type: 'bullet_list', icon: List, label: 'Bullet List' },
+  { type: 'numbered_list', icon: ListOrdered, label: 'Numbered List' },
   { type: 'code', icon: Code, label: 'Code' },
   { type: 'image', icon: ImageIcon, label: 'Image' },
   { type: 'video', icon: Video, label: 'Video' },
