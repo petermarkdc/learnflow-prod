@@ -686,8 +686,7 @@ export default function CourseEditor() {
             )}
           </div>
         </div>
-      </div>
-    {/* Transfer Lesson Dialog */}
+      {/* Transfer Lesson Dialog */}
       <Dialog open={!!transferLesson} onOpenChange={(o) => { if (!o) setTransferLesson(null); }}>
         <DialogContent>
           <DialogHeader>
