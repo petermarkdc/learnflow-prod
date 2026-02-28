@@ -114,8 +114,7 @@ export default function Layout({ children, currentPageName }) {
                   </Link>
                   <Button
                     size="sm"
-                    variant="outline"
-                    className="gap-2"
+                    className="bg-purple-600 hover:bg-purple-700 gap-2"
                     onClick={() => setShowNewLessonDialog(true)}
                   >
                     <BookOpen className="w-4 h-4" />
