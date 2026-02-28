@@ -170,7 +170,7 @@ export default function LessonView() {
       )}
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-h-screen">
+      <div className="flex-1 flex min-h-screen">
         {/* Top Bar */}
         <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-sm border-b px-4 py-3">
           <div className="flex items-center justify-between max-w-3xl mx-auto">
