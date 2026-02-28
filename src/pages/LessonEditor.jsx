@@ -11,7 +11,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   ArrowLeft, Save, Plus, Eye, Loader2,
   Type, Code, Image as ImageIcon, Link as LinkIcon, Heading, Minus,
-  Table, Video, Paperclip, Info, AlertTriangle, Lightbulb, Indent, List, ListOrdered
+  Table, Video, Paperclip, Info, AlertTriangle, Lightbulb, Indent, List, ListOrdered,
+  ClipboardList, FlaskConical, ChevronDown, ChevronUp
 } from 'lucide-react';
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
