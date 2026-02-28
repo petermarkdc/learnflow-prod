@@ -139,6 +139,7 @@ export default function LessonEditor() {
       content: '',
       ...(type === 'code' && { language: 'javascript' }),
       ...(type === 'heading' && { level: 2 }),
+      ...((type === 'bullet_list' || type === 'numbered_list') && { items: [''] }),
     };
     setFormData(prev => ({ ...prev, content: [...prev.content, newBlock] }));
   };
