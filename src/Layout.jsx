@@ -205,7 +205,7 @@ export default function Layout({ children, currentPageName }) {
                   </Link>
                 );
               })}
-              {isTeacher && (
+              {isTeacherUser && (
                 <>
                   <Link to={createPageUrl('CourseEditor')} onClick={() => setMobileMenuOpen(false)}>
                     <Button className="w-full mt-2 bg-indigo-600 hover:bg-indigo-700 gap-2">
