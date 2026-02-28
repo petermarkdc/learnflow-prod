@@ -169,8 +169,8 @@ export default function LessonView() {
         </div>
       )}
 
-      {/* Main Content */}
-      <div className="flex-1 flex min-h-screen">
+      {/* Main Content + TOC */}
+      <div className="flex-1 flex flex-col min-h-screen min-w-0">
         {/* Top Bar */}
         <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-sm border-b px-4 py-3">
           <div className="flex items-center justify-between max-w-3xl mx-auto">
@@ -236,27 +236,35 @@ export default function LessonView() {
           </div>
         </div>
 
-        {/* Content */}
-        <div className="flex-1 px-4 py-8">
-          <div className="max-w-3xl mx-auto">
-            <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-8">
-              {lesson.title}
-            </h1>
+        {/* Content row */}
+        <div className="flex-1 flex">
+          {/* Article */}
+          <div className="flex-1 px-4 py-8 min-w-0">
+            <div className="max-w-3xl mx-auto">
+              <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-8">
+                {lesson.title}
+              </h1>
 
-            <ContentRenderer blocks={lesson.content || []} />
+              <ContentRenderer blocks={lesson.content || []} />
 
-            {/* Quiz Section */}
-            {lesson.quiz && lesson.quiz.length > 0 && (
-              <div className="mt-12 pt-8 border-t">
-                <h2 className="text-2xl font-bold text-slate-900 mb-6">
-                  Knowledge Check
-                </h2>
-                <QuizViewer
-                  questions={lesson.quiz}
-                  onComplete={handleQuizComplete}
-                />
-              </div>
-            )}
+              {/* Quiz Section */}
+              {lesson.quiz && lesson.quiz.length > 0 && (
+                <div className="mt-12 pt-8 border-t">
+                  <h2 className="text-2xl font-bold text-slate-900 mb-6">
+                    Knowledge Check
+                  </h2>
+                  <QuizViewer
+                    questions={lesson.quiz}
+                    onComplete={handleQuizComplete}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* TOC Sidebar */}
+          <div className="hidden xl:block w-56 flex-shrink-0 px-4 py-8 border-l bg-white">
+            <TableOfContents blocks={lesson.content || []} />
           </div>
         </div>
 
