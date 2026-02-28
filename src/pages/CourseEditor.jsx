@@ -622,6 +622,25 @@ export default function CourseEditor() {
             )}
           </div>
 
+          {/* Bottom Save Button (below lessons) */}
+          {courseId && (
+            <div className="bg-white rounded-2xl border p-4 flex justify-end">
+              <Button
+                onClick={() => saveMutation.mutate()}
+                disabled={saveMutation.isPending}
+                className="bg-indigo-600 hover:bg-indigo-700"
+              >
+                {saveMutation.isPending ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <Save className="w-4 h-4 mr-2" />
+                )}
+                Save Course Settings
+              </Button>
+            </div>
+          )}
+        </div>
+
           {/* Sidebar Tips */}
           <div className="space-y-6">
             <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6">
