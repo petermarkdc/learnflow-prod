@@ -54,6 +54,8 @@ export default function LessonEditor() {
     title: '',
     content: [],
     quiz: [],
+    pre_test: [],
+    post_test: [],
     estimated_time: '',
     is_subtopic: false,
     parent_lesson_id: '',
@@ -61,6 +63,8 @@ export default function LessonEditor() {
   const [saveAndNew, setSaveAndNew] = useState(false);
   const [showSaveNewConfirm, setShowSaveNewConfirm] = useState(false);
   const [activeTab, setActiveTab] = useState('edit');
+  const [showPreTest, setShowPreTest] = useState(false);
+  const [showPostTest, setShowPostTest] = useState(false);
 
   const { data: lesson, isLoading: lessonLoading } = useQuery({
     queryKey: ['lesson', lessonId],
