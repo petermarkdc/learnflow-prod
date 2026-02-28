@@ -57,6 +57,7 @@ export default function LessonEditor() {
     parent_lesson_id: '',
   });
   const [saveAndNew, setSaveAndNew] = useState(false);
+  const [showSaveNewConfirm, setShowSaveNewConfirm] = useState(false);
   const [activeTab, setActiveTab] = useState('edit');
 
   const { data: lesson, isLoading: lessonLoading } = useQuery({
