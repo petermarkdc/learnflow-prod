@@ -128,15 +128,9 @@ export default function Home() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Categories</SelectItem>
-                <SelectItem value="web-development">Web Development</SelectItem>
-                <SelectItem value="programming-basics">Programming Basics</SelectItem>
-                <SelectItem value="devops">DevOps</SelectItem>
-                <SelectItem value="data-science">Data Science</SelectItem>
-                <SelectItem value="mobile-development">Mobile Development</SelectItem>
-                <SelectItem value="robotics">Robotics</SelectItem>
-                <SelectItem value="arduino">Arduino</SelectItem>
-                <SelectItem value="raspberry-pi">Raspberry Pi</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
+                {ALL_CATEGORIES.map(cat => (
+                  <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
             <Select value={difficulty} onValueChange={setDifficulty}>
