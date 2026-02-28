@@ -57,6 +57,8 @@ export default function Home() {
     enabled: !!user?.email,
   });
 
+  const usersMap = users.reduce((acc, u) => { acc[u.email] = u; return acc; }, {});
+
   const lessonCounts = lessons.reduce((acc, lesson) => {
     acc[lesson.course_id] = (acc[lesson.course_id] || 0) + 1;
     return acc;
