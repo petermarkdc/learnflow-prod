@@ -63,6 +63,8 @@ export default function LessonView() {
   const completedLessons = progress?.completed_lessons || [];
   const isCompleted = completedLessons.includes(lessonId);
   const isTeacher = user?.role === 'teacher' || user?.role === 'admin';
+  // Only the course owner (or admin) can edit/duplicate lessons
+  const isOwner = user?.role === 'admin' || (course && course.created_by === user?.email);
 
   const markCompleteMutation = useMutation({
     mutationFn: async () => {
