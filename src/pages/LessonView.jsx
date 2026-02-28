@@ -8,7 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { 
   ChevronLeft, ChevronRight, Menu, CheckCircle2, 
-  BookOpen, Edit, Copy
+  BookOpen, Edit, Copy, Printer
 } from 'lucide-react';
 import ContentRenderer from '../components/viewer/ContentRenderer';
 import QuizViewer from '../components/viewer/QuizViewer';
