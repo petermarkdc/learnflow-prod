@@ -15,6 +15,8 @@ import { cn } from "@/lib/utils";
 const LANGUAGES = [
   { value: 'javascript', label: 'JavaScript' },
   { value: 'python', label: 'Python' },
+  { value: 'arduino', label: 'Arduino' },
+  { value: 'cpp', label: 'C++' },
   { value: 'c', label: 'C' },
   { value: 'html', label: 'HTML' },
   { value: 'bash', label: 'Bash' },
