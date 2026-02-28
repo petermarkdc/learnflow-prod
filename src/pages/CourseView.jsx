@@ -264,7 +264,7 @@ export default function CourseView() {
                 </div>
               )}
 
-              {isTeacher && (
+              {isOwner && (
                 <div className="flex gap-2 pt-3 border-t mt-3 flex-wrap">
                   <Link to={createPageUrl('CourseEditor') + `?id=${course.id}`} className="flex-1">
                     <Button variant="outline" className="w-full">
