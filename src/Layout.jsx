@@ -155,6 +155,14 @@ export default function Layout({ children, currentPageName }) {
                         My Profile
                       </DropdownMenuItem>
                     </Link>
+                    {(user?.role === 'admin' || user?.role === 'teacher') && (
+                      <Link to={createPageUrl('CourseEnrollmentSummary')}>
+                        <DropdownMenuItem>
+                          <BarChart2 className="w-4 h-4 mr-2" />
+                          Enrollment Summary
+                        </DropdownMenuItem>
+                      </Link>
+                    )}
                     {user?.role === 'admin' && (
                       <Link to={createPageUrl('AdminCategories')}>
                         <DropdownMenuItem>
