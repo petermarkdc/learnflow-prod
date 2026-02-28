@@ -40,7 +40,11 @@ export default function Profile() {
     setUploading(true);
     const { file_url } = await base44.integrations.Core.UploadFile({ file });
     setFormData(prev => ({ ...prev, avatar_url: file_url }));
+    await base44.auth.updateMe({ avatar_url: file_url });
+    const updated = await base44.auth.me();
+    setUser(updated);
     setUploading(false);
+    toast.success('Profile photo updated!');
   };
 
   if (!user) {
