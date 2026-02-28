@@ -63,6 +63,13 @@ export default function CourseEditor() {
     course_code: generateCode(),
   });
   const [uploading, setUploading] = useState(false);
+  const [user, setUser] = useState(null);
+  const [transferLesson, setTransferLesson] = useState(null); // lesson to transfer
+  const [transferCourseId, setTransferCourseId] = useState('');
+
+  useEffect(() => {
+    base44.auth.me().then(setUser).catch(() => setUser(null));
+  }, []);
 
   const { data: course, isLoading: courseLoading } = useQuery({
     queryKey: ['course', courseId],
