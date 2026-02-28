@@ -37,6 +37,7 @@ export default function Layout({ children, currentPageName }) {
   }, []);
 
   const isTeacherUser = user?.role === 'teacher' || user?.role === 'admin';
+  const canCreateContent = isTeacherUser;
 
   const { data: teacherCourses = [] } = useQuery({
     queryKey: ['my-courses', user?.email],
