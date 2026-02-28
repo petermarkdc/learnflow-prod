@@ -61,7 +61,9 @@ export default function CourseEditor() {
     is_published: false,
     access_type: 'free',
     course_code: generateCode(),
+    collaborators: [],
   });
+  const [collaboratorInput, setCollaboratorInput] = useState('');
   const [uploading, setUploading] = useState(false);
   const [user, setUser] = useState(null);
   const [transferLesson, setTransferLesson] = useState(null); // lesson to transfer
