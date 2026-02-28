@@ -161,6 +161,36 @@ export default function ContentRenderer({ blocks = [] }) {
         );
       }
 
+      case 'bullet_list': {
+        const items = Array.isArray(block.items) ? block.items.filter(Boolean) : [];
+        if (!items.length) return null;
+        return (
+          <ul key={index} className="my-4 space-y-1.5 pl-2">
+            {items.map((item, i) => (
+              <li key={i} className="flex items-start gap-2 text-slate-700">
+                <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-indigo-500 flex-shrink-0" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        );
+      }
+
+      case 'numbered_list': {
+        const items = Array.isArray(block.items) ? block.items.filter(Boolean) : [];
+        if (!items.length) return null;
+        return (
+          <ol key={index} className="my-4 space-y-1.5 pl-2">
+            {items.map((item, i) => (
+              <li key={i} className="flex items-start gap-3 text-slate-700">
+                <span className="font-semibold text-indigo-600 text-sm w-5 flex-shrink-0 mt-0.5">{i + 1}.</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ol>
+        );
+      }
+
       case 'divider':
         return <hr key={index} className="my-8 border-slate-200" />;
 
