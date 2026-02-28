@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { 
   ArrowLeft, Save, Plus, GripVertical, Edit, Trash2, 
-  BookOpen, Upload, Loader2, Eye, Users, Globe, Lock, Indent
+  BookOpen, Upload, Loader2, Eye, Users, Globe, Lock, Indent, Copy, ArrowRightLeft
 } from 'lucide-react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { toast } from "sonner";
@@ -27,6 +27,22 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription
+} from "@/components/ui/dialog";
+
+const ALL_CATEGORIES = [
+  { value: 'web-development', label: 'Web Development' },
+  { value: 'programming-basics', label: 'Programming Basics' },
+  { value: 'devops', label: 'DevOps' },
+  { value: 'data-science', label: 'Data Science' },
+  { value: 'mobile-development', label: 'Mobile Development' },
+  { value: 'robotics', label: 'Robotics' },
+  { value: 'arduino', label: 'Arduino' },
+  { value: 'raspberry-pi', label: 'Raspberry Pi' },
+  { value: 'other', label: 'Other' },
+  ...(() => { try { return JSON.parse(localStorage.getItem('learnhub_custom_categories') || '[]'); } catch { return []; } })(),
+];
 
 export default function CourseEditor() {
   const navigate = useNavigate();
