@@ -57,6 +57,7 @@ import Home from './pages/Home';
 import LessonEditor from './pages/LessonEditor';
 import LessonView from './pages/LessonView';
 import Profile from './pages/Profile';
+import CourseEnrollmentSummary from './pages/CourseEnrollmentSummary';
 import __Layout from './Layout.jsx';
 
 
@@ -71,6 +72,7 @@ export const PAGES = {
     "LessonEditor": LessonEditor,
     "LessonView": LessonView,
     "Profile": Profile,
+    "CourseEnrollmentSummary": CourseEnrollmentSummary,
 }
 
 export const pagesConfig = {
