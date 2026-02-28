@@ -223,6 +223,73 @@ export default function Dashboard() {
           </div>
         )}
 
+        {/* Teacher: Authored Courses */}
+        {(user?.role === 'teacher' || user?.role === 'admin') && (
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-slate-900">My Courses</h2>
+              <Link to={createPageUrl('CourseEditor')}>
+                <Button className="bg-indigo-600 hover:bg-indigo-700 gap-2">
+                  <Plus className="w-4 h-4" />
+                  Create Course
+                </Button>
+              </Link>
+            </div>
+            {authoredLoading ? (
+              <div className="grid md:grid-cols-3 gap-4">
+                {[1,2,3].map(i => <Skeleton key={i} className="h-28 rounded-xl" />)}
+              </div>
+            ) : authoredCourses.length === 0 ? (
+              <Card className="border-dashed">
+                <CardContent className="py-10 text-center">
+                  <BookOpen className="w-10 h-10 mx-auto text-slate-300 mb-3" />
+                  <p className="text-slate-500 mb-4">You haven't created any courses yet</p>
+                  <Link to={createPageUrl('CourseEditor')}>
+                    <Button className="bg-indigo-600 hover:bg-indigo-700 gap-2">
+                      <Plus className="w-4 h-4" />
+                      Create Your First Course
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid md:grid-cols-3 gap-4">
+                {authoredCourses.map(course => (
+                  <Card key={course.id} className="hover:shadow-md transition-shadow overflow-hidden">
+                    <div className="h-24 bg-gradient-to-br from-indigo-500 to-purple-600 relative">
+                      {course.cover_image && (
+                        <img src={course.cover_image} alt="" className="w-full h-full object-cover" />
+                      )}
+                      <div className="absolute top-2 right-2">
+                        <Badge className={course.is_published ? 'bg-green-500 text-white' : 'bg-slate-500 text-white'}>
+                          {course.is_published ? 'Published' : 'Draft'}
+                        </Badge>
+                      </div>
+                    </div>
+                    <CardContent className="p-4">
+                      <h3 className="font-semibold text-slate-900 truncate mb-3">{course.title}</h3>
+                      <div className="flex gap-2">
+                        <Link to={createPageUrl('CourseEditor') + `?id=${course.id}`} className="flex-1">
+                          <Button variant="outline" size="sm" className="w-full gap-1">
+                            <Edit className="w-3 h-3" />
+                            Edit
+                          </Button>
+                        </Link>
+                        <Link to={createPageUrl('CourseStudents') + `?id=${course.id}`}>
+                          <Button variant="outline" size="sm" className="gap-1">
+                            <Users className="w-3 h-3" />
+                            Students
+                          </Button>
+                        </Link>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Empty State */}
         {!progressLoading && inProgressCourses.length === 0 && coursesCompleted === 0 && (
           <div className="text-center py-16">
