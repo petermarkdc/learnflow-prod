@@ -203,6 +203,7 @@ export default function Home() {
                   course={course}
                   lessonCount={lessonCounts[course.id] || 0}
                   progress={progressMap[course.id]}
+                  author={usersMap[course.created_by]}
                 />
               </motion.div>
             ))}
