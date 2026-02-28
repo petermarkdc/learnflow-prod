@@ -149,6 +149,12 @@ export default function Layout({ children, currentPageName }) {
                         Dashboard
                       </DropdownMenuItem>
                     </Link>
+                    <Link to={createPageUrl('Profile')}>
+                      <DropdownMenuItem>
+                        <UserCircle className="w-4 h-4 mr-2" />
+                        My Profile
+                      </DropdownMenuItem>
+                    </Link>
                     {user?.role === 'admin' && (
                       <Link to={createPageUrl('AdminCategories')}>
                         <DropdownMenuItem>
