@@ -120,7 +120,7 @@ export default function LessonEditor() {
     onSuccess: (result) => {
       queryClient.invalidateQueries(['lesson']);
       queryClient.invalidateQueries(['lessons']);
-      toast.success('Lesson saved!');
+      toast.success('Lesson saved successfully!');
       if (saveAndNew) {
         setSaveAndNew(false);
         // Reset form for new lesson
