@@ -74,7 +74,7 @@ export default function LessonSidebar({
                 to={createPageUrl('LessonView') + `?id=${lesson.id}`}
                 onClick={onClose}
                 className={cn(
-                  "flex items-start gap-2 py-2 pr-3 rounded-lg transition-all",
+                  "group flex items-start gap-2 py-2 pr-3 rounded-lg transition-all",
                   isSubtopic ? "ml-8 pl-2" : "ml-2 pl-2",
                   isCurrent ? "bg-indigo-50 border border-indigo-200" : "hover:bg-slate-50",
                 )}
