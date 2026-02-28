@@ -136,8 +136,9 @@ export default function CourseEditor() {
     mutationFn: (lessonId) => base44.entities.Lesson.delete(lessonId),
     onSuccess: () => {
       queryClient.invalidateQueries(['lessons']);
-      toast.success('Lesson deleted');
+      toast.success('Lesson deleted!');
     },
+    onError: () => toast.error('Failed to delete lesson.'),
   });
 
   const reorderMutation = useMutation({
