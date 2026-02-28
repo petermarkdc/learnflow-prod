@@ -54,7 +54,7 @@ export default function Layout({ children, currentPageName }) {
   // Hide layout on lesson view for better reading experience
   const hideNav = currentPageName === 'LessonView';
 
-  const isTeacher = user?.role === 'teacher' || user?.role === 'admin';
+  const isTeacher = isTeacherUser;
 
   const navItems = [
     { name: 'Home', icon: Home, href: createPageUrl('Home') },
