@@ -11,6 +11,7 @@ import {
   Play, Edit, Copy, Trash2, ArrowLeft, Lock, Globe, Users
 } from 'lucide-react';
 import AccessGate from '../components/course/AccessGate';
+import CourseAuthors from '../components/course/CourseAuthors';
 import { motion } from 'framer-motion';
 import { cn } from "@/lib/utils";
 import {

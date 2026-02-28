@@ -7,7 +7,7 @@ import { base44 } from '@/api/base44Client';
 import { 
   Type, Code, Image as ImageIcon, Link as LinkIcon, 
   Heading, Minus, GripVertical, Trash2, Upload, Loader2,
-  Table, Video, Paperclip, Info, AlertTriangle, Lightbulb, Palette
+  Table, Video, Paperclip, Info, AlertTriangle, Lightbulb, Palette, List, ListOrdered
 } from 'lucide-react';
 import TableEditor from './TableEditor';
 import { cn } from "@/lib/utils";
