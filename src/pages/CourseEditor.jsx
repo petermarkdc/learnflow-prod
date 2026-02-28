@@ -418,8 +418,21 @@ export default function CourseEditor() {
                 <p className="text-xs text-slate-500 mt-1">6-character alphanumeric code. Students enter this to self-enroll.</p>
               </div>
 
+              {/* Admin: Change Author */}
+              {courseId && user?.role === 'admin' && (
+                <div>
+                  <Label>Author (created_by)</Label>
+                  <p className="text-xs text-slate-500 mb-2">Admin only — change the course owner</p>
+                  <Input
+                    value={formData._override_created_by ?? course?.created_by ?? ''}
+                    onChange={(e) => setFormData(prev => ({ ...prev, _override_created_by: e.target.value.trim() }))}
+                    placeholder="owner@email.com"
+                  />
+                </div>
+              )}
+
               {/* Collaborators */}
-              {courseId && user && course?.created_by === user?.email && (
+              {courseId && user && (course?.created_by === user?.email || user?.role === 'admin') && (
                 <div>
                   <Label>Collaborators</Label>
                   <p className="text-xs text-slate-500 mb-2">Other teachers who can edit this course</p>
