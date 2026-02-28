@@ -40,7 +40,7 @@ export default function Layout({ children, currentPageName }) {
   const canCreateContent = isTeacherUser;
 
   const { data: teacherCourses = [] } = useQuery({
-    queryKey: ['my-courses', user?.email],
+    queryKey: ['my-courses-layout', user?.email],
     queryFn: () => base44.entities.Course.filter({ created_by: user.email }),
     enabled: !!user?.email && isTeacherUser,
   });

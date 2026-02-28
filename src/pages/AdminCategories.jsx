@@ -23,7 +23,7 @@ const DEFAULT_CATEGORIES = [
   { value: 'other', label: 'Other' },
 ];
 
-const STORAGE_KEY = 'learnhub_custom_categories';
+const STORAGE_KEY = 'learnflow_custom_categories';
 
 function loadCategories() {
   try {
