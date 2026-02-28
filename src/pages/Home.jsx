@@ -80,32 +80,34 @@ export default function Home() {
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1920')] opacity-10 bg-cover bg-center" />
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/90 via-purple-600/90 to-indigo-800/90" />
         
-        <div className="relative max-w-7xl mx-auto px-4 py-16 md:py-24">
+        <div className="relative max-w-7xl mx-auto px-4 py-8 md:py-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="max-w-3xl"
+            className="flex flex-col md:flex-row md:items-center md:justify-between gap-4"
           >
-            <div className="flex items-center gap-2 mb-4">
-              <GraduationCap className="w-8 h-8" />
-              <span className="text-lg font-semibold">LearnFlow</span>
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <GraduationCap className="w-6 h-6" />
+                <span className="text-base font-semibold">LearnFlow</span>
+              </div>
+              <h1 className="text-2xl md:text-3xl font-bold mb-1">
+                Master Programming Through Interactive Tutorials
+              </h1>
+              <p className="text-sm text-indigo-100">
+                Learn at your own pace with step-by-step lessons, code examples, and quizzes.
+              </p>
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              Master Programming Through Interactive Tutorials
-            </h1>
-            <p className="text-xl text-indigo-100 mb-8">
-              Learn at your own pace with step-by-step lessons, code examples, and quizzes.
-            </p>
             
             {/* Search Bar */}
-            <div className="flex gap-3 max-w-xl">
+            <div className="flex gap-3 w-full md:w-80 flex-shrink-0">
               <div className="flex-1 relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <Input
                   placeholder="Search courses..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="pl-10 h-12 bg-white text-slate-900 border-0 shadow-lg"
+                  className="pl-10 h-10 bg-white text-slate-900 border-0 shadow-lg"
                 />
               </div>
             </div>
