@@ -182,6 +182,7 @@ export default function CourseEditor() {
       queryClient.invalidateQueries(['lessons']);
       toast.success('Lesson duplicated!');
     },
+    onError: () => toast.error('Failed to duplicate lesson.'),
   });
 
   const transferLessonMutation = useMutation({
