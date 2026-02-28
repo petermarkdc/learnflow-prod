@@ -120,6 +120,9 @@ export default function Home() {
                 <SelectItem value="devops">DevOps</SelectItem>
                 <SelectItem value="data-science">Data Science</SelectItem>
                 <SelectItem value="mobile-development">Mobile Development</SelectItem>
+                <SelectItem value="robotics">Robotics</SelectItem>
+                <SelectItem value="arduino">Arduino</SelectItem>
+                <SelectItem value="raspberry-pi">Raspberry Pi</SelectItem>
                 <SelectItem value="other">Other</SelectItem>
               </SelectContent>
             </Select>

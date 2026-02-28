@@ -55,6 +55,7 @@ import EnrollPage from './pages/EnrollPage';
 import Home from './pages/Home';
 import LessonEditor from './pages/LessonEditor';
 import LessonView from './pages/LessonView';
+import AdminCategories from './pages/AdminCategories';
 import __Layout from './Layout.jsx';
 
 
@@ -67,6 +68,7 @@ export const PAGES = {
     "Home": Home,
     "LessonEditor": LessonEditor,
     "LessonView": LessonView,
+    "AdminCategories": AdminCategories,
 }
 
 export const pagesConfig = {
