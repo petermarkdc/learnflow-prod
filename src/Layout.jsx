@@ -221,6 +221,41 @@ export default function Layout({ children, currentPageName }) {
 
       {/* Main content */}
       <main>{children}</main>
+
+      {/* New Lesson Dialog */}
+      <Dialog open={showNewLessonDialog} onOpenChange={setShowNewLessonDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create New Lesson</DialogTitle>
+            <DialogDescription>Select the course this lesson belongs to.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 mt-2">
+            <div>
+              <Label>Course</Label>
+              <Select value={selectedCourseId} onValueChange={setSelectedCourseId}>
+                <SelectTrigger className="mt-1.5">
+                  <SelectValue placeholder="Select a course..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {teacherCourses.map(c => (
+                    <SelectItem key={c.id} value={c.id}>{c.title}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button variant="outline" onClick={() => setShowNewLessonDialog(false)}>Cancel</Button>
+              <Button
+                disabled={!selectedCourseId}
+                className="bg-indigo-600 hover:bg-indigo-700"
+                onClick={handleCreateLesson}
+              >
+                Continue
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
