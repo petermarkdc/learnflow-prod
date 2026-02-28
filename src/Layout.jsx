@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { 
   GraduationCap, Home, LayoutDashboard, 
-  LogOut, Menu, X, Plus, BookOpen, Tag, UserCircle
+  LogOut, Menu, X, Plus, BookOpen, Tag, UserCircle, BarChart2
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import {
