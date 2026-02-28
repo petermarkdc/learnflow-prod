@@ -21,7 +21,7 @@ const ALL_CATEGORIES = [
   { value: 'arduino', label: 'Arduino' },
   { value: 'raspberry-pi', label: 'Raspberry Pi' },
   { value: 'other', label: 'Other' },
-  ...(() => { try { return JSON.parse(localStorage.getItem('learnhub_custom_categories') || '[]'); } catch { return []; } })(),
+  ...(() => { try { return JSON.parse(localStorage.getItem('learnflow_custom_categories') || '[]'); } catch { return []; } })(),
 ];
 
 export default function Home() {
@@ -88,7 +88,7 @@ export default function Home() {
           >
             <div className="flex items-center gap-2 mb-4">
               <GraduationCap className="w-8 h-8" />
-              <span className="text-lg font-semibold">LearnHub</span>
+              <span className="text-lg font-semibold">LearnFlow</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
               Master Programming Through Interactive Tutorials
