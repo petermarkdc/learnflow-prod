@@ -53,9 +53,9 @@ import CourseStudents from './pages/CourseStudents';
 import CourseView from './pages/CourseView';
 import Dashboard from './pages/Dashboard';
 import EnrollPage from './pages/EnrollPage';
-import Home from './pages/Home';
 import LessonEditor from './pages/LessonEditor';
 import LessonView from './pages/LessonView';
+import Home from './pages/Home';
 import __Layout from './Layout.jsx';
 
 
@@ -66,9 +66,9 @@ export const PAGES = {
     "CourseView": CourseView,
     "Dashboard": Dashboard,
     "EnrollPage": EnrollPage,
-    "Home": Home,
     "LessonEditor": LessonEditor,
     "LessonView": LessonView,
+    "Home": Home,
 }
 
 export const pagesConfig = {

@@ -13,6 +13,7 @@ import {
 import ContentRenderer from '../components/viewer/ContentRenderer';
 import QuizViewer from '../components/viewer/QuizViewer';
 import LessonSidebar from '../components/course/LessonSidebar';
+import TableOfContents from '../components/viewer/TableOfContents';
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
