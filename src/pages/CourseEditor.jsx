@@ -642,6 +642,7 @@ export default function CourseEditor() {
         </div>
 
           {/* Sidebar Tips */}
+
           <div className="space-y-6">
             <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6">
               <h3 className="font-semibold text-slate-900 mb-3">💡 Tips for a great course</h3>
