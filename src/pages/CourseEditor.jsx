@@ -483,36 +483,50 @@ export default function CourseEditor() {
                                     <Indent className="w-4 h-4" />
                                   </button>
                                   <div className="flex gap-1">
-                                    <Link to={createPageUrl('LessonEditor') + `?id=${lesson.id}`}>
-                                      <Button variant="ghost" size="icon" className="h-8 w-8">
-                                        <Edit className="w-4 h-4" />
-                                      </Button>
-                                    </Link>
-                                    <AlertDialog>
-                                      <AlertDialogTrigger asChild>
-                                        <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500 hover:text-red-600">
-                                          <Trash2 className="w-4 h-4" />
-                                        </Button>
-                                      </AlertDialogTrigger>
-                                      <AlertDialogContent>
-                                        <AlertDialogHeader>
-                                          <AlertDialogTitle>Delete Lesson</AlertDialogTitle>
-                                          <AlertDialogDescription>
-                                            Are you sure you want to delete "{lesson.title}"? This action cannot be undone.
-                                          </AlertDialogDescription>
-                                        </AlertDialogHeader>
-                                        <AlertDialogFooter>
-                                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                          <AlertDialogAction
-                                            onClick={() => deleteLessonMutation.mutate(lesson.id)}
-                                            className="bg-red-600 hover:bg-red-700"
-                                          >
-                                            Delete
-                                          </AlertDialogAction>
-                                        </AlertDialogFooter>
-                                      </AlertDialogContent>
-                                    </AlertDialog>
-                                  </div>
+                                     <Link to={createPageUrl('LessonEditor') + `?id=${lesson.id}`}>
+                                       <Button variant="ghost" size="icon" className="h-8 w-8" title="Edit">
+                                         <Edit className="w-4 h-4" />
+                                       </Button>
+                                     </Link>
+                                     <Button
+                                       variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-indigo-600"
+                                       title="Duplicate"
+                                       onClick={() => duplicateLessonMutation.mutate(lesson)}
+                                     >
+                                       <Copy className="w-4 h-4" />
+                                     </Button>
+                                     <Button
+                                       variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-amber-600"
+                                       title="Transfer to another course"
+                                       onClick={() => { setTransferLesson(lesson); setTransferCourseId(''); }}
+                                     >
+                                       <ArrowRightLeft className="w-4 h-4" />
+                                     </Button>
+                                     <AlertDialog>
+                                       <AlertDialogTrigger asChild>
+                                         <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500 hover:text-red-600" title="Delete">
+                                           <Trash2 className="w-4 h-4" />
+                                         </Button>
+                                       </AlertDialogTrigger>
+                                       <AlertDialogContent>
+                                         <AlertDialogHeader>
+                                           <AlertDialogTitle>Delete Lesson</AlertDialogTitle>
+                                           <AlertDialogDescription>
+                                             Are you sure you want to delete "{lesson.title}"? This action cannot be undone.
+                                           </AlertDialogDescription>
+                                         </AlertDialogHeader>
+                                         <AlertDialogFooter>
+                                           <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                           <AlertDialogAction
+                                             onClick={() => deleteLessonMutation.mutate(lesson.id)}
+                                             className="bg-red-600 hover:bg-red-700"
+                                           >
+                                             Delete
+                                           </AlertDialogAction>
+                                         </AlertDialogFooter>
+                                       </AlertDialogContent>
+                                     </AlertDialog>
+                                   </div>
                                 </div>
                               )}
                             </Draggable>
