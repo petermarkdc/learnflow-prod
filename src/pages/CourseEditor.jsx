@@ -642,7 +642,6 @@ export default function CourseEditor() {
               </Button>
             </div>
           )}
-          </div>
 
           {/* Sidebar Tips */}
           <div className="space-y-6">
