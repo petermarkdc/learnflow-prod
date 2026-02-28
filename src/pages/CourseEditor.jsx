@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { 
   ArrowLeft, Save, Plus, GripVertical, Edit, Trash2, 
-  BookOpen, Upload, Loader2, Eye, Users, Globe, Lock, Indent, Copy, ArrowRightLeft
+  BookOpen, Upload, Loader2, Eye, Users, Globe, Lock, Indent, Copy, ArrowRightLeft, UserPlus, X
 } from 'lucide-react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { toast } from "sonner";
