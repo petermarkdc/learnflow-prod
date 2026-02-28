@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Plus, Trash2, GripVertical, HelpCircle } from 'lucide-react';
 import { cn } from "@/lib/utils";
 
-export default function QuizEditor({ questions = [], onChange }) {
+export default function QuizEditor({ questions = [], onChange, maxQuestions, label = "Quiz" }) {
   const addQuestion = () => {
     const newQuestion = {
       id: Date.now().toString(),
