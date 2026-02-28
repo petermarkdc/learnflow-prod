@@ -197,12 +197,22 @@ export default function Layout({ children, currentPageName }) {
                 );
               })}
               {isTeacher && (
-                <Link to={createPageUrl('CourseEditor')} onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full mt-2 bg-indigo-600 hover:bg-indigo-700 gap-2">
-                    <Plus className="w-4 h-4" />
-                    Create Course
+                <>
+                  <Link to={createPageUrl('CourseEditor')} onClick={() => setMobileMenuOpen(false)}>
+                    <Button className="w-full mt-2 bg-indigo-600 hover:bg-indigo-700 gap-2">
+                      <Plus className="w-4 h-4" />
+                      Create Course
+                    </Button>
+                  </Link>
+                  <Button
+                    variant="outline"
+                    className="w-full mt-2 gap-2"
+                    onClick={() => { setMobileMenuOpen(false); setShowNewLessonDialog(true); }}
+                  >
+                    <BookOpen className="w-4 h-4" />
+                    New Lesson
                   </Button>
-                </Link>
+                </>
               )}
             </div>
           </div>
