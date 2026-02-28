@@ -9,8 +9,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
 import { 
   BookOpen, CheckCircle2, Clock, Trophy, 
-  ChevronRight, Play, Target
+  ChevronRight, Play, Target, Plus, Edit, Users
 } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
 import { motion } from 'framer-motion';
 
 export default function Dashboard() {
