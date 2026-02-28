@@ -100,6 +100,7 @@ export default function CourseEditor() {
         is_published: course.is_published || false,
         access_type: course.access_type || 'free',
         course_code: course.course_code || '',
+        collaborators: course.collaborators || [],
       });
     }
   }, [course]);
