@@ -418,6 +418,60 @@ export default function CourseEditor() {
                 <p className="text-xs text-slate-500 mt-1">6-character alphanumeric code. Students enter this to self-enroll.</p>
               </div>
 
+              {/* Collaborators */}
+              {courseId && user && course?.created_by === user?.email && (
+                <div>
+                  <Label>Collaborators</Label>
+                  <p className="text-xs text-slate-500 mb-2">Other teachers who can edit this course</p>
+                  <div className="flex gap-2 mb-2">
+                    <Input
+                      value={collaboratorInput}
+                      onChange={(e) => setCollaboratorInput(e.target.value)}
+                      placeholder="teacher@email.com"
+                      className="flex-1"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          const email = collaboratorInput.trim().toLowerCase();
+                          if (email && !formData.collaborators.includes(email)) {
+                            setFormData(prev => ({ ...prev, collaborators: [...prev.collaborators, email] }));
+                          }
+                          setCollaboratorInput('');
+                        }
+                      }}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        const email = collaboratorInput.trim().toLowerCase();
+                        if (email && !formData.collaborators.includes(email)) {
+                          setFormData(prev => ({ ...prev, collaborators: [...prev.collaborators, email] }));
+                        }
+                        setCollaboratorInput('');
+                      }}
+                    >
+                      <UserPlus className="w-4 h-4" />
+                    </Button>
+                  </div>
+                  {formData.collaborators.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {formData.collaborators.map(email => (
+                        <div key={email} className="flex items-center gap-1 bg-indigo-50 text-indigo-700 text-xs px-2 py-1 rounded-lg">
+                          <span>{email}</span>
+                          <button
+                            onClick={() => setFormData(prev => ({ ...prev, collaborators: prev.collaborators.filter(e => e !== email) }))}
+                            className="hover:text-indigo-900"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Publish Toggle */}
               <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
                 <div>
