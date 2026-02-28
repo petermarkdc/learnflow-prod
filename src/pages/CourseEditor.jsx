@@ -34,6 +34,8 @@ export default function CourseEditor() {
   const urlParams = new URLSearchParams(window.location.search);
   const courseId = urlParams.get('id');
 
+  const generateCode = () => Math.random().toString(36).substr(2, 6).toUpperCase();
+
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -42,7 +44,7 @@ export default function CourseEditor() {
     difficulty: 'beginner',
     is_published: false,
     access_type: 'free',
-    course_code: '',
+    course_code: generateCode(),
   });
   const [uploading, setUploading] = useState(false);
 
