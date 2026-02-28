@@ -129,6 +129,7 @@ export default function LessonEditor() {
       } else if (!lessonId) {
         navigate(createPageUrl('LessonEditor') + `?id=${result.id}`);
       }
+    },
     onError: () => {
       toast.error('Failed to save lesson. Please try again.');
     },
