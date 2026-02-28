@@ -12,10 +12,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { 
-  GraduationCap, Home, BookOpen, LayoutDashboard, 
-  User, LogOut, Menu, X, Plus 
+  GraduationCap, Home, LayoutDashboard, 
+  LogOut, Menu, X, Plus, BookOpen
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription
+} from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useQuery } from '@tanstack/react-query';
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
