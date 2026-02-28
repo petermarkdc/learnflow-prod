@@ -30,11 +30,26 @@ export default function Layout({ children, currentPageName }) {
   const [showNewLessonDialog, setShowNewLessonDialog] = useState(false);
   const [selectedCourseId, setSelectedCourseId] = useState('');
   const location = useLocation();
-  const navigate = useNavigate ? useNavigate() : null;
+  const navigate = useNavigate();
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => setUser(null));
   }, []);
+
+  const isTeacherUser = user?.role === 'teacher' || user?.role === 'admin';
+
+  const { data: teacherCourses = [] } = useQuery({
+    queryKey: ['my-courses', user?.email],
+    queryFn: () => base44.entities.Course.filter({ created_by: user.email }),
+    enabled: !!user?.email && isTeacherUser,
+  });
+
+  const handleCreateLesson = () => {
+    if (!selectedCourseId) return;
+    setShowNewLessonDialog(false);
+    setSelectedCourseId('');
+    navigate(createPageUrl('LessonEditor') + `?courseId=${selectedCourseId}`);
+  };
 
   // Hide layout on lesson view for better reading experience
   const hideNav = currentPageName === 'LessonView';
