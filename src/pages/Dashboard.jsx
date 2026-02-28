@@ -26,6 +26,12 @@ export default function Dashboard() {
     queryFn: () => base44.entities.Course.filter({ is_published: true }),
   });
 
+  const { data: authoredCourses = [], isLoading: authoredLoading } = useQuery({
+    queryKey: ['authored-courses', user?.email],
+    queryFn: () => base44.entities.Course.filter({ created_by: user.email }),
+    enabled: !!user?.email && (user?.role === 'teacher' || user?.role === 'admin'),
+  });
+
   const { data: lessons = [] } = useQuery({
     queryKey: ['allLessons'],
     queryFn: () => base44.entities.Lesson.list(),
