@@ -41,7 +41,7 @@ const ALL_CATEGORIES = [
   { value: 'arduino', label: 'Arduino' },
   { value: 'raspberry-pi', label: 'Raspberry Pi' },
   { value: 'other', label: 'Other' },
-  ...(() => { try { return JSON.parse(localStorage.getItem('learnhub_custom_categories') || '[]'); } catch { return []; } })(),
+  ...(() => { try { return JSON.parse(localStorage.getItem('learnflow_custom_categories') || '[]'); } catch { return []; } })(),
 ];
 
 export default function CourseEditor() {
