@@ -49,6 +49,7 @@
  */
 import AdminCategories from './pages/AdminCategories';
 import CourseEditor from './pages/CourseEditor';
+import CourseEnrollmentSummary from './pages/CourseEnrollmentSummary';
 import CourseStudents from './pages/CourseStudents';
 import CourseView from './pages/CourseView';
 import Dashboard from './pages/Dashboard';
@@ -57,13 +58,13 @@ import Home from './pages/Home';
 import LessonEditor from './pages/LessonEditor';
 import LessonView from './pages/LessonView';
 import Profile from './pages/Profile';
-import CourseEnrollmentSummary from './pages/CourseEnrollmentSummary';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "AdminCategories": AdminCategories,
     "CourseEditor": CourseEditor,
+    "CourseEnrollmentSummary": CourseEnrollmentSummary,
     "CourseStudents": CourseStudents,
     "CourseView": CourseView,
     "Dashboard": Dashboard,
@@ -72,7 +73,6 @@ export const PAGES = {
     "LessonEditor": LessonEditor,
     "LessonView": LessonView,
     "Profile": Profile,
-    "CourseEnrollmentSummary": CourseEnrollmentSummary,
 }
 
 export const pagesConfig = {

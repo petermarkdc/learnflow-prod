@@ -122,10 +122,13 @@ export default function CourseEditor() {
     onSuccess: (result) => {
       queryClient.invalidateQueries(['course']);
       queryClient.invalidateQueries(['courses']);
-      toast.success('Course saved!');
+      toast.success('Course saved successfully!');
       if (!courseId) {
         navigate(createPageUrl('CourseEditor') + `?id=${result.id}`);
       }
+    },
+    onError: () => {
+      toast.error('Failed to save course. Please try again.');
     },
   });
 
