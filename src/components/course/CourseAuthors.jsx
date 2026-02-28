@@ -6,11 +6,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 function AuthorChip({ email, label }) {
   const { data: users = [] } = useQuery({
     queryKey: ['user-by-email', email],
-    queryFn: () => base44.entities.User.list(),
+    queryFn: () => base44.entities.User.filter({ email }),
     staleTime: 60000,
+    enabled: !!email,
   });
 
-  const user = users.find(u => u.email === email);
+  const user = users[0];
   const displayName = user?.nickname || user?.full_name || email;
   const avatar = user?.avatar_url;
   const initials = displayName?.[0]?.toUpperCase() || '?';
