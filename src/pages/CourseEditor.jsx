@@ -584,6 +584,43 @@ export default function CourseEditor() {
           </div>
         </div>
       </div>
+    {/* Transfer Lesson Dialog */}
+      <Dialog open={!!transferLesson} onOpenChange={(o) => { if (!o) setTransferLesson(null); }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Transfer Lesson</DialogTitle>
+            <DialogDescription>
+              Move "{transferLesson?.title}" to another course.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 mt-2">
+            <div>
+              <Label>Target Course</Label>
+              <Select value={transferCourseId} onValueChange={setTransferCourseId}>
+                <SelectTrigger className="mt-1.5">
+                  <SelectValue placeholder="Select a course..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {myCourses.filter(c => c.id !== courseId).map(c => (
+                    <SelectItem key={c.id} value={c.id}>{c.title}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button variant="outline" onClick={() => setTransferLesson(null)}>Cancel</Button>
+              <Button
+                disabled={!transferCourseId || transferLessonMutation.isPending}
+                className="bg-indigo-600 hover:bg-indigo-700"
+                onClick={() => transferLessonMutation.mutate({ lesson: transferLesson, targetCourseId: transferCourseId })}
+              >
+                {transferLessonMutation.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+                Transfer
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
