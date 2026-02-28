@@ -148,6 +148,14 @@ export default function Layout({ children, currentPageName }) {
                         Dashboard
                       </DropdownMenuItem>
                     </Link>
+                    {user?.role === 'admin' && (
+                      <Link to={createPageUrl('AdminCategories')}>
+                        <DropdownMenuItem>
+                          <Tag className="w-4 h-4 mr-2" />
+                          Manage Categories
+                        </DropdownMenuItem>
+                      </Link>
+                    )}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => base44.auth.logout()}>
                       <LogOut className="w-4 h-4 mr-2" />
