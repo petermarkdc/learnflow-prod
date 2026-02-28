@@ -109,10 +109,14 @@ export default function CourseEditor() {
 
   const saveMutation = useMutation({
     mutationFn: async () => {
+      const { _override_created_by, ...cleanData } = formData;
       if (courseId) {
-        return base44.entities.Course.update(courseId, formData);
+        const payload = user?.role === 'admin' && _override_created_by
+          ? { ...cleanData, created_by: _override_created_by }
+          : cleanData;
+        return base44.entities.Course.update(courseId, payload);
       } else {
-        return base44.entities.Course.create(formData);
+        return base44.entities.Course.create(cleanData);
       }
     },
     onSuccess: (result) => {
