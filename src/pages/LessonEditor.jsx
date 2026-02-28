@@ -121,6 +121,8 @@ export default function LessonEditor() {
       toast.success('Lesson saved!');
       if (saveAndNew) {
         setSaveAndNew(false);
+        // Reset form for new lesson
+        setFormData({ title: '', content: [], quiz: [], estimated_time: '', is_subtopic: false, parent_lesson_id: '' });
         navigate(createPageUrl('LessonEditor') + `?courseId=${result.course_id || effectiveCourseId}`);
       } else if (!lessonId) {
         navigate(createPageUrl('LessonEditor') + `?id=${result.id}`);
