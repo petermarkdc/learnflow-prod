@@ -36,6 +36,8 @@ const FONT_COLORS = [
 const BLOCK_META = {
   heading: { icon: Heading, label: 'Heading', color: 'bg-purple-100 text-purple-600' },
   text: { icon: Type, label: 'Text', color: 'bg-blue-100 text-blue-600' },
+  bullet_list: { icon: List, label: 'Bullet List', color: 'bg-cyan-100 text-cyan-600' },
+  numbered_list: { icon: ListOrdered, label: 'Numbered List', color: 'bg-violet-100 text-violet-600' },
   code: { icon: Code, label: 'Code', color: 'bg-emerald-100 text-emerald-600' },
   image: { icon: ImageIcon, label: 'Image', color: 'bg-pink-100 text-pink-600' },
   link: { icon: LinkIcon, label: 'Link', color: 'bg-amber-100 text-amber-600' },

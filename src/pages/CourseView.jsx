@@ -228,6 +228,11 @@ export default function CourseView() {
                   <span>{sortedLessons.length} lessons</span>
                 </div>
               </div>
+
+              {/* Authors */}
+              <div className="mt-4">
+                <CourseAuthors course={course} />
+              </div>
             </div>
 
             {/* Actions Card */}
