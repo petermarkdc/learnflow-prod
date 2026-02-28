@@ -114,6 +114,51 @@ export default function ContentBlockEditor({ block, onChange, onDelete, dragHand
           </div>
         );
 
+      case 'bullet_list':
+      case 'numbered_list': {
+        const items = Array.isArray(block.items) ? block.items : [''];
+        const isBullet = block.type === 'bullet_list';
+        return (
+          <div className="space-y-2">
+            <p className="text-xs text-slate-400">One item per line — or use the fields below</p>
+            {items.map((item, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <span className="text-slate-400 text-sm w-6 flex-shrink-0 text-right">
+                  {isBullet ? '•' : `${i + 1}.`}
+                </span>
+                <Input
+                  value={item}
+                  onChange={(e) => {
+                    const updated = [...items];
+                    updated[i] = e.target.value;
+                    onChange({ ...block, items: updated });
+                  }}
+                  placeholder={`Item ${i + 1}`}
+                  className="flex-1"
+                />
+                <Button
+                  variant="ghost" size="icon"
+                  className="h-8 w-8 text-slate-300 hover:text-red-500"
+                  onClick={() => {
+                    const updated = items.filter((_, idx) => idx !== i);
+                    onChange({ ...block, items: updated.length ? updated : [''] });
+                  }}
+                >
+                  <Trash2 className="w-3 h-3" />
+                </Button>
+              </div>
+            ))}
+            <Button
+              variant="outline" size="sm"
+              onClick={() => onChange({ ...block, items: [...items, ''] })}
+              className="mt-1"
+            >
+              + Add item
+            </Button>
+          </div>
+        );
+      }
+
       case 'note':
       case 'warning':
       case 'tip':
