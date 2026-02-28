@@ -220,6 +220,15 @@ export default function LessonView() {
                 </>
               )}
               
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => window.print()}
+                title="Print to PDF"
+              >
+                <Printer className="w-4 h-4" />
+              </Button>
+
               {user && (
                 <Button
                   variant={isCompleted ? "secondary" : "outline"}
