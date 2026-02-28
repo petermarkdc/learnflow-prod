@@ -154,6 +154,46 @@ export default function CourseEditor() {
     });
   };
 
+  const duplicateLessonMutation = useMutation({
+    mutationFn: async (lesson) => {
+      const { id, created_date, updated_date, created_by, ...lessonData } = lesson;
+      return base44.entities.Lesson.create({
+        ...lessonData,
+        title: `${lesson.title} (Copy)`,
+        order_index: (lesson.order_index || 0) + 0.5,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['lessons']);
+      toast.success('Lesson duplicated!');
+    },
+  });
+
+  const transferLessonMutation = useMutation({
+    mutationFn: async ({ lesson, targetCourseId }) => {
+      const allTargetLessons = await base44.entities.Lesson.filter({ course_id: targetCourseId });
+      return base44.entities.Lesson.update(lesson.id, {
+        course_id: targetCourseId,
+        order_index: allTargetLessons.length,
+        is_subtopic: false,
+        parent_lesson_id: '',
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['lessons']);
+      setTransferLesson(null);
+      setTransferCourseId('');
+      toast.success('Lesson transferred!');
+    },
+  });
+
+  // Fetch teacher's other courses for transfer
+  const { data: myCourses = [] } = useQuery({
+    queryKey: ['my-courses', user?.email],
+    queryFn: () => base44.entities.Course.filter({ created_by: user.email }),
+    enabled: !!user?.email,
+  });
+
   const handleCoverUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
