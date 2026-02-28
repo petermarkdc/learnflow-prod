@@ -359,12 +359,78 @@ export default function LessonEditor() {
                 </div>
               </div>
 
+              {/* Pre-Test Section */}
+              <div className="bg-white rounded-2xl border p-6">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <ClipboardList className="w-5 h-5 text-blue-600" />
+                    <div>
+                      <h3 className="text-lg font-semibold text-slate-900">Pre-Test</h3>
+                      <p className="text-xs text-slate-500">Given before the lesson (up to 20 items)</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-slate-500">{showPreTest ? 'Enabled' : 'Disabled'}</span>
+                    <Switch
+                      checked={showPreTest}
+                      onCheckedChange={(v) => {
+                        setShowPreTest(v);
+                        if (!v) setFormData(prev => ({ ...prev, pre_test: [] }));
+                      }}
+                    />
+                  </div>
+                </div>
+                {showPreTest && (
+                  <div className="mt-4">
+                    <QuizEditor
+                      questions={formData.pre_test}
+                      onChange={(pre_test) => setFormData(prev => ({ ...prev, pre_test }))}
+                      maxQuestions={20}
+                      label="Pre-Test"
+                    />
+                  </div>
+                )}
+              </div>
+
               {/* Quiz Section */}
               <div className="bg-white rounded-2xl border p-6">
                 <QuizEditor
                   questions={formData.quiz}
                   onChange={(quiz) => setFormData(prev => ({ ...prev, quiz }))}
                 />
+              </div>
+
+              {/* Post-Test Section */}
+              <div className="bg-white rounded-2xl border p-6">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <FlaskConical className="w-5 h-5 text-green-600" />
+                    <div>
+                      <h3 className="text-lg font-semibold text-slate-900">Post-Test</h3>
+                      <p className="text-xs text-slate-500">Given after the lesson (up to 20 items)</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-slate-500">{showPostTest ? 'Enabled' : 'Disabled'}</span>
+                    <Switch
+                      checked={showPostTest}
+                      onCheckedChange={(v) => {
+                        setShowPostTest(v);
+                        if (!v) setFormData(prev => ({ ...prev, post_test: [] }));
+                      }}
+                    />
+                  </div>
+                </div>
+                {showPostTest && (
+                  <div className="mt-4">
+                    <QuizEditor
+                      questions={formData.post_test}
+                      onChange={(post_test) => setFormData(prev => ({ ...prev, post_test }))}
+                      maxQuestions={20}
+                      label="Post-Test"
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Bottom Save Bar */}
