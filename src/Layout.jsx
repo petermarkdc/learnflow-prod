@@ -104,12 +104,23 @@ export default function Layout({ children, currentPageName }) {
             {/* Right side */}
             <div className="flex items-center gap-3">
               {isTeacher && (
-                <Link to={createPageUrl('CourseEditor')} className="hidden sm:block">
-                  <Button size="sm" className="bg-indigo-600 hover:bg-indigo-700 gap-2">
-                    <Plus className="w-4 h-4" />
-                    Create Course
+                <div className="hidden sm:flex items-center gap-2">
+                  <Link to={createPageUrl('CourseEditor')}>
+                    <Button size="sm" className="bg-indigo-600 hover:bg-indigo-700 gap-2">
+                      <Plus className="w-4 h-4" />
+                      Create Course
+                    </Button>
+                  </Link>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="gap-2"
+                    onClick={() => setShowNewLessonDialog(true)}
+                  >
+                    <BookOpen className="w-4 h-4" />
+                    New Lesson
                   </Button>
-                </Link>
+                </div>
               )}
 
               {user ? (
