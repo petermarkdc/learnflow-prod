@@ -92,14 +92,20 @@ export default function LessonEditor() {
 
   useEffect(() => {
     if (lesson) {
+      const preTest = lesson.pre_test || [];
+      const postTest = lesson.post_test || [];
       setFormData({
         title: lesson.title || '',
         content: lesson.content || [],
         quiz: lesson.quiz || [],
+        pre_test: preTest,
+        post_test: postTest,
         estimated_time: lesson.estimated_time || '',
         is_subtopic: lesson.is_subtopic || false,
         parent_lesson_id: lesson.parent_lesson_id || '',
       });
+      if (preTest.length > 0) setShowPreTest(true);
+      if (postTest.length > 0) setShowPostTest(true);
     }
   }, [lesson]);
 
