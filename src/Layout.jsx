@@ -104,7 +104,7 @@ export default function Layout({ children, currentPageName }) {
 
             {/* Right side */}
             <div className="flex items-center gap-3">
-              {isTeacher && (
+              {isTeacherUser && (
                 <div className="hidden sm:flex items-center gap-2">
                   <Link to={createPageUrl('CourseEditor')}>
                     <Button size="sm" className="bg-indigo-600 hover:bg-indigo-700 gap-2">
