@@ -330,28 +330,26 @@ export default function CourseEditor() {
               </div>
 
               {/* Course Code - always visible */}
-              {(
-                <div>
-                  <Label>Course Code</Label>
-                  <div className="flex gap-2 mt-1.5">
-                    <Input
-                      value={formData.course_code}
-                      onChange={(e) => setFormData({ ...formData, course_code: e.target.value.toUpperCase() })}
-                      placeholder="e.g., PYTH2024"
-                      className="font-mono tracking-widest uppercase font-bold"
-                      maxLength={12}
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => setFormData({ ...formData, course_code: Math.random().toString(36).substr(2, 6).toUpperCase() })}
-                    >
-                      Generate
-                    </Button>
-                  </div>
-                  <p className="text-xs text-slate-500 mt-1">Students enter this code to self-enroll.</p>
+              <div>
+                <Label>Course Code</Label>
+                <div className="flex gap-2 mt-1.5">
+                  <Input
+                    value={formData.course_code}
+                    onChange={(e) => setFormData({ ...formData, course_code: e.target.value.replace(/[^A-Z0-9]/gi, '').toUpperCase().slice(0, 6) })}
+                    placeholder="e.g., AB12CD"
+                    className="font-mono tracking-widest uppercase font-bold"
+                    maxLength={6}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setFormData({ ...formData, course_code: generateCode() })}
+                  >
+                    Generate
+                  </Button>
                 </div>
-              )}
+                <p className="text-xs text-slate-500 mt-1">6-character alphanumeric code. Students enter this to self-enroll.</p>
+              </div>
 
               {/* Publish Toggle */}
               <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
