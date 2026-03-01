@@ -407,6 +407,50 @@ export default function Dashboard() {
           </div>
         )}
       </div>
+
+      {/* Pre-Test Modal */}
+      {activePreTest && (
+        <PreTestModal
+          lesson={activePreTest}
+          user={user}
+          onComplete={async ({ score, total, answers }) => {
+            await saveTestResultMutation.mutateAsync({
+              user_email: user.email,
+              user_name: user.full_name,
+              course_id: activePreTest.course_id,
+              lesson_id: activePreTest.id,
+              lesson_title: activePreTest.title,
+              test_type: 'pre_test',
+              score,
+              total,
+              answers,
+            });
+          }}
+          onSkip={() => setActivePreTest(null)}
+        />
+      )}
+
+      {/* Post-Test Modal */}
+      {activePostTest && (
+        <PostTestModal
+          lesson={activePostTest}
+          open={true}
+          onComplete={async ({ score, total, answers }) => {
+            await saveTestResultMutation.mutateAsync({
+              user_email: user.email,
+              user_name: user.full_name,
+              course_id: activePostTest.course_id,
+              lesson_id: activePostTest.id,
+              lesson_title: activePostTest.title,
+              test_type: 'post_test',
+              score,
+              total,
+              answers,
+            });
+          }}
+          onClose={() => setActivePostTest(null)}
+        />
+      )}
     </div>
   );
 }
