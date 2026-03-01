@@ -175,6 +175,62 @@ export default function LessonEditor() {
     }));
   };
 
+  const generateTestsWithAI = async () => {
+    const contentText = formData.content
+      .filter(b => b.type === 'text' || b.type === 'heading' || b.type === 'note' || b.type === 'tip')
+      .map(b => b.content || (b.items || []).join(', '))
+      .join('\n');
+
+    if (!formData.title && !contentText) {
+      toast.error('Please add a lesson title or some content first');
+      return;
+    }
+
+    setGeneratingTests(true);
+    const result = await base44.integrations.Core.InvokeLLM({
+      prompt: `Generate 10 multiple-choice quiz questions for a lesson titled: "${formData.title}".
+${contentText ? `\nLesson content:\n${contentText}` : ''}
+
+Create questions that test understanding of the key concepts. Each question should have 4 options with one correct answer and a brief explanation.
+
+Return JSON:
+{
+  "questions": [
+    {
+      "question": "...",
+      "options": ["option A", "option B", "option C", "option D"],
+      "correct_answer": 0,
+      "explanation": "..."
+    }
+  ]
+}`,
+      response_json_schema: {
+        type: "object",
+        properties: {
+          questions: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                question: { type: "string" },
+                options: { type: "array", items: { type: "string" } },
+                correct_answer: { type: "number" },
+                explanation: { type: "string" }
+              }
+            }
+          }
+        }
+      }
+    });
+
+    const questions = (result.questions || []).map((q, i) => ({ ...q, id: `ai-${Date.now()}-${i}` }));
+    setFormData(prev => ({ ...prev, pre_test: questions, post_test: questions }));
+    setShowPreTest(true);
+    setShowPostTest(true);
+    setGeneratingTests(false);
+    toast.success(`Generated ${questions.length} questions for pre-test and post-test!`);
+  };
+
   const handleDragEnd = (result) => {
     if (!result.destination) return;
     setFormData(prev => {
