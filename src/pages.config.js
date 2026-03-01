@@ -58,6 +58,7 @@ import Home from './pages/Home';
 import LessonEditor from './pages/LessonEditor';
 import LessonView from './pages/LessonView';
 import Profile from './pages/Profile';
+import TestScoresReport from './pages/TestScoresReport';
 import __Layout from './Layout.jsx';
 
 
@@ -73,6 +74,7 @@ export const PAGES = {
     "LessonEditor": LessonEditor,
     "LessonView": LessonView,
     "Profile": Profile,
+    "TestScoresReport": TestScoresReport,
 }
 
 export const pagesConfig = {
