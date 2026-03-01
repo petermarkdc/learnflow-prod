@@ -215,16 +215,14 @@ export default function Dashboard() {
 
         {/* Tests Section - for students */}
         {user?.role !== 'teacher' && user?.role !== 'admin' && (() => {
-          // Find lessons that have tests and student is enrolled
-          // Check both Enrollment records AND enrolled_emails on course
+          // A student is "enrolled" if they have a Progress record (started the course),
+          // an Enrollment record, or are in enrolled_emails
+          const enrolledViaProgress = progressList.map(p => p.course_id);
           const enrolledViaEntity = enrollments.map(e => e.course_id);
           const enrolledViaEmail = courses
             .filter(c => (c.enrolled_emails || []).includes(user?.email))
             .map(c => c.id);
-          const publicCourseIds = courses
-            .filter(c => c.access_type === 'public' || c.access_type === 'free')
-            .map(c => c.id);
-          const enrolledCourseIds = [...new Set([...enrolledViaEntity, ...enrolledViaEmail, ...publicCourseIds])];
+          const enrolledCourseIds = [...new Set([...enrolledViaProgress, ...enrolledViaEntity, ...enrolledViaEmail])];
 
           const lessonTests = lessons
             .filter(l => enrolledCourseIds.includes(l.course_id))
