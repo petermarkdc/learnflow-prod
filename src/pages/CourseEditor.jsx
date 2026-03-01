@@ -262,19 +262,19 @@ export default function CourseEditor() {
               Would you like to create another course, add a lesson, or keep editing?
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="flex-col sm:flex-row gap-2">
-            <AlertDialogCancel onClick={() => setShowPostSaveDialog(false)}>Keep Editing</AlertDialogCancel>
+          <AlertDialogFooter className="flex-col gap-2">
             <Button
               variant="outline"
               onClick={() => {
                 setShowPostSaveDialog(false);
                 navigate(createPageUrl('LessonEditor') + `?courseId=${courseId}`);
               }}
+              className="w-full"
             >
               <Plus className="w-4 h-4 mr-1" /> Add New Lesson
             </Button>
             <Button
-              className="bg-indigo-600 hover:bg-indigo-700"
+              className="bg-indigo-600 hover:bg-indigo-700 w-full"
               onClick={() => {
                 setShowPostSaveDialog(false);
                 navigate(createPageUrl('CourseEditor'));
@@ -282,6 +282,7 @@ export default function CourseEditor() {
             >
               <BookOpen className="w-4 h-4 mr-1" /> Create New Course
             </Button>
+            <AlertDialogCancel onClick={() => setShowPostSaveDialog(false)} className="w-full">Keep Editing</AlertDialogCancel>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
