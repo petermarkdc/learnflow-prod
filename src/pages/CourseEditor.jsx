@@ -278,9 +278,9 @@ export default function CourseEditor() {
       </div>
 
       <div className="max-w-5xl mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="space-y-6">
           {/* Main Form */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="space-y-6">
             <div className="bg-white rounded-2xl border p-6 space-y-6">
               <div>
                 <Label htmlFor="title">Course Title</Label>
