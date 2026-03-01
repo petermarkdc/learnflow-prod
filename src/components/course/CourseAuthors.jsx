@@ -30,15 +30,15 @@ function AuthorChip({ email, label }) {
   );
 }
 
-export default function CourseAuthors({ course }) {
+export default function CourseAuthors({ course, dark = false }) {
   if (!course) return null;
   const collaborators = course.collaborators || [];
 
   return (
     <div className="flex flex-wrap items-center gap-4">
-      <AuthorChip email={course.created_by} label="Author" />
+      <AuthorChip email={course.created_by} label="Author" dark={dark} />
       {collaborators.map(email => (
-        <AuthorChip key={email} email={email} label="Co-author" />
+        <AuthorChip key={email} email={email} label="Co-author" dark={dark} />
       ))}
     </div>
   );
