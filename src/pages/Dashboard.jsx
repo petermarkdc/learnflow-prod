@@ -28,8 +28,8 @@ export default function Dashboard() {
   }, []);
 
   const { data: courses = [], isLoading: coursesLoading } = useQuery({
-    queryKey: ['courses'],
-    queryFn: () => base44.entities.Course.filter({ is_published: true }),
+    queryKey: ['courses-all'],
+    queryFn: () => base44.entities.Course.list(),
   });
 
   const { data: authoredCourses = [], isLoading: authoredLoading } = useQuery({
