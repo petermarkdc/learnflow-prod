@@ -231,7 +231,7 @@ export default function CourseView() {
 
               {/* Authors */}
               <div className="mt-4">
-                <CourseAuthors course={course} />
+                <CourseAuthors course={course} dark />
               </div>
             </div>
 
