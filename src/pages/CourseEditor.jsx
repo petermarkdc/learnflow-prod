@@ -124,9 +124,12 @@ export default function CourseEditor() {
     onSuccess: (result) => {
       queryClient.invalidateQueries(['course']);
       queryClient.invalidateQueries(['courses']);
-      toast.success('Course saved successfully!');
+      setShowSavedBanner(true);
+      setTimeout(() => setShowSavedBanner(false), 2500);
       if (!courseId) {
         navigate(createPageUrl('CourseEditor') + `?id=${result.id}`);
+      } else {
+        setShowPostSaveDialog(true);
       }
     },
     onError: () => {
