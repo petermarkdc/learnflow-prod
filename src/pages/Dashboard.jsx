@@ -49,6 +49,23 @@ export default function Dashboard() {
     enabled: !!user?.email,
   });
 
+  const { data: enrollments = [] } = useQuery({
+    queryKey: ['enrollments', user?.email],
+    queryFn: () => base44.entities.Enrollment.filter({ user_email: user.email, status: 'active' }),
+    enabled: !!user?.email,
+  });
+
+  const { data: testResults = [] } = useQuery({
+    queryKey: ['testResults', user?.email],
+    queryFn: () => base44.entities.TestResult.filter({ user_email: user.email }),
+    enabled: !!user?.email,
+  });
+
+  const saveTestResultMutation = useMutation({
+    mutationFn: (data) => base44.entities.TestResult.create(data),
+    onSuccess: () => queryClient.invalidateQueries(['testResults', user?.email]),
+  });
+
   // Calculate stats
   const totalCourses = courses.length;
   const coursesStarted = progressList.length;
