@@ -654,6 +654,30 @@ Return JSON:
               
               <ContentRenderer blocks={formData.content} />
 
+              {formData.activities?.items?.length > 0 && (
+                <div className="mt-12 pt-8 border-t">
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-2xl font-bold text-slate-900">Activities</h2>
+                    {formData.activities.suggested_time && (
+                      <span className="flex items-center gap-1.5 text-sm text-slate-500 bg-amber-50 px-3 py-1 rounded-full">
+                        <Clock className="w-4 h-4 text-amber-500" />
+                        {formData.activities.suggested_time} min suggested
+                      </span>
+                    )}
+                  </div>
+                  <ol className="space-y-3">
+                    {formData.activities.items.map((item, idx) => (
+                      <li key={item.id} className="flex items-start gap-3">
+                        <span className="w-7 h-7 flex-shrink-0 rounded-full bg-amber-100 text-amber-700 text-sm font-bold flex items-center justify-center mt-0.5">
+                          {idx + 1}
+                        </span>
+                        <span className="text-slate-700 pt-1">{item.task}</span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              )}
+
               {formData.quiz && formData.quiz.length > 0 && (
                 <div className="mt-12 pt-8 border-t">
                   <h2 className="text-2xl font-bold text-slate-900 mb-6">Knowledge Check</h2>
@@ -661,7 +685,7 @@ Return JSON:
                 </div>
               )}
 
-              {formData.content.length === 0 && formData.quiz.length === 0 && (
+              {formData.content.length === 0 && !formData.activities?.items?.length && (
                 <div className="text-center py-12 text-slate-400">
                   <p>No content to preview yet</p>
                 </div>
