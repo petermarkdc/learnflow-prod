@@ -506,6 +506,22 @@ export default function CourseEditor() {
                   onCheckedChange={(v) => setFormData({ ...formData, is_published: v })}
                 />
               </div>
+
+              {/* Save Button inside card */}
+              <div className="flex justify-end pt-2 border-t">
+                <Button
+                  onClick={() => saveMutation.mutate()}
+                  disabled={saveMutation.isPending}
+                  className="bg-indigo-600 hover:bg-indigo-700"
+                >
+                  {saveMutation.isPending ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <Save className="w-4 h-4 mr-2" />
+                  )}
+                  Save Course Settings
+                </Button>
+              </div>
             </div>
 
             {/* Lessons Section */}
