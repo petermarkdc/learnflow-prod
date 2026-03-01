@@ -12,7 +12,7 @@ import {
   ArrowLeft, Save, Plus, Eye, Loader2,
   Type, Code, Image as ImageIcon, Link as LinkIcon, Heading, Minus,
   Table, Video, Paperclip, Info, AlertTriangle, Lightbulb, Indent, List, ListOrdered,
-  ClipboardList, FlaskConical, ChevronDown, ChevronUp
+  ClipboardList, FlaskConical, ChevronDown, ChevronUp, Sparkles
 } from 'lucide-react';
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
