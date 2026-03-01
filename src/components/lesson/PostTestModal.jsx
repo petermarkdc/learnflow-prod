@@ -30,6 +30,13 @@ export default function PostTestModal({ lesson, open, onComplete, onClose }) {
     setSubmitted(true);
   };
 
+  const handleTryAgain = () => {
+    setCurrent(0);
+    setAnswers({});
+    setSubmitted(false);
+    setScore(0);
+  };
+
   if (submitted) {
     const pct = Math.round((score / questions.length) * 100);
     return (
@@ -41,9 +48,14 @@ export default function PostTestModal({ lesson, open, onComplete, onClose }) {
             <p className="text-slate-500 mb-1">Your score:</p>
             <p className="text-5xl font-bold text-indigo-600 mb-1">{score}/{questions.length}</p>
             <p className="text-lg text-slate-400 mb-6">{pct}%</p>
-            <Button className="bg-indigo-600 hover:bg-indigo-700 w-full" onClick={onClose}>
-              Continue
-            </Button>
+            <div className="flex flex-col gap-2">
+              <Button className="bg-indigo-600 hover:bg-indigo-700 w-full" onClick={onClose}>
+                Continue
+              </Button>
+              <Button variant="outline" className="w-full" onClick={handleTryAgain}>
+                Try Again
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
