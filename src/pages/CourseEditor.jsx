@@ -244,6 +244,48 @@ export default function CourseEditor() {
 
   return (
     <div className="min-h-screen bg-slate-50">
+      {/* Save Success Banner */}
+      {showSavedBanner && (
+        <div className="fixed inset-0 flex items-center justify-center z-[9999] pointer-events-none">
+          <div className="bg-green-500 text-white px-10 py-5 rounded-2xl shadow-2xl text-lg font-semibold flex items-center gap-3 animate-in fade-in zoom-in-95">
+            <span>✓ Course Saved!</span>
+          </div>
+        </div>
+      )}
+
+      {/* Post-Save Dialog */}
+      <AlertDialog open={showPostSaveDialog} onOpenChange={setShowPostSaveDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Course saved! What's next?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Would you like to create another course, add a lesson, or keep editing?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+            <AlertDialogCancel onClick={() => setShowPostSaveDialog(false)}>Keep Editing</AlertDialogCancel>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowPostSaveDialog(false);
+                navigate(createPageUrl('LessonEditor') + `?courseId=${courseId}`);
+              }}
+            >
+              <Plus className="w-4 h-4 mr-1" /> Add New Lesson
+            </Button>
+            <Button
+              className="bg-indigo-600 hover:bg-indigo-700"
+              onClick={() => {
+                setShowPostSaveDialog(false);
+                navigate(createPageUrl('CourseEditor'));
+              }}
+            >
+              <BookOpen className="w-4 h-4 mr-1" /> Create New Course
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       {/* Header */}
       <div className="bg-white border-b sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
