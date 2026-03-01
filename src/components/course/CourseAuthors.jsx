@@ -12,7 +12,7 @@ function AuthorChip({ email, label, dark = false }) {
   });
 
   const user = users[0];
-  const displayName = user?.full_name || email;
+  const displayName = user?.nickname || user?.full_name || '—';
   const avatar = user?.avatar_url;
   const initials = displayName?.[0]?.toUpperCase() || '?';
 
