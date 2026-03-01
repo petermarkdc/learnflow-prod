@@ -679,6 +679,10 @@ Return JSON:
                 onInsertBlock={(block) => setFormData(prev => ({ ...prev, content: [...prev.content, block] }))}
               />
 
+              <DocumentReference
+                onInsertBlock={(block) => setFormData(prev => ({ ...prev, content: [...prev.content, block] }))}
+              />
+
               <div className="bg-white rounded-2xl border p-5">
                 <h3 className="font-semibold text-slate-900 mb-3 text-sm">Formatting</h3>
                 <div className="text-xs text-slate-600 space-y-2">
