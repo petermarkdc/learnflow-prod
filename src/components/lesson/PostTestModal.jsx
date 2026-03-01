@@ -10,20 +10,24 @@ export default function PostTestModal({ lesson, open, onComplete, onClose }) {
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
+  const [saving, setSaving] = useState(false);
 
   if (!questions.length) return null;
 
   const q = questions[current];
   const allAnswered = Object.keys(answers).length === questions.length;
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     let correct = 0;
     questions.forEach((q, i) => {
       if (answers[i] === q.correct_answer) correct++;
     });
     setScore(correct);
+    setSaving(true);
+    // Save first, then show result
+    await onComplete({ score: correct, total: questions.length, answers: Object.values(answers) });
+    setSaving(false);
     setSubmitted(true);
-    onComplete({ score: correct, total: questions.length, answers: Object.values(answers) });
   };
 
   if (submitted) {
@@ -104,10 +108,10 @@ export default function PostTestModal({ lesson, open, onComplete, onClose }) {
             ) : (
               <Button
                 className="flex-1 bg-green-600 hover:bg-green-700"
-                disabled={!allAnswered}
+                disabled={!allAnswered || saving}
                 onClick={handleSubmit}
               >
-                Submit Post-Test
+                {saving ? 'Saving...' : 'Submit Post-Test'}
               </Button>
             )}
             <Button variant="ghost" size="sm" onClick={onClose} className="text-slate-400">
