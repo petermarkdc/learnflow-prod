@@ -137,11 +137,8 @@ export default function LessonEditor() {
       queryClient.invalidateQueries(['lesson']);
       queryClient.invalidateQueries(['lessons']);
       // Center-screen notification
-      const el = document.createElement('div');
-      el.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#22c55e;color:white;padding:20px 36px;border-radius:16px;font-size:18px;font-weight:600;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.2);pointer-events:none;';
-      el.textContent = '✓ Lesson Saved!';
-      document.body.appendChild(el);
-      setTimeout(() => el.remove(), 2000);
+      setShowSavedBanner(true);
+      setTimeout(() => setShowSavedBanner(false), 2500);
       if (saveAndNew) {
         setSaveAndNew(false);
         setFormData({ title: '', content: [], quiz: [], pre_test: [], post_test: [], activities: { suggested_time: '', items: [] }, estimated_time: '', is_subtopic: false, parent_lesson_id: '' });
