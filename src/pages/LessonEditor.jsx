@@ -617,38 +617,34 @@ Return JSON:
               </div>
 
               {/* Post-Save "What's next?" Dialog */}
-              <AlertDialog open={showPostSaveDialog} onOpenChange={setShowPostSaveDialog}>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Lesson saved! What's next?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Would you like to add another lesson to this course, create a new course, or keep editing?
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter className="flex-col gap-2">
+              <Dialog open={showPostSaveDialog} onOpenChange={setShowPostSaveDialog}>
+                <DialogContent className="max-w-sm">
+                  <DialogHeader>
+                    <DialogTitle>Lesson saved! What's next?</DialogTitle>
+                    <DialogDescription>
+                      Would you like to add another lesson, create a new course, or keep editing?
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="flex flex-col gap-2 mt-2">
                     <Button
                       variant="outline"
-                      onClick={() => {
-                        setShowPostSaveDialog(false);
-                        navigate(createPageUrl('LessonEditor') + `?courseId=${effectiveCourseId}`);
-                      }}
                       className="w-full"
+                      onClick={() => { setShowPostSaveDialog(false); navigate(createPageUrl('LessonEditor') + `?courseId=${effectiveCourseId}`); }}
                     >
                       <Plus className="w-4 h-4 mr-1" /> Add Another Lesson
                     </Button>
                     <Button
                       className="bg-indigo-600 hover:bg-indigo-700 w-full"
-                      onClick={() => {
-                        setShowPostSaveDialog(false);
-                        navigate(createPageUrl('CourseEditor'));
-                      }}
+                      onClick={() => { setShowPostSaveDialog(false); navigate(createPageUrl('CourseEditor')); }}
                     >
                       <BookOpen className="w-4 h-4 mr-1" /> Create New Course
                     </Button>
-                    <AlertDialogCancel onClick={() => setShowPostSaveDialog(false)} className="w-full">Keep Editing</AlertDialogCancel>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+                    <Button variant="ghost" className="w-full" onClick={() => setShowPostSaveDialog(false)}>
+                      Keep Editing
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
 
               {/* Save & New Confirmation Dialog */}
               <AlertDialog open={showSaveNewConfirm} onOpenChange={setShowSaveNewConfirm}>
