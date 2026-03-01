@@ -104,6 +104,7 @@ export default function LessonEditor() {
         quiz: lesson.quiz || [],
         pre_test: preTest,
         post_test: postTest,
+        activities: lesson.activities || { suggested_time: '', items: [] },
         estimated_time: lesson.estimated_time || '',
         is_subtopic: lesson.is_subtopic || false,
         parent_lesson_id: lesson.parent_lesson_id || '',
