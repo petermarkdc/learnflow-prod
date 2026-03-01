@@ -616,6 +616,39 @@ Return JSON:
                 </Button>
               </div>
 
+              {/* Post-Save "What's next?" Dialog */}
+              <AlertDialog open={showPostSaveDialog} onOpenChange={setShowPostSaveDialog}>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Lesson saved! What's next?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Would you like to add another lesson to this course, create a new course, or keep editing?
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+                    <AlertDialogCancel onClick={() => setShowPostSaveDialog(false)}>Keep Editing</AlertDialogCancel>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setShowPostSaveDialog(false);
+                        navigate(createPageUrl('LessonEditor') + `?courseId=${effectiveCourseId}`);
+                      }}
+                    >
+                      <Plus className="w-4 h-4 mr-1" /> Add Another Lesson
+                    </Button>
+                    <Button
+                      className="bg-indigo-600 hover:bg-indigo-700"
+                      onClick={() => {
+                        setShowPostSaveDialog(false);
+                        navigate(createPageUrl('CourseEditor'));
+                      }}
+                    >
+                      <BookOpen className="w-4 h-4 mr-1" /> Create New Course
+                    </Button>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+
               {/* Save & New Confirmation Dialog */}
               <AlertDialog open={showSaveNewConfirm} onOpenChange={setShowSaveNewConfirm}>
                 <AlertDialogContent>
