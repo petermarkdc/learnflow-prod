@@ -8,12 +8,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { 
   ChevronLeft, ChevronRight, Menu, CheckCircle2, 
-  BookOpen, Edit, Copy, Printer
+  BookOpen, Edit, Copy, Printer, FlaskConical, Clock
 } from 'lucide-react';
 import ContentRenderer from '../components/viewer/ContentRenderer';
 import QuizViewer from '../components/viewer/QuizViewer';
 import LessonSidebar from '../components/course/LessonSidebar';
 import TableOfContents from '../components/viewer/TableOfContents';
+import PreTestModal from '../components/lesson/PreTestModal';
+import PostTestModal from '../components/lesson/PostTestModal';
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
