@@ -24,6 +24,9 @@ export default function LessonView() {
   const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showPreTest, setShowPreTest] = useState(false);
+  const [preTestDone, setPreTestDone] = useState(false);
+  const [showPostTest, setShowPostTest] = useState(false);
   
   const urlParams = new URLSearchParams(window.location.search);
   const lessonId = urlParams.get('id');
