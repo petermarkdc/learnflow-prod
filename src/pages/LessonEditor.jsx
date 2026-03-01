@@ -260,6 +260,14 @@ Return JSON:
 
   return (
     <div className="min-h-screen bg-slate-50">
+      {/* Save Success Banner */}
+      {showSavedBanner && (
+        <div className="fixed inset-0 flex items-center justify-center z-[9999] pointer-events-none">
+          <div className="bg-green-500 text-white px-10 py-5 rounded-2xl shadow-2xl text-lg font-semibold flex items-center gap-3 animate-in fade-in zoom-in-95">
+            <span>✓ Lesson Saved!</span>
+          </div>
+        </div>
+      )}
       {/* Header */}
       <div className="bg-white border-b sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
