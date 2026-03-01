@@ -23,6 +23,7 @@ export default function PreTestModal({ lesson, user, onComplete, onSkip }) {
     });
     setScore(correct);
     setSubmitted(true);
+    // Save score — modal stays open to show result
     onComplete({ score: correct, total: questions.length, answers: Object.values(answers) });
   };
 
@@ -60,7 +61,6 @@ export default function PreTestModal({ lesson, user, onComplete, onSkip }) {
         </DialogHeader>
 
         <div className="mt-2">
-          {/* Progress */}
           <div className="flex justify-between text-xs text-slate-400 mb-3">
             <span>Question {current + 1} of {questions.length}</span>
             <span>{Object.keys(answers).length} answered</span>
