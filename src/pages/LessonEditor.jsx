@@ -137,7 +137,6 @@ export default function LessonEditor() {
     onSuccess: (result) => {
       queryClient.invalidateQueries(['lesson']);
       queryClient.invalidateQueries(['lessons']);
-      // Center-screen notification
       setShowSavedBanner(true);
       setTimeout(() => setShowSavedBanner(false), 2500);
       if (saveAndNew) {
@@ -146,6 +145,8 @@ export default function LessonEditor() {
         navigate(createPageUrl('LessonEditor') + `?courseId=${result.course_id || effectiveCourseId}`);
       } else if (!lessonId) {
         navigate(createPageUrl('LessonEditor') + `?id=${result.id}`);
+      } else {
+        setShowPostSaveDialog(true);
       }
     },
     onError: () => {
