@@ -66,8 +66,10 @@ export default function CourseEditor() {
   const [collaboratorInput, setCollaboratorInput] = useState('');
   const [uploading, setUploading] = useState(false);
   const [user, setUser] = useState(null);
-  const [transferLesson, setTransferLesson] = useState(null); // lesson to transfer
+  const [transferLesson, setTransferLesson] = useState(null);
   const [transferCourseId, setTransferCourseId] = useState('');
+  const [showSavedBanner, setShowSavedBanner] = useState(false);
+  const [showPostSaveDialog, setShowPostSaveDialog] = useState(false);
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => setUser(null));
