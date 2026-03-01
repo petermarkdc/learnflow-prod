@@ -328,6 +328,31 @@ export default function LessonView() {
 
               <ContentRenderer blocks={lesson.content || []} />
 
+              {/* Activities Section */}
+              {lesson.activities?.items?.length > 0 && (
+                <div className="mt-12 pt-8 border-t">
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-2xl font-bold text-slate-900">Activities</h2>
+                    {lesson.activities.suggested_time && (
+                      <span className="flex items-center gap-1.5 text-sm text-slate-500 bg-amber-50 px-3 py-1 rounded-full border border-amber-100">
+                        <Clock className="w-4 h-4 text-amber-500" />
+                        {lesson.activities.suggested_time} min suggested
+                      </span>
+                    )}
+                  </div>
+                  <ol className="space-y-3">
+                    {lesson.activities.items.map((item, idx) => (
+                      <li key={item.id} className="flex items-start gap-3">
+                        <span className="w-7 h-7 flex-shrink-0 rounded-full bg-amber-100 text-amber-700 text-sm font-bold flex items-center justify-center mt-0.5">
+                          {idx + 1}
+                        </span>
+                        <span className="text-slate-700 pt-1">{item.task}</span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              )}
+
               {/* Quiz Section */}
               {lesson.quiz && lesson.quiz.length > 0 && (
                 <div className="mt-12 pt-8 border-t">
@@ -338,6 +363,25 @@ export default function LessonView() {
                     questions={lesson.quiz}
                     onComplete={handleQuizComplete}
                   />
+                </div>
+              )}
+
+              {/* Post-Test CTA */}
+              {lesson.post_test?.length > 0 && user && (
+                <div className="mt-12 pt-8 border-t">
+                  <div className="bg-green-50 border border-green-200 rounded-2xl p-6 flex items-center justify-between">
+                    <div>
+                      <h3 className="font-semibold text-slate-900 mb-1">Ready for the Post-Test?</h3>
+                      <p className="text-sm text-slate-500">Check how much you've learned from this lesson.</p>
+                    </div>
+                    <Button
+                      className="bg-green-600 hover:bg-green-700 gap-2 flex-shrink-0"
+                      onClick={() => setShowPostTest(true)}
+                    >
+                      <FlaskConical className="w-4 h-4" />
+                      Take Post-Test
+                    </Button>
+                  </div>
                 </div>
               )}
             </div>
