@@ -19,6 +19,9 @@ import PostTestModal from '../components/lesson/PostTestModal';
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
+  const [activePreTest, setActivePreTest] = useState(null); // lesson object
+  const [activePostTest, setActivePostTest] = useState(null); // lesson object
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => setUser(null));
