@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
@@ -9,10 +9,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
 import { 
   BookOpen, CheckCircle2, Clock, Trophy, 
-  ChevronRight, Play, Target, Plus, Edit, Users
+  ChevronRight, Play, Target, Plus, Edit, Users,
+  ClipboardList, FlaskConical, RotateCcw
 } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { motion } from 'framer-motion';
+import PreTestModal from '../components/lesson/PreTestModal';
+import PostTestModal from '../components/lesson/PostTestModal';
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
