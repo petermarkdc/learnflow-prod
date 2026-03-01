@@ -67,6 +67,7 @@ export default function LessonEditor() {
   const [activeTab, setActiveTab] = useState('edit');
   const [showPreTest, setShowPreTest] = useState(false);
   const [showPostTest, setShowPostTest] = useState(false);
+  const [generatingTests, setGeneratingTests] = useState(false);
 
   const { data: lesson, isLoading: lessonLoading } = useQuery({
     queryKey: ['lesson', lessonId],
