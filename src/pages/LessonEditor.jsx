@@ -58,6 +58,7 @@ export default function LessonEditor() {
     quiz: [],
     pre_test: [],
     post_test: [],
+    activities: { suggested_time: '', items: [] },
     estimated_time: '',
     is_subtopic: false,
     parent_lesson_id: '',
