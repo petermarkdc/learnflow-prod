@@ -155,12 +155,20 @@ export default function Layout({ children, currentPageName }) {
                       </DropdownMenuItem>
                     </Link>
                     {(user?.role === 'admin' || user?.role === 'teacher') && (
-                      <Link to={createPageUrl('CourseEnrollmentSummary')}>
-                        <DropdownMenuItem>
-                          <BarChart2 className="w-4 h-4 mr-2" />
-                          Enrollment Summary
-                        </DropdownMenuItem>
-                      </Link>
+                      <>
+                        <Link to={createPageUrl('CourseEnrollmentSummary')}>
+                          <DropdownMenuItem>
+                            <BarChart2 className="w-4 h-4 mr-2" />
+                            Enrollment Summary
+                          </DropdownMenuItem>
+                        </Link>
+                        <Link to={createPageUrl('TestScoresReport')}>
+                          <DropdownMenuItem>
+                            <ClipboardList className="w-4 h-4 mr-2" />
+                            Test Scores Report
+                          </DropdownMenuItem>
+                        </Link>
+                      </>
                     )}
                     {user?.role === 'admin' && (
                       <Link to={createPageUrl('AdminCategories')}>
