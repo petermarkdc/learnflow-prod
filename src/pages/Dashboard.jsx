@@ -213,6 +213,86 @@ export default function Dashboard() {
           </div>
         )}
 
+        {/* Tests Section - for students */}
+        {user?.role !== 'teacher' && user?.role !== 'admin' && (() => {
+          // Find lessons that have tests and student is enrolled
+          const enrolledCourseIds = enrollments.map(e => e.course_id);
+          const lessonTests = lessons
+            .filter(l => enrolledCourseIds.includes(l.course_id))
+            .flatMap(lesson => {
+              const rows = [];
+              const preResult = testResults.find(r => r.lesson_id === lesson.id && r.test_type === 'pre_test');
+              const postResult = testResults.find(r => r.lesson_id === lesson.id && r.test_type === 'post_test');
+              if (lesson.pre_test?.length > 0) {
+                rows.push({ lesson, type: 'pre_test', result: preResult });
+              }
+              if (lesson.post_test?.length > 0) {
+                rows.push({ lesson, type: 'post_test', result: postResult });
+              }
+              return rows;
+            });
+
+          if (!lessonTests.length) return null;
+
+          return (
+            <div className="mb-8">
+              <h2 className="text-xl font-bold text-slate-900 mb-4">My Tests</h2>
+              <div className="grid md:grid-cols-2 gap-4">
+                {lessonTests.map(({ lesson, type, result }) => {
+                  const isPreTest = type === 'pre_test';
+                  const Icon = isPreTest ? ClipboardList : FlaskConical;
+                  const color = isPreTest ? 'text-blue-600' : 'text-green-600';
+                  const bg = isPreTest ? 'bg-blue-50' : 'bg-green-50';
+                  const label = isPreTest ? 'Pre-Test' : 'Post-Test';
+                  const course = courses.find(c => c.id === lesson.course_id);
+
+                  return (
+                    <Card key={`${lesson.id}-${type}`} className="hover:shadow-md transition-shadow">
+                      <CardContent className="p-4 flex items-center gap-4">
+                        <div className={`p-3 rounded-xl ${bg} flex-shrink-0`}>
+                          <Icon className={`w-5 h-5 ${color}`} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs text-slate-400 truncate">{course?.title}</p>
+                          <p className="font-medium text-slate-900 truncate">{lesson.title}</p>
+                          <p className={`text-xs font-semibold ${color}`}>{label}</p>
+                          {result && (
+                            <p className="text-sm text-slate-600 mt-0.5">
+                              Score: <span className="font-bold">{result.score}/{result.total}</span>
+                              <span className="text-slate-400 ml-1">({Math.round((result.score/result.total)*100)}%)</span>
+                            </p>
+                          )}
+                        </div>
+                        <div className="flex-shrink-0">
+                          {!result ? (
+                            <Button
+                              size="sm"
+                              className={isPreTest ? 'bg-blue-600 hover:bg-blue-700' : 'bg-green-600 hover:bg-green-700'}
+                              onClick={() => isPreTest ? setActivePreTest(lesson) : setActivePostTest(lesson)}
+                            >
+                              Take Test
+                            </Button>
+                          ) : !isPreTest ? (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="gap-1"
+                              onClick={() => setActivePostTest(lesson)}
+                            >
+                              <RotateCcw className="w-3 h-3" />
+                              Retry
+                            </Button>
+                          ) : null}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })()}
+
         {/* Completed Courses */}
         {coursesCompleted > 0 && (
           <div className="mb-8">
