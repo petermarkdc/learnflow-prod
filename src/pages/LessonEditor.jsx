@@ -27,6 +27,7 @@ import ContentBlockEditor from '../components/editor/ContentBlockEditor';
 import QuizEditor from '../components/editor/QuizEditor';
 import ContentRenderer from '../components/viewer/ContentRenderer';
 import AISuggestions from '../components/editor/AISuggestions';
+import DocumentReference from '../components/editor/DocumentReference';
 import QuizViewer from '../components/viewer/QuizViewer';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { toast } from "sonner";
