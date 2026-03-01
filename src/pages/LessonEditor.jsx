@@ -464,12 +464,87 @@ Return JSON:
                 )}
               </div>
 
-              {/* Quiz Section */}
+              {/* Activities Section */}
               <div className="bg-white rounded-2xl border p-6">
-                <QuizEditor
-                  questions={formData.quiz}
-                  onChange={(quiz) => setFormData(prev => ({ ...prev, quiz }))}
-                />
+                <div className="flex items-center justify-between mb-5">
+                  <div className="flex items-center gap-2">
+                    <CheckSquare className="w-5 h-5 text-amber-600" />
+                    <div>
+                      <h3 className="text-lg font-semibold text-slate-900">Activities</h3>
+                      <p className="text-xs text-slate-500">Numbered to-do list for this lesson</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-slate-400" />
+                    <Input
+                      type="number"
+                      placeholder="Time (min)"
+                      className="w-32 h-8 text-sm"
+                      value={formData.activities?.suggested_time || ''}
+                      onChange={(e) => setFormData(prev => ({
+                        ...prev,
+                        activities: { ...prev.activities, suggested_time: e.target.value }
+                      }))}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  {(formData.activities?.items || []).map((item, idx) => (
+                    <div key={item.id} className="flex items-center gap-3 group">
+                      <span className="w-6 h-6 flex-shrink-0 rounded-full bg-amber-100 text-amber-700 text-xs font-bold flex items-center justify-center">
+                        {idx + 1}
+                      </span>
+                      <Input
+                        value={item.task}
+                        onChange={(e) => {
+                          const items = [...(formData.activities?.items || [])];
+                          items[idx] = { ...item, task: e.target.value };
+                          setFormData(prev => ({ ...prev, activities: { ...prev.activities, items } }));
+                        }}
+                        placeholder={`Activity ${idx + 1}...`}
+                        className="flex-1 h-9"
+                      />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-600"
+                        onClick={() => {
+                          const items = (formData.activities?.items || []).filter((_, i) => i !== idx);
+                          setFormData(prev => ({ ...prev, activities: { ...prev.activities, items } }));
+                        }}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+
+                {(formData.activities?.items || []).length === 0 && (
+                  <div className="text-center py-8 border-2 border-dashed rounded-xl mb-3">
+                    <CheckSquare className="w-8 h-8 mx-auto text-slate-300 mb-2" />
+                    <p className="text-sm text-slate-400">No activities yet. Add tasks for students to complete.</p>
+                  </div>
+                )}
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="mt-3 gap-2"
+                  onClick={() => {
+                    const newItem = { id: Date.now().toString(), task: '' };
+                    setFormData(prev => ({
+                      ...prev,
+                      activities: {
+                        ...prev.activities,
+                        items: [...(prev.activities?.items || []), newItem]
+                      }
+                    }));
+                  }}
+                >
+                  <Plus className="w-4 h-4" />
+                  Add Activity
+                </Button>
               </div>
 
               {/* Post-Test Section */}
