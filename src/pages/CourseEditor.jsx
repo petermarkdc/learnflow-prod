@@ -640,66 +640,6 @@ export default function CourseEditor() {
               </div>
             )}
           </div>
-
-          {/* Bottom Save Button (below lessons) */}
-          {courseId && (
-            <div className="bg-white rounded-2xl border p-4 flex justify-end">
-              <Button
-                onClick={() => saveMutation.mutate()}
-                disabled={saveMutation.isPending}
-                className="bg-indigo-600 hover:bg-indigo-700"
-              >
-                {saveMutation.isPending ? (
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                ) : (
-                  <Save className="w-4 h-4 mr-2" />
-                )}
-                Save Course Settings
-              </Button>
-            </div>
-          )}
-
-          {/* Sidebar Tips */}
-          <div className="space-y-6">
-            <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6">
-              <h3 className="font-semibold text-slate-900 mb-3">💡 Tips for a great course</h3>
-              <ul className="text-sm text-slate-600 space-y-2">
-                <li>• Write a clear, descriptive title</li>
-                <li>• Add an engaging cover image</li>
-                <li>• Break content into small lessons</li>
-                <li>• Include code examples</li>
-                <li>• Add quizzes to test understanding</li>
-              </ul>
-            </div>
-
-            {courseId && (
-              <div className="bg-white rounded-2xl border p-6">
-                <h3 className="font-semibold text-slate-900 mb-3">Course Status</h3>
-                <div className="space-y-3 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Lessons</span>
-                    <span className="font-medium">{sortedLessons.length}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Status</span>
-                    <span className={`font-medium ${formData.is_published ? 'text-green-600' : 'text-amber-600'}`}>
-                      {formData.is_published ? 'Published' : 'Draft'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Access</span>
-                    <span className="font-medium capitalize">{formData.access_type}</span>
-                  </div>
-                </div>
-                <Link to={createPageUrl('CourseStudents') + `?id=${courseId}`} className="mt-4 block">
-                  <Button variant="outline" size="sm" className="w-full">
-                    <Users className="w-4 h-4 mr-2" />
-                    Manage Students
-                  </Button>
-                </Link>
-              </div>
-            )}
-          </div>
         </div>
       </div>
       {/* Transfer Lesson Dialog */}
