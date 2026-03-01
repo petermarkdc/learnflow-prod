@@ -63,19 +63,22 @@ export default function LessonView() {
   });
 
   // Check if pre-test was already taken
-  const { data: existingPreTest } = useQuery({
+  const { data: existingPreTest, isLoading: pretestLoading } = useQuery({
     queryKey: ['pretest', lessonId, user?.email],
-    queryFn: () => base44.entities.TestResult.filter({ lesson_id: lessonId, user_email: user.email, test_type: 'pre_test' }).then(res => res[0]),
+    queryFn: () => base44.entities.TestResult.filter({ lesson_id: lessonId, user_email: user.email, test_type: 'pre_test' }),
     enabled: !!lessonId && !!user?.email,
   });
 
   // Show pre-test modal once when lesson loads if pre_test exists and not yet taken
   useEffect(() => {
-    if (lesson && user && !preTestDone && existingPreTest === null && lesson.pre_test?.length > 0) {
-      setShowPreTest(true);
-      setPreTestDone(true);
+    if (lesson && user && !preTestDone && !pretestLoading && existingPreTest !== undefined) {
+      const alreadyTaken = existingPreTest && existingPreTest.length > 0;
+      if (!alreadyTaken && lesson.pre_test?.length > 0) {
+        setShowPreTest(true);
+        setPreTestDone(true);
+      }
     }
-  }, [lesson, user, existingPreTest, preTestDone]);
+  }, [lesson, user, existingPreTest, pretestLoading, preTestDone]);
 
   const sortedLessons = [...allLessons].sort((a, b) => (a.order_index || 0) - (b.order_index || 0));
   const currentIndex = sortedLessons.findIndex(l => l.id === lessonId);
