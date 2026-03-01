@@ -427,15 +427,27 @@ Return JSON:
                       <p className="text-xs text-slate-500">Given before the lesson (up to 20 items)</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-slate-500">{showPreTest ? 'Enabled' : 'Disabled'}</span>
-                    <Switch
-                      checked={showPreTest}
-                      onCheckedChange={(v) => {
-                        setShowPreTest(v);
-                        if (!v) setFormData(prev => ({ ...prev, pre_test: [] }));
-                      }}
-                    />
+                  <div className="flex items-center gap-3">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={generateTestsWithAI}
+                      disabled={generatingTests}
+                      className="gap-2 text-indigo-600 border-indigo-200 hover:bg-indigo-50"
+                    >
+                      {generatingTests ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                      Generate with AI
+                    </Button>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-slate-500">{showPreTest ? 'Enabled' : 'Disabled'}</span>
+                      <Switch
+                        checked={showPreTest}
+                        onCheckedChange={(v) => {
+                          setShowPreTest(v);
+                          if (!v) setFormData(prev => ({ ...prev, pre_test: [] }));
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
                 {showPreTest && (
