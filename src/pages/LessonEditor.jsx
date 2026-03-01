@@ -135,11 +135,15 @@ export default function LessonEditor() {
     onSuccess: (result) => {
       queryClient.invalidateQueries(['lesson']);
       queryClient.invalidateQueries(['lessons']);
-      toast.success('Lesson saved successfully!');
+      // Center-screen notification
+      const el = document.createElement('div');
+      el.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#22c55e;color:white;padding:20px 36px;border-radius:16px;font-size:18px;font-weight:600;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.2);pointer-events:none;';
+      el.textContent = '✓ Lesson Saved!';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 2000);
       if (saveAndNew) {
         setSaveAndNew(false);
-        // Reset form for new lesson
-        setFormData({ title: '', content: [], quiz: [], estimated_time: '', is_subtopic: false, parent_lesson_id: '' });
+        setFormData({ title: '', content: [], quiz: [], pre_test: [], post_test: [], activities: { suggested_time: '', items: [] }, estimated_time: '', is_subtopic: false, parent_lesson_id: '' });
         navigate(createPageUrl('LessonEditor') + `?courseId=${result.course_id || effectiveCourseId}`);
       } else if (!lessonId) {
         navigate(createPageUrl('LessonEditor') + `?id=${result.id}`);
