@@ -129,6 +129,39 @@ export default function LessonView() {
     },
   });
 
+  const handlePreTestComplete = async ({ score, total, answers }) => {
+    await base44.entities.TestResult.create({
+      user_email: user.email,
+      user_name: user.full_name || user.email,
+      course_id: lesson.course_id,
+      lesson_id: lessonId,
+      lesson_title: lesson.title,
+      test_type: 'pre_test',
+      score,
+      total,
+      answers,
+    });
+    queryClient.invalidateQueries(['pretest', lessonId, user?.email]);
+    setShowPreTest(false);
+  };
+
+  const handlePostTestComplete = async ({ score, total, answers }) => {
+    await base44.entities.TestResult.create({
+      user_email: user.email,
+      user_name: user.full_name || user.email,
+      course_id: lesson.course_id,
+      lesson_id: lessonId,
+      lesson_title: lesson.title,
+      test_type: 'post_test',
+      score,
+      total,
+      answers,
+    });
+    queryClient.invalidateQueries(['posttest', lessonId, user?.email]);
+    setShowPostTest(false);
+    toast.success('Post-test submitted!');
+  };
+
   const handleQuizComplete = async (score) => {
     if (!progress) {
       await base44.entities.Progress.create({
