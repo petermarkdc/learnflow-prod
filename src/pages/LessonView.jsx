@@ -210,6 +210,25 @@ export default function LessonView() {
 
   return (
     <div className="min-h-screen bg-white flex">
+      {/* Pre-Test Modal */}
+      {showPreTest && lesson?.pre_test?.length > 0 && user && (
+        <PreTestModal
+          lesson={lesson}
+          user={user}
+          onComplete={handlePreTestComplete}
+          onSkip={() => setShowPreTest(false)}
+        />
+      )}
+
+      {/* Post-Test Modal */}
+      {lesson?.post_test?.length > 0 && user && (
+        <PostTestModal
+          lesson={lesson}
+          open={showPostTest}
+          onComplete={handlePostTestComplete}
+          onClose={() => setShowPostTest(false)}
+        />
+      )}
       {/* Desktop Sidebar */}
       {course && (
         <div className="hidden lg:block w-80 border-r bg-slate-50 flex-shrink-0">
