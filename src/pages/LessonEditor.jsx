@@ -696,7 +696,7 @@ Return JSON:
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction
                       className="bg-indigo-600 hover:bg-indigo-700"
-                      onClick={() => { setShowSaveNewConfirm(false); setSaveAndNew(true); saveMutation.mutate(); }}
+                      onClick={() => { setShowSaveNewConfirm(false); validateAndSave(true); }}
                     >
                       Save & Continue
                     </AlertDialogAction>
