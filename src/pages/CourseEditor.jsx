@@ -588,7 +588,7 @@ export default function CourseEditor() {
               {/* Save Button inside card */}
               <div className="flex justify-end pt-2 border-t">
                 <Button
-                  onClick={() => saveMutation.mutate()}
+                  onClick={validateAndSave}
                   disabled={saveMutation.isPending}
                   className="bg-indigo-600 hover:bg-indigo-700"
                 >
