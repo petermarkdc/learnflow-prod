@@ -675,6 +675,10 @@ Return JSON:
 
             {/* Sidebar */}
             <div className="space-y-6">
+              <LessonTemplate
+                onInsertBlocks={(blocks) => setFormData(prev => ({ ...prev, content: [...prev.content, ...blocks] }))}
+              />
+
               <AISuggestions
                 lessonTitle={formData.title}
                 onInsertBlock={(block) => setFormData(prev => ({ ...prev, content: [...prev.content, block] }))}
