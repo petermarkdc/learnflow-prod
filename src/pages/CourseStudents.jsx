@@ -62,6 +62,9 @@ export default function CourseStudents() {
   });
 
   const isTeacher = user?.role === 'teacher' || user?.role === 'admin';
+  // Verify current user can manage this course's students
+  const canManage = !user || user.role === 'admin' || 
+    (isTeacher && course && (course.created_by === user?.email || (course.collaborators || []).includes(user?.email)));
 
   const addStudentMutation = useMutation({
     mutationFn: async (email) => {
