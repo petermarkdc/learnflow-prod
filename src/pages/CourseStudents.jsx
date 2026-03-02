@@ -261,19 +261,20 @@ export default function CourseStudents() {
           ) : (
             <div className="space-y-3">
               {enrollments.map((enrollment) => {
-                const userInfo = getUserInfo(enrollment.user_email);
+                const profile = getProfile(enrollment.user_email);
+                const emailUsername = enrollment.user_email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+                const displayName = profile?.nickname || emailUsername;
                 const prog = getProgress(enrollment.user_email);
                 return (
                   <div key={enrollment.id} className="flex items-center gap-4 p-3 bg-slate-50 rounded-xl">
                     <Avatar className="h-10 w-10">
+                      <AvatarImage src={profile?.avatar_url} />
                       <AvatarFallback className="bg-indigo-100 text-indigo-700">
-                        {(userInfo?.full_name || enrollment.user_email)?.[0]?.toUpperCase()}
+                        {displayName?.[0]?.toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-slate-900 truncate">
-                        {userInfo?.full_name || enrollment.user_email}
-                      </p>
+                      <p className="font-medium text-slate-900 truncate">{displayName}</p>
                       <p className="text-xs text-slate-500 truncate">{enrollment.user_email}</p>
                     </div>
                     <div className="text-right min-w-[80px]">
