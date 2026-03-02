@@ -73,7 +73,7 @@ export default function Dashboard() {
   });
 
   // Calculate stats
-  const totalCourses = courses.length;
+  const totalCourses = courses.filter(c => c.is_published).length;
   const coursesStarted = progressList.length;
   const coursesCompleted = progressList.filter(p => {
     const courseLessons = lessons.filter(l => l.course_id === p.course_id);
