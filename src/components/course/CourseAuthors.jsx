@@ -4,18 +4,17 @@ import { base44 } from '@/api/base44Client';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 function AuthorChip({ email, label, dark = false }) {
-  const { data: users = [] } = useQuery({
-    queryKey: ['user-by-email', email],
-    queryFn: () => base44.entities.User.filter({ email }).catch(() => []),
+  const { data: profiles = [] } = useQuery({
+    queryKey: ['user-profile', email],
+    queryFn: () => base44.entities.UserProfile.filter({ user_email: email }),
     staleTime: 60000,
     enabled: !!email,
   });
 
-  const user = users[0];
-  // Fall back to email username if full_name is not accessible
+  const profile = profiles[0];
   const emailUsername = email ? email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : '—';
-  const displayName = user?.nickname || user?.full_name || emailUsername;
-  const avatar = user?.avatar_url;
+  const displayName = profile?.nickname || emailUsername;
+  const avatar = profile?.avatar_url;
   const initials = displayName?.[0]?.toUpperCase() || '?';
 
   return (
