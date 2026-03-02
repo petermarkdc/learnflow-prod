@@ -111,6 +111,14 @@ export default function CourseEditor() {
 
   const sortedLessons = [...lessons].sort((a, b) => (a.order_index || 0) - (b.order_index || 0));
 
+  const validateAndSave = () => {
+    const errors = [];
+    if (!formData.title?.trim()) errors.push('title');
+    setValidationErrors(errors);
+    if (errors.length > 0) return;
+    saveMutation.mutate();
+  };
+
   const saveMutation = useMutation({
     mutationFn: async () => {
       const { _override_created_by, ...cleanData } = formData;
