@@ -316,7 +316,7 @@ Return JSON:
               </TabsList>
             </Tabs>
             <Button 
-              onClick={() => saveMutation.mutate()}
+              onClick={() => validateAndSave()}
               disabled={saveMutation.isPending}
               className="bg-indigo-600 hover:bg-indigo-700"
             >
