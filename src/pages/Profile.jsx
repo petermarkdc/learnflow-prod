@@ -8,6 +8,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader2, Save, Upload, User } from 'lucide-react';
 import { toast } from "sonner";
 
+async function syncUserProfile(email, { nickname, avatar_url }) {
+  const existing = await base44.entities.UserProfile.filter({ user_email: email });
+  if (existing[0]) {
+    await base44.entities.UserProfile.update(existing[0].id, { nickname, avatar_url });
+  } else {
+    await base44.entities.UserProfile.create({ user_email: email, nickname, avatar_url });
+  }
+}
+
 export default function Profile() {
   const [user, setUser] = useState(null);
   const [formData, setFormData] = useState({ nickname: '', bio: '', avatar_url: '' });
