@@ -40,8 +40,14 @@ export default function Layout({ children, currentPageName }) {
   const canCreateContent = isTeacherUser;
 
   const { data: teacherCourses = [] } = useQuery({
-    queryKey: ['my-courses-layout', user?.email],
-    queryFn: () => base44.entities.Course.filter({ created_by: user.email }),
+    queryKey: ['my-courses-layout', user?.email, user?.role],
+    queryFn: async () => {
+      if (user.role === 'admin') return base44.entities.Course.list();
+      const owned = await base44.entities.Course.filter({ created_by: user.email });
+      const all = await base44.entities.Course.list();
+      const collab = all.filter(c => (c.collaborators || []).includes(user.email) && c.created_by !== user.email);
+      return [...owned, ...collab];
+    },
     enabled: !!user?.email && isTeacherUser,
   });
 
