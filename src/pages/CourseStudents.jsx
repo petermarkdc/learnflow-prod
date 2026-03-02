@@ -61,6 +61,21 @@ export default function CourseStudents() {
     enabled: !!courseId,
   });
 
+  const enrolledEmails = enrollments.map(e => e.user_email);
+  const { data: userProfiles = [] } = useQuery({
+    queryKey: ['user-profiles', enrolledEmails.join(',')],
+    queryFn: async () => {
+      if (enrolledEmails.length === 0) return [];
+      const results = await Promise.all(enrolledEmails.map(email => 
+        base44.entities.UserProfile.filter({ user_email: email })
+      ));
+      return results.flat();
+    },
+    enabled: enrolledEmails.length > 0,
+  });
+
+  const getProfile = (email) => userProfiles.find(p => p.user_email === email);
+
   const isTeacher = user?.role === 'teacher' || user?.role === 'admin';
   // Verify current user can manage this course's students
   const canManage = !user || user.role === 'admin' || 
