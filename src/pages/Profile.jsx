@@ -63,7 +63,7 @@ export default function Profile() {
     const { file_url } = await base44.integrations.Core.UploadFile({ file });
     setFormData(prev => ({ ...prev, avatar_url: file_url }));
     await base44.auth.updateMe({ avatar_url: file_url });
-    await syncUserProfile(user.email, { nickname: formData.nickname, avatar_url: file_url });
+    await syncUserProfile(user.email, { nickname: formData.nickname, avatar_url: file_url, school_organization: formData.school_organization });
     const updated = await base44.auth.me();
     setUser(updated);
     setUploading(false);
