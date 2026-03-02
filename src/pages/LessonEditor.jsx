@@ -122,6 +122,15 @@ export default function LessonEditor() {
     }
   }, [lesson]);
 
+  const validateAndSave = (andNew = false) => {
+    const errors = [];
+    if (!formData.title?.trim()) errors.push('title');
+    setValidationErrors(errors);
+    if (errors.length > 0) return;
+    setSaveAndNew(andNew);
+    saveMutation.mutate();
+  };
+
   const saveMutation = useMutation({
     mutationFn: async () => {
       const data = {
