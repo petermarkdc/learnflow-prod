@@ -126,6 +126,10 @@ export default function LessonEditor() {
       const data = {
         ...formData,
         estimated_time: formData.estimated_time ? Number(formData.estimated_time) : null,
+        activities: {
+          ...formData.activities,
+          suggested_time: formData.activities?.suggested_time ? Number(formData.activities.suggested_time) : null,
+        },
       };
       
       if (lessonId) {
