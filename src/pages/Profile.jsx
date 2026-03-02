@@ -37,6 +37,7 @@ export default function Profile() {
   const handleSave = async () => {
     setSaving(true);
     await base44.auth.updateMe(formData);
+    await syncUserProfile(user.email, { nickname: formData.nickname, avatar_url: formData.avatar_url });
     const updated = await base44.auth.me();
     setUser(updated);
     setSaving(false);
@@ -50,6 +51,7 @@ export default function Profile() {
     const { file_url } = await base44.integrations.Core.UploadFile({ file });
     setFormData(prev => ({ ...prev, avatar_url: file_url }));
     await base44.auth.updateMe({ avatar_url: file_url });
+    await syncUserProfile(user.email, { nickname: formData.nickname, avatar_url: file_url });
     const updated = await base44.auth.me();
     setUser(updated);
     setUploading(false);
