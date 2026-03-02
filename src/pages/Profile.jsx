@@ -144,6 +144,17 @@ export default function Profile() {
           </div>
 
           <div>
+            <Label htmlFor="school_organization">School / Organization</Label>
+            <Input
+              id="school_organization"
+              value={formData.school_organization}
+              onChange={(e) => setFormData(prev => ({ ...prev, school_organization: e.target.value }))}
+              placeholder="e.g. MIT, Google, Acme Corp"
+              className="mt-1.5"
+            />
+          </div>
+
+          <div>
             <Label htmlFor="bio">Bio</Label>
             <Textarea
               id="bio"
