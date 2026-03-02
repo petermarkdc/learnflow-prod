@@ -95,7 +95,7 @@ export default function AdminCategories() {
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center gap-4">
         <ShieldAlert className="w-14 h-14 text-red-400" />
         <h2 className="text-2xl font-bold text-slate-800">Access Denied</h2>
-        <p className="text-slate-500">Only admins can manage categories.</p>
+        <p className="text-slate-500">Only teachers and admins can manage categories.</p>
       </div>
     );
   }
