@@ -43,11 +43,16 @@ export default function Profile() {
 
   const handleSave = async () => {
     setSaving(true);
-    await base44.auth.updateMe(formData);
-    await syncUserProfile(user.email, { nickname: formData.nickname, avatar_url: formData.avatar_url });
+    await base44.auth.updateMe({ nickname: formData.nickname, bio: formData.bio, avatar_url: formData.avatar_url });
+    await syncUserProfile(user.email, {
+      nickname: formData.nickname,
+      avatar_url: formData.avatar_url,
+      school_organization: formData.school_organization,
+    });
     const updated = await base44.auth.me();
     setUser(updated);
     setSaving(false);
+    setIsNewUser(false);
     toast.success('Profile updated!');
   };
 
