@@ -176,7 +176,7 @@ export default function Layout({ children, currentPageName }) {
                         </Link>
                       </>
                     )}
-                    {user?.role === 'admin' && (
+                    {(user?.role === 'admin' || user?.role === 'teacher') && (
                       <Link to={createPageUrl('AdminCategories')}>
                         <DropdownMenuItem>
                           <Tag className="w-4 h-4 mr-2" />
