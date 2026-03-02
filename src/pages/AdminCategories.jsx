@@ -47,7 +47,7 @@ export default function AdminCategories() {
     base44.auth.me().then(setUser).catch(() => setUser(null));
   }, []);
 
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = user?.role === 'admin' || user?.role === 'teacher';
 
   const toSlug = (str) => str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
