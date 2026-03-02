@@ -633,14 +633,14 @@ Return JSON:
               <div className="bg-white rounded-2xl border p-4 flex items-center gap-3 justify-end">
                 <Button
                   variant="outline"
-                  onClick={() => setShowSaveNewConfirm(true)}
+                  onClick={() => { const errors = []; if (!formData.title?.trim()) errors.push('title'); setValidationErrors(errors); if (errors.length === 0) setShowSaveNewConfirm(true); }}
                   disabled={saveMutation.isPending}
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Save & Add New Lesson
                 </Button>
                 <Button
-                  onClick={() => { setSaveAndNew(false); saveMutation.mutate(); }}
+                  onClick={() => validateAndSave(false)}
                   disabled={saveMutation.isPending}
                   className="bg-indigo-600 hover:bg-indigo-700"
                 >
