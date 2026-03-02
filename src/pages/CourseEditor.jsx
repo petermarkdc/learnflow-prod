@@ -341,15 +341,33 @@ export default function CourseEditor() {
         <div className="space-y-6">
           {/* Main Form */}
           <div className="space-y-6">
-            <div className="bg-white rounded-2xl border p-6 space-y-6">
+            {/* Validation Errors Banner */}
+            {validationErrors.length > 0 && (
+              <div className="bg-red-50 border border-red-300 rounded-xl p-4 flex gap-3 items-start">
+                <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-semibold text-red-700 mb-1">Please fill in the required fields before saving:</p>
+                  <ul className="text-sm text-red-600 list-disc list-inside">
+                    {validationErrors.includes('title') && <li>Course Title is required</li>}
+                  </ul>
+                </div>
+              </div>
+            )}
+
+            <div className={`bg-white rounded-2xl border p-6 space-y-6 ${validationErrors.includes('title') ? 'border-red-400 ring-1 ring-red-300' : ''}`}>
               <div>
-                <Label htmlFor="title">Course Title</Label>
+                <Label htmlFor="title" className={validationErrors.includes('title') ? 'text-red-600' : ''}>
+                  Course Title <span className="text-red-500">*</span>
+                </Label>
                 <Input
                   id="title"
                   value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, title: e.target.value });
+                    if (e.target.value.trim()) setValidationErrors(prev => prev.filter(e => e !== 'title'));
+                  }}
                   placeholder="e.g., Introduction to Python"
-                  className="mt-1.5"
+                  className={`mt-1.5 ${validationErrors.includes('title') ? 'border-red-400 focus-visible:ring-red-400' : ''}`}
                 />
               </div>
 
