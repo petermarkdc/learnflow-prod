@@ -87,9 +87,9 @@ export default function LessonView() {
   const completedLessons = progress?.completed_lessons || [];
   const isCompleted = completedLessons.includes(lessonId);
   const isTeacher = user?.role === 'teacher' || user?.role === 'admin';
-  // Only the course owner, collaborator, or admin can edit/duplicate lessons
+  // Admin can edit any lesson; teacher can edit lessons in their own or collaborated courses
   const isOwner = user?.role === 'admin' || 
-    (course && (course.created_by === user?.email || (course.collaborators || []).includes(user?.email)));
+    (isTeacher && course && (course.created_by === user?.email || (course.collaborators || []).includes(user?.email)));
 
   const markCompleteMutation = useMutation({
     mutationFn: async () => {
