@@ -114,12 +114,16 @@ export default function TestScoresReport() {
   const isAdmin = user?.role === 'admin';
   const isTeacher = user?.role === 'teacher' || isAdmin;
 
-  // Admin sees all courses; teacher sees only their own
+  // Admin sees all courses; teacher sees own + collaborated
   const { data: courses = [] } = useQuery({
     queryKey: ['report-courses', user?.email, isAdmin],
-    queryFn: () => isAdmin
-      ? base44.entities.Course.list()
-      : base44.entities.Course.filter({ created_by: user.email }),
+    queryFn: async () => {
+      if (isAdmin) return base44.entities.Course.list();
+      const owned = await base44.entities.Course.filter({ created_by: user.email });
+      const all = await base44.entities.Course.list();
+      const collab = all.filter(c => (c.collaborators || []).includes(user.email) && c.created_by !== user.email);
+      return [...owned, ...collab];
+    },
     enabled: !!user?.email,
   });
 
