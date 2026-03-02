@@ -70,6 +70,7 @@ export default function CourseEditor() {
   const [transferCourseId, setTransferCourseId] = useState('');
   const [showSavedBanner, setShowSavedBanner] = useState(false);
   const [showPostSaveDialog, setShowPostSaveDialog] = useState(false);
+  const [validationErrors, setValidationErrors] = useState([]);
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => setUser(null));
