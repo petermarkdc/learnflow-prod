@@ -140,8 +140,8 @@ export default function LessonEditor() {
       }
     },
     onSuccess: (result) => {
-      queryClient.invalidateQueries(['lesson']);
-      queryClient.invalidateQueries(['lessons']);
+      queryClient.invalidateQueries({ queryKey: ['lesson'] });
+      queryClient.invalidateQueries({ queryKey: ['lessons'] });
       setShowSavedBanner(true);
       setTimeout(() => setShowSavedBanner(false), 2500);
       if (saveAndNew) {
