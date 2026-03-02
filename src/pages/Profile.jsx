@@ -19,17 +19,24 @@ async function syncUserProfile(email, data) {
 
 export default function Profile() {
   const [user, setUser] = useState(null);
-  const [formData, setFormData] = useState({ nickname: '', bio: '', avatar_url: '' });
+  const [formData, setFormData] = useState({ nickname: '', bio: '', avatar_url: '', school_organization: '' });
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [isNewUser, setIsNewUser] = useState(false);
 
   useEffect(() => {
-    base44.auth.me().then(u => {
+    base44.auth.me().then(async u => {
       setUser(u);
+      // Check if profile is incomplete to show welcome banner
+      const profiles = await base44.entities.UserProfile.filter({ user_email: u.email });
+      const profile = profiles[0];
+      const incomplete = !profile?.nickname || !profile?.avatar_url;
+      setIsNewUser(incomplete);
       setFormData({
         nickname: u.nickname || '',
         bio: u.bio || '',
         avatar_url: u.avatar_url || '',
+        school_organization: profile?.school_organization || '',
       });
     }).catch(() => base44.auth.redirectToLogin());
   }, []);
