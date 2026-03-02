@@ -118,7 +118,7 @@ export default function CourseStudents() {
     return { completed, total, percent: total > 0 ? Math.round((completed / total) * 100) : 0 };
   };
 
-  if (!isTeacher) return (
+  if (user && !isTeacher) return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center">
       <div className="text-center">
         <Shield className="w-12 h-12 mx-auto text-slate-300 mb-3" />
