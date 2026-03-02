@@ -81,9 +81,10 @@ export default function CourseEditor() {
     enabled: !!courseId,
   });
 
-  // Only owner, collaborator, or admin can edit this course
-  const isOwner = !courseId || !user || user.role === 'admin' || 
+  // Admin or course owner or collaborator can edit
+  const canEdit = !courseId || !user || user.role === 'admin' || user.role === 'teacher' ||
     (course && (course.created_by === user?.email || (course.collaborators || []).includes(user?.email)));
+  const isOwner = canEdit;
 
   const { data: lessons = [], isLoading: lessonsLoading } = useQuery({
     queryKey: ['lessons', courseId],
