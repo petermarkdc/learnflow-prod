@@ -125,7 +125,7 @@ export default function CourseStudents() {
     setTimeout(() => setCopiedCode(false), 2000);
   };
 
-  const getUserInfo = (email) => allUsers.find(u => u.email === email);
+  const getUserInfo = (email) => allUsers.find(u => u.email === email) || {};
   const getProgress = (email) => {
     const p = progressList.find(p => p.user_email === email);
     const completed = p?.completed_lessons?.length || 0;
