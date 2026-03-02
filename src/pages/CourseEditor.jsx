@@ -209,10 +209,16 @@ export default function CourseEditor() {
     onError: () => toast.error('Failed to transfer lesson.'),
   });
 
-  // Fetch teacher's other courses for transfer
+  // Fetch teacher's other courses for transfer (admin sees all, teacher sees own + collab)
   const { data: myCourses = [] } = useQuery({
-    queryKey: ['my-courses', user?.email],
-    queryFn: () => base44.entities.Course.filter({ created_by: user.email }),
+    queryKey: ['my-courses', user?.email, user?.role],
+    queryFn: async () => {
+      if (user.role === 'admin') return base44.entities.Course.list();
+      const owned = await base44.entities.Course.filter({ created_by: user.email });
+      const all = await base44.entities.Course.list();
+      const collab = all.filter(c => (c.collaborators || []).includes(user.email) && c.created_by !== user.email);
+      return [...owned, ...collab];
+    },
     enabled: !!user?.email,
   });
 
