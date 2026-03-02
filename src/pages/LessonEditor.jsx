@@ -72,6 +72,7 @@ export default function LessonEditor() {
   const [showSaveNewConfirm, setShowSaveNewConfirm] = useState(false);
   const [showSavedBanner, setShowSavedBanner] = useState(false);
   const [showPostSaveDialog, setShowPostSaveDialog] = useState(false);
+  const [validationErrors, setValidationErrors] = useState([]);
   const [activeTab, setActiveTab] = useState('edit');
   const [showPreTest, setShowPreTest] = useState(false);
   const [showPostTest, setShowPostTest] = useState(false);
