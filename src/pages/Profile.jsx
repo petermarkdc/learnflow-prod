@@ -81,7 +81,20 @@ export default function Profile() {
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4">
       <div className="max-w-lg mx-auto">
-        <h1 className="text-2xl font-bold text-slate-900 mb-8">My Profile</h1>
+        <h1 className="text-2xl font-bold text-slate-900 mb-6">My Profile</h1>
+
+        {/* Welcome / Encourage banner for new/incomplete profiles */}
+        {isNewUser && (
+          <div className="mb-6 bg-indigo-50 border border-indigo-200 rounded-2xl p-5 flex gap-4 items-start">
+            <div className="p-2 bg-indigo-100 rounded-xl flex-shrink-0">
+              <Sparkles className="w-5 h-5 text-indigo-600" />
+            </div>
+            <div>
+              <p className="font-semibold text-indigo-900 mb-1">Welcome! Set up your profile 👋</p>
+              <p className="text-sm text-indigo-700">Add a photo, nickname, and your school or organization so others can recognize you on courses.</p>
+            </div>
+          </div>
+        )}
 
         <div className="bg-white rounded-2xl border p-6 space-y-6">
           {/* Avatar */}
