@@ -185,7 +185,9 @@ export default function LessonEditor() {
     };
     setFormData(prev => {
       const newContent = [...prev.content];
-      if (insertAfterIndex !== null && insertAfterIndex >= 0) {
+      if (insertAfterIndex === -1) {
+        newContent.unshift(newBlock);
+      } else if (insertAfterIndex !== null) {
         newContent.splice(insertAfterIndex + 1, 0, newBlock);
       } else {
         newContent.push(newBlock);
