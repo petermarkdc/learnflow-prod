@@ -507,7 +507,18 @@ Return JSON:
                 <DragDropContext onDragEnd={handleDragEnd}>
                   <Droppable droppableId="content-blocks">
                     {(provided) => (
-                      <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-4">
+                      <div {...provided.droppableProps} ref={provided.innerRef}>
+                        {/* Insert zone at top */}
+                        {formData.content.length > 0 && (
+                          <div className="flex items-center gap-2 mb-2">
+                            <button
+                              onClick={() => setInsertAfterIndex(-1)}
+                              className={`flex-1 h-6 rounded border-2 border-dashed transition-all text-xs flex items-center justify-center gap-1 ${insertAfterIndex === -1 ? 'border-indigo-400 bg-indigo-50 text-indigo-600' : 'border-slate-200 text-slate-300 hover:border-indigo-300 hover:text-indigo-400'}`}
+                            >
+                              <Plus className="w-3 h-3" /> Insert at top
+                            </button>
+                          </div>
+                        )}
                         {formData.content.map((block, index) => (
                           <Draggable key={block.id} draggableId={block.id} index={index}>
                             {(provided) => (
@@ -518,6 +529,15 @@ Return JSON:
                                   onDelete={() => deleteBlock(index)}
                                   dragHandleProps={provided.dragHandleProps}
                                 />
+                                {/* Insert zone after each block */}
+                                <div className="flex items-center gap-2 my-1">
+                                  <button
+                                    onClick={() => setInsertAfterIndex(index)}
+                                    className={`flex-1 h-6 rounded border-2 border-dashed transition-all text-xs flex items-center justify-center gap-1 ${insertAfterIndex === index ? 'border-indigo-400 bg-indigo-50 text-indigo-600' : 'border-slate-200 text-slate-300 hover:border-indigo-300 hover:text-indigo-400'}`}
+                                  >
+                                    <Plus className="w-3 h-3" /> Insert here
+                                  </button>
+                                </div>
                               </div>
                             )}
                           </Draggable>
@@ -532,28 +552,9 @@ Return JSON:
                   <div className="text-center py-12 border-2 border-dashed rounded-xl">
                     <Type className="w-10 h-10 mx-auto text-slate-300 mb-3" />
                     <p className="text-slate-500 mb-2">No content blocks yet</p>
-                    <p className="text-sm text-slate-400">Add blocks from the sidebar to build your lesson</p>
+                    <p className="text-sm text-slate-400">Click a block type in the left panel to add content</p>
                   </div>
                 )}
-
-                {/* Quick add buttons */}
-                <div className="mt-6 pt-6 border-t">
-                  <p className="text-sm text-slate-500 mb-3">Add content block:</p>
-                  <div className="flex flex-wrap gap-2">
-                    {BLOCK_TYPES.map((block) => (
-                      <Button
-                        key={block.type}
-                        variant="outline"
-                        size="sm"
-                        onClick={() => addBlock(block.type)}
-                        className="gap-2"
-                      >
-                        <block.icon className="w-4 h-4" />
-                        {block.label}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
               </div>
 
               {/* Pre-Test Section */}
