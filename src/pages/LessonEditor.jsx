@@ -770,31 +770,6 @@ Return JSON:
               </AlertDialog>
             </div>
 
-            {/* Sidebar */}
-            <div className="space-y-6">
-              <LessonTemplate
-                onInsertBlocks={(blocks) => setFormData(prev => ({ ...prev, content: [...prev.content, ...blocks] }))}
-              />
-
-              <AISuggestions
-                lessonTitle={formData.title}
-                onInsertBlock={(block) => setFormData(prev => ({ ...prev, content: [...prev.content, block] }))}
-              />
-
-              <DocumentReference
-                onInsertBlock={(block) => setFormData(prev => ({ ...prev, content: [...prev.content, block] }))}
-              />
-
-              <div className="bg-white rounded-2xl border p-5">
-                <h3 className="font-semibold text-slate-900 mb-3 text-sm">Formatting</h3>
-                <div className="text-xs text-slate-600 space-y-2">
-                  <p><code className="bg-slate-100 px-1 rounded">**bold**</code> for <strong>bold</strong></p>
-                  <p><code className="bg-slate-100 px-1 rounded">*italic*</code> for <em>italic</em></p>
-                  <p><code className="bg-slate-100 px-1 rounded">`code`</code> for <code className="bg-slate-100 px-1 rounded text-pink-600">code</code></p>
-                  <p><code className="bg-slate-100 px-1 rounded">- item</code> for bullets</p>
-                </div>
-              </div>
-            </div>
           </div>
         ) : (
           /* Preview Tab */
