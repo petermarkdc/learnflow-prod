@@ -718,30 +718,6 @@ Return JSON:
                 )}
               </div>
 
-              {/* Bottom Save Bar */}
-              <div className="bg-white rounded-2xl border p-4 flex items-center gap-3 justify-end">
-                <Button
-                  variant="outline"
-                  onClick={() => { const errors = []; if (!formData.title?.trim()) errors.push('title'); setValidationErrors(errors); if (errors.length === 0) setShowSaveNewConfirm(true); }}
-                  disabled={saveMutation.isPending}
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Save & Add New Lesson
-                </Button>
-                <Button
-                  onClick={() => validateAndSave(false)}
-                  disabled={saveMutation.isPending}
-                  className="bg-indigo-600 hover:bg-indigo-700"
-                >
-                  {saveMutation.isPending ? (
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  ) : (
-                    <Save className="w-4 h-4 mr-2" />
-                  )}
-                  Save Lesson
-                </Button>
-              </div>
-
               {/* Post-Save "What's next?" Dialog */}
               <Dialog open={showPostSaveDialog} onOpenChange={setShowPostSaveDialog}>
                 <DialogContent className="max-w-sm">
