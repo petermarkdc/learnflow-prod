@@ -183,7 +183,16 @@ export default function LessonEditor() {
       ...(type === 'heading' && { level: 3 }),
       ...((type === 'bullet_list' || type === 'numbered_list') && { items: [''] }),
     };
-    setFormData(prev => ({ ...prev, content: [...prev.content, newBlock] }));
+    setFormData(prev => {
+      const newContent = [...prev.content];
+      if (insertAfterIndex !== null && insertAfterIndex >= 0) {
+        newContent.splice(insertAfterIndex + 1, 0, newBlock);
+      } else {
+        newContent.push(newBlock);
+      }
+      return { ...prev, content: newContent };
+    });
+    setInsertAfterIndex(null);
   };
 
   const updateBlock = (index, updatedBlock) => {
