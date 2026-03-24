@@ -90,8 +90,8 @@ export default function ContentRenderer({ blocks = [] }) {
       case 'image':
         return (
           <figure key={index} className="my-6">
-            <div className="rounded-xl overflow-hidden border border-slate-200 bg-slate-50">
-              <img src={block.url} alt={block.alt || ''} className="w-full h-auto object-contain max-h-[500px]" />
+            <div className="flex justify-center rounded-xl overflow-hidden border border-slate-200 bg-slate-50 p-2">
+              <img src={block.url} alt={block.alt || ''} className="max-w-full h-auto object-contain" style={{ maxHeight: '500px' }} />
             </div>
             {block.alt && <figcaption className="text-center text-sm text-slate-500 mt-2">{block.alt}</figcaption>}
           </figure>
