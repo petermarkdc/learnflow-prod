@@ -5,12 +5,16 @@ function slugify(text) {
   return text?.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '') || '';
 }
 
+function stripColorSyntax(text) {
+  return text?.replace(/\[(red|blue|green|yellow|orange|purple|pink):([^\]]+)\]/g, '$2') || '';
+}
+
 export default function TableOfContents({ blocks = [] }) {
   const [activeId, setActiveId] = useState('');
 
   const headings = blocks
     .filter(b => b.type === 'heading' && b.content)
-    .map(b => ({ id: slugify(b.content), text: b.content, level: b.level || 2 }));
+    .map(b => ({ id: slugify(stripColorSyntax(b.content)), text: stripColorSyntax(b.content), level: b.level || 2 }));
 
   useEffect(() => {
     if (headings.length === 0) return;
