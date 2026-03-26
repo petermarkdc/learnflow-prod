@@ -31,9 +31,13 @@ export default function ContentRenderer({ blocks = [] }) {
                 p: ({ children }) => <p className="leading-relaxed mb-4" style={block.color ? { color: block.color } : {}}>{children}</p>,
                 strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
                 em: ({ children }) => <em className="italic">{children}</em>,
-                code: ({ children }) => (
-                  <code className="px-1.5 py-0.5 rounded bg-slate-100 text-pink-600 text-sm font-mono">{children}</code>
-                ),
+                code: ({ children }) => {
+                  const text = String(children);
+                  if (text.startsWith('b:')) {
+                    return <span className="text-blue-600 font-medium">{text.slice(2)}</span>;
+                  }
+                  return <code className="px-1.5 py-0.5 rounded bg-slate-100 text-pink-600 text-sm font-mono">{children}</code>;
+                },
                 ul: ({ children }) => <ul className="list-disc list-inside space-y-1 mb-4">{children}</ul>,
                 ol: ({ children }) => <ol className="list-decimal list-inside space-y-1 mb-4">{children}</ol>,
                 li: ({ children }) => <li>{children}</li>,

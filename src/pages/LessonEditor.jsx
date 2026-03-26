@@ -419,6 +419,7 @@ Return JSON:
                     <p><code className="bg-slate-100 px-1 rounded">*italic*</code> for <em>italic</em></p>
                     <p><code className="bg-slate-100 px-1 rounded">`code`</code> for <code className="bg-slate-100 px-1 rounded text-pink-600">code</code></p>
                     <p><code className="bg-slate-100 px-1 rounded">- item</code> for bullets</p>
+                    <p><code className="bg-slate-100 px-1 rounded">`b:word`</code> for <span className="text-blue-600 font-medium">blue</span></p>
                   </div>
                 </div>
               </div>
