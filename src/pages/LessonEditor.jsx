@@ -420,6 +420,11 @@ Return JSON:
                     <p><code className="bg-slate-100 px-1 rounded">`code`</code> for <code className="bg-slate-100 px-1 rounded text-pink-600">code</code></p>
                     <p><code className="bg-slate-100 px-1 rounded">- item</code> for bullets</p>
                     <p><code className="bg-slate-100 px-1 rounded">`b:word`</code> for <span className="text-blue-600 font-medium">blue</span></p>
+                    <p className="mt-1 font-medium text-slate-500">Heading colors:</p>
+                    <p><code className="bg-slate-100 px-1 rounded">[red:text]</code> <code className="bg-slate-100 px-1 rounded">[blue:text]</code></p>
+                    <p><code className="bg-slate-100 px-1 rounded">[green:text]</code> <code className="bg-slate-100 px-1 rounded">[yellow:text]</code></p>
+                    <p><code className="bg-slate-100 px-1 rounded">[orange:text]</code> <code className="bg-slate-100 px-1 rounded">[purple:text]</code></p>
+                    <p><code className="bg-slate-100 px-1 rounded">[pink:text]</code></p>
                   </div>
                 </div>
               </div>

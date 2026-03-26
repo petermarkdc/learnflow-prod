@@ -4,6 +4,30 @@ import CodeBlock from '../editor/CodeBlock';
 import VideoPlayer from './VideoPlayer';
 import { ExternalLink, Paperclip, Info, AlertTriangle, Lightbulb } from 'lucide-react';
 
+const COLOR_MAP = {
+  red: 'text-red-600',
+  blue: 'text-blue-600',
+  green: 'text-green-600',
+  yellow: 'text-yellow-500',
+  orange: 'text-orange-500',
+  purple: 'text-purple-600',
+  pink: 'text-pink-500',
+};
+
+function parseColoredText(text) {
+  if (!text) return text;
+  const parts = [];
+  const regex = /\[(red|blue|green|yellow|orange|purple|pink):([^\]]+)\]/g;
+  let last = 0, match;
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > last) parts.push(text.slice(last, match.index));
+    parts.push(<span key={match.index} className={COLOR_MAP[match[1]]}>{match[2]}</span>);
+    last = match.index + match[0].length;
+  }
+  if (last < text.length) parts.push(text.slice(last));
+  return parts.length ? parts : text;
+}
+
 export default function ContentRenderer({ blocks = [] }) {
   const renderBlock = (block, index) => {
     switch (block.type) {
@@ -18,7 +42,7 @@ export default function ContentRenderer({ blocks = [] }) {
         const slugId = block.content?.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '') || '';
         return (
           <HeadingTag key={index} id={slugId} className={headingStyles[block.level || 2]}>
-            {block.content}
+            {parseColoredText(block.content)}
           </HeadingTag>
         );
       }
