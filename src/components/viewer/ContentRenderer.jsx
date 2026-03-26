@@ -197,7 +197,7 @@ export default function ContentRenderer({ blocks = [] }) {
             {items.map((item, i) => (
               <li key={i} className="flex items-start gap-2 text-slate-700">
                 <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-indigo-500 flex-shrink-0" />
-                <span>{item}</span>
+                <span>{parseColoredText(item)}</span>
               </li>
             ))}
           </ul>
@@ -212,7 +212,7 @@ export default function ContentRenderer({ blocks = [] }) {
             {items.map((item, i) => (
               <li key={i} className="flex items-start gap-3 text-slate-700">
                 <span className="font-semibold text-indigo-600 text-sm w-5 flex-shrink-0 mt-0.5">{i + 1}.</span>
-                <span>{item}</span>
+                <span>{parseColoredText(item)}</span>
               </li>
             ))}
           </ol>
