@@ -284,13 +284,16 @@ export default function CourseView() {
                       <Users className="w-4 h-4" />
                     </Button>
                   </Link>
-                  <Button 
-                    variant="outline"
-                    onClick={() => duplicateCourseMutation.mutate()}
-                    disabled={duplicateCourseMutation.isPending}
-                  >
-                    <Copy className="w-4 h-4" />
-                  </Button>
+                  {user?.role === 'admin' && (
+                    <Button 
+                      variant="outline"
+                      onClick={() => duplicateCourseMutation.mutate()}
+                      disabled={duplicateCourseMutation.isPending}
+                      title="Duplicate course"
+                    >
+                      <Copy className="w-4 h-4" />
+                    </Button>
+                  )}
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button variant="outline" className="text-red-600 hover:text-red-700">
