@@ -413,18 +413,12 @@ Return JSON:
                 />
 
                 <div className="bg-white rounded-2xl border p-4">
-                  <h3 className="font-semibold text-slate-900 mb-3 text-sm">Formatting</h3>
-                  <div className="text-xs text-slate-600 space-y-2">
-                    <p><code className="bg-slate-100 px-1 rounded">**bold**</code> for <strong>bold</strong></p>
-                    <p><code className="bg-slate-100 px-1 rounded">*italic*</code> for <em>italic</em></p>
-                    <p><code className="bg-slate-100 px-1 rounded">`code`</code> for <code className="bg-slate-100 px-1 rounded text-pink-600">code</code></p>
-                    <p><code className="bg-slate-100 px-1 rounded">- item</code> for bullets</p>
-                    <p><code className="bg-slate-100 px-1 rounded">`b:word`</code> for <span className="text-blue-600 font-medium">blue</span></p>
-                    <p className="mt-1 font-medium text-slate-500">Heading colors:</p>
+                  <h3 className="font-semibold text-slate-900 mb-3 text-sm">Formatting Tips</h3>
+                  <div className="text-xs text-slate-600 space-y-1.5">
+                    <p className="text-slate-500"><strong className="text-slate-700">Text block</strong> — use the toolbar to bold, italicize, color, resize, add links, lists, and more by selecting text first.</p>
+                    <p className="text-slate-500 mt-2"><strong className="text-slate-700">Heading colors</strong> — only for heading blocks:</p>
                     <p><code className="bg-slate-100 px-1 rounded">[red:text]</code> <code className="bg-slate-100 px-1 rounded">[blue:text]</code></p>
-                    <p><code className="bg-slate-100 px-1 rounded">[green:text]</code> <code className="bg-slate-100 px-1 rounded">[yellow:text]</code></p>
-                    <p><code className="bg-slate-100 px-1 rounded">[orange:text]</code> <code className="bg-slate-100 px-1 rounded">[purple:text]</code></p>
-                    <p><code className="bg-slate-100 px-1 rounded">[pink:text]</code></p>
+                    <p><code className="bg-slate-100 px-1 rounded">[green:text]</code> <code className="bg-slate-100 px-1 rounded">[orange:text]</code></p>
                   </div>
                 </div>
               </div>
