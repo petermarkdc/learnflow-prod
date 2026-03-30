@@ -60,6 +60,7 @@ const BLOCK_META = {
 
 export default function ContentBlockEditor({ block, onChange, onDelete, dragHandleProps }) {
   const [uploading, setUploading] = useState(false);
+  const [showHtml, setShowHtml] = useState(false);
 
   const handleFileUpload = async (e, field = 'url') => {
     const file = e.target.files?.[0];
@@ -93,8 +94,7 @@ export default function ContentBlockEditor({ block, onChange, onDelete, dragHand
           </div>
         );
 
-      case 'text': {
-        const [showHtml, setShowHtml] = useState(false);
+      case 'text':
         return (
           <div className="space-y-2">
             <div className="flex justify-end">
@@ -126,7 +126,6 @@ export default function ContentBlockEditor({ block, onChange, onDelete, dragHand
             )}
           </div>
         );
-      }
 
       case 'bullet_list':
       case 'numbered_list': {
