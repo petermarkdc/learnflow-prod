@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ReactQuill from 'react-quill';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -22,15 +23,22 @@ const LANGUAGES = [
   { value: 'bash', label: 'Bash' },
 ];
 
-const FONT_COLORS = [
-  { label: 'Default', value: '' },
-  { label: 'Red', value: '#ef4444' },
-  { label: 'Blue', value: '#3b82f6' },
-  { label: 'Green', value: '#22c55e' },
-  { label: 'Orange', value: '#f97316' },
-  { label: 'Purple', value: '#a855f7' },
-  { label: 'Pink', value: '#ec4899' },
-  { label: 'Gray', value: '#6b7280' },
+const QUILL_MODULES = {
+  toolbar: [
+    [{ size: ['small', false, 'large', 'huge'] }],
+    ['bold', 'italic', 'underline', 'strike'],
+    [{ color: [] }, { background: [] }],
+    ['code', 'link'],
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    ['blockquote'],
+    ['clean'],
+  ],
+};
+
+const QUILL_FORMATS = [
+  'size', 'bold', 'italic', 'underline', 'strike',
+  'color', 'background', 'code', 'link',
+  'list', 'bullet', 'blockquote',
 ];
 
 const BLOCK_META = {
@@ -85,34 +93,40 @@ export default function ContentBlockEditor({ block, onChange, onDelete, dragHand
           </div>
         );
 
-      case 'text':
+      case 'text': {
+        const [showHtml, setShowHtml] = useState(false);
         return (
           <div className="space-y-2">
-            <div className="flex items-center gap-2 flex-wrap">
-              <Palette className="w-4 h-4 text-slate-400" />
-              <span className="text-xs text-slate-500">Font color:</span>
-              {FONT_COLORS.map(c => (
-                <button
-                  key={c.value}
-                  title={c.label}
-                  onClick={() => onChange({ ...block, color: c.value })}
-                  className={cn(
-                    "w-5 h-5 rounded-full border-2 transition-transform hover:scale-110",
-                    block.color === c.value ? "border-slate-700 scale-110" : "border-transparent"
-                  )}
-                  style={{ background: c.value || '#1e293b' }}
-                />
-              ))}
+            <div className="flex justify-end">
+              <button
+                onClick={() => setShowHtml(h => !h)}
+                className="text-xs text-slate-400 hover:text-indigo-600 underline"
+              >
+                {showHtml ? 'Visual Editor' : 'HTML'}
+              </button>
             </div>
-            <Textarea
-              value={block.content || ''}
-              onChange={(e) => onChange({ ...block, content: e.target.value })}
-              placeholder="Write your content here... (supports **bold**, *italic*, `code`, - list, > quote)"
-              className="min-h-[100px] resize-y"
-              style={block.color ? { color: block.color } : {}}
-            />
+            {showHtml ? (
+              <Textarea
+                value={block.content || ''}
+                onChange={(e) => onChange({ ...block, content: e.target.value })}
+                placeholder="<p>Paste or write raw HTML here...</p>"
+                className="min-h-[150px] font-mono text-sm resize-y"
+              />
+            ) : (
+              <div className="quill-wrapper">
+                <ReactQuill
+                  theme="snow"
+                  value={block.content || ''}
+                  onChange={(val) => onChange({ ...block, content: val })}
+                  modules={QUILL_MODULES}
+                  formats={QUILL_FORMATS}
+                  placeholder="Write your content here..."
+                />
+              </div>
+            )}
           </div>
         );
+      }
 
       case 'bullet_list':
       case 'numbered_list': {

@@ -48,12 +48,23 @@ export default function ContentRenderer({ blocks = [] }) {
         );
       }
 
-      case 'text':
+      case 'text': {
+        // If content looks like HTML (from Quill), render as HTML
+        const isHtml = block.content && /<[a-z][\s\S]*>/i.test(block.content);
+        if (isHtml) {
+          return (
+            <div
+              key={index}
+              className="prose prose-slate max-w-none mb-4 ql-content"
+              dangerouslySetInnerHTML={{ __html: block.content }}
+            />
+          );
+        }
         return (
-          <div key={index} className="prose prose-slate max-w-none mb-4" style={block.color ? { color: block.color } : {}}>
+          <div key={index} className="prose prose-slate max-w-none mb-4">
             <ReactMarkdown
               components={{
-                p: ({ children }) => <p className="leading-relaxed mb-4" style={block.color ? { color: block.color } : {}}>{children}</p>,
+                p: ({ children }) => <p className="leading-relaxed mb-4">{children}</p>,
                 strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
                 em: ({ children }) => <em className="italic">{children}</em>,
                 code: ({ children }) => {
@@ -75,6 +86,7 @@ export default function ContentRenderer({ blocks = [] }) {
             </ReactMarkdown>
           </div>
         );
+      }
 
       case 'note':
         return (

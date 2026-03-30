@@ -2,6 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Quill rich text editor styles */
+.quill-wrapper .ql-toolbar {
+  border-radius: 0.5rem 0.5rem 0 0;
+  border-color: #e2e8f0;
+  background: #f8fafc;
+}
+.quill-wrapper .ql-container {
+  border-radius: 0 0 0.5rem 0.5rem;
+  border-color: #e2e8f0;
+  font-size: 0.875rem;
+  min-height: 120px;
+}
+.quill-wrapper .ql-editor {
+  min-height: 120px;
+}
+/* Render Quill HTML output */
+.ql-content p { margin-bottom: 0.75rem; line-height: 1.7; }
+.ql-content strong { font-weight: 600; }
+.ql-content em { font-style: italic; }
+.ql-content u { text-decoration: underline; }
+.ql-content s { text-decoration: line-through; }
+.ql-content code { background: #f1f5f9; color: #db2777; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.875em; }
+.ql-content a { color: #4f46e5; text-decoration: underline; }
+.ql-content ol { list-style: decimal; padding-left: 1.5rem; margin-bottom: 0.75rem; }
+.ql-content ul { list-style: disc; padding-left: 1.5rem; margin-bottom: 0.75rem; }
+.ql-content li { margin-bottom: 0.25rem; }
+.ql-content blockquote { border-left: 4px solid #6366f1; padding-left: 1rem; margin: 1rem 0; background: #eef2ff; border-radius: 0 0.5rem 0.5rem 0; }
+.ql-content .ql-size-small { font-size: 0.8em; }
+.ql-content .ql-size-large { font-size: 1.25em; }
+.ql-content .ql-size-huge { font-size: 1.6em; }
+
 @layer base {
   :root {
     --background: 0 0% 100%;
