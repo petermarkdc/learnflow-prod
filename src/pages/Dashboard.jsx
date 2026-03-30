@@ -7,10 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
+import { useNavigate } from 'react-router-dom';
 import { 
   BookOpen, CheckCircle2, Clock, Trophy, 
   ChevronRight, Play, Target, Plus, Edit, Users,
-  ClipboardList, FlaskConical, RotateCcw
+  ClipboardList, FlaskConical, RotateCcw, Copy, Loader2
 } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { motion } from 'framer-motion';
@@ -19,9 +20,31 @@ import PostTestModal from '../components/lesson/PostTestModal';
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
-  const [activePreTest, setActivePreTest] = useState(null); // lesson object
-  const [activePostTest, setActivePostTest] = useState(null); // lesson object
+  const [activePreTest, setActivePreTest] = useState(null);
+  const [activePostTest, setActivePostTest] = useState(null);
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  const duplicateCourseMutation = useMutation({
+    mutationFn: async (course) => {
+      const newCourse = await base44.entities.Course.create({
+        ...course,
+        id: undefined,
+        title: `${course.title} (Copy)`,
+        is_published: false,
+      });
+      const courseLessons = await base44.entities.Lesson.filter({ course_id: course.id });
+      for (const lesson of courseLessons) {
+        await base44.entities.Lesson.create({ ...lesson, id: undefined, course_id: newCourse.id });
+      }
+      return newCourse;
+    },
+    onSuccess: (newCourse) => {
+      queryClient.invalidateQueries(['authored-courses']);
+      queryClient.invalidateQueries(['courses-all']);
+      navigate(createPageUrl('CourseEditor') + `?id=${newCourse.id}`);
+    },
+  });
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => setUser(null));
@@ -397,6 +420,16 @@ export default function Dashboard() {
                             Students
                           </Button>
                         </Link>
+                        {user?.role === 'admin' && (
+                          <Button
+                            variant="outline" size="sm"
+                            title="Duplicate course"
+                            disabled={duplicateCourseMutation.isPending}
+                            onClick={() => duplicateCourseMutation.mutate(course)}
+                          >
+                            {duplicateCourseMutation.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : <Copy className="w-3 h-3" />}
+                          </Button>
+                        )}
                       </div>
                     </CardContent>
                   </Card>
