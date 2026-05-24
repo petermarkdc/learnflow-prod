@@ -609,7 +609,7 @@ Return JSON with a "questions" array. Each question must have:
                     <QuizEditor
                       questions={formData.pre_test}
                       onChange={(pre_test) => setFormData(prev => ({ ...prev, pre_test }))}
-                      maxQuestions={5}
+                      maxQuestions={20}
                       label="Pre-Test"
                     />
                   </div>
@@ -725,7 +725,7 @@ Return JSON with a "questions" array. Each question must have:
                     <QuizEditor
                       questions={formData.post_test}
                       onChange={(post_test) => setFormData(prev => ({ ...prev, post_test }))}
-                      maxQuestions={5}
+                      maxQuestions={20}
                       label="Post-Test"
                     />
                   </div>
