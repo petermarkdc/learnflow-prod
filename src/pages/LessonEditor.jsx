@@ -78,6 +78,7 @@ export default function LessonEditor() {
   const [showPreTest, setShowPreTest] = useState(false);
   const [showPostTest, setShowPostTest] = useState(false);
   const [generatingTests, setGeneratingTests] = useState(false);
+  const [testCount, setTestCount] = useState(5);
 
   const { data: lesson, isLoading: lessonLoading } = useQuery({
     queryKey: ['lesson', lessonId],
@@ -214,7 +215,7 @@ export default function LessonEditor() {
 
   const generateTestsWithAI = async () => {
     const contentText = formData.content
-      .filter(b => b.type === 'text' || b.type === 'heading' || b.type === 'note' || b.type === 'tip')
+      .filter(b => ['text', 'heading', 'note', 'tip', 'bullet_list', 'numbered_list'].includes(b.type))
       .map(b => b.content || (b.items || []).join(', '))
       .join('\n');
 
@@ -225,22 +226,20 @@ export default function LessonEditor() {
 
     setGeneratingTests(true);
     const result = await base44.integrations.Core.InvokeLLM({
-      prompt: `Generate 10 multiple-choice quiz questions for a lesson titled: "${formData.title}".
+      prompt: `Generate exactly ${testCount} test questions for a lesson titled: "${formData.title}".
 ${contentText ? `\nLesson content:\n${contentText}` : ''}
 
-Create questions that test understanding of the key concepts. Each question should have 4 options with one correct answer and a brief explanation.
+Create a mix of: multiple choice, true/false, multiple answers (checkbox), and coding problems.
+Questions must directly test understanding of this lesson's content.
 
-Return JSON:
-{
-  "questions": [
-    {
-      "question": "...",
-      "options": ["option A", "option B", "option C", "option D"],
-      "correct_answer": 0,
-      "explanation": "..."
-    }
-  ]
-}`,
+Return JSON with a "questions" array. Each question must have:
+- type: "multiple_choice" | "true_false" | "multiple_answers" | "coding"
+- question: string
+- For multiple_choice/true_false: options (array), correct_answer (index number)
+- For true_false: options must be exactly ["True","False"]
+- For multiple_answers: options (array), correct_answers (array of correct index numbers)
+- For coding: starter_code (optional skeleton), solution (model answer)
+- explanation: string`,
       response_json_schema: {
         type: "object",
         properties: {
@@ -249,9 +248,13 @@ Return JSON:
             items: {
               type: "object",
               properties: {
+                type: { type: "string" },
                 question: { type: "string" },
                 options: { type: "array", items: { type: "string" } },
                 correct_answer: { type: "number" },
+                correct_answers: { type: "array", items: { type: "number" } },
+                starter_code: { type: "string" },
+                solution: { type: "string" },
                 explanation: { type: "string" }
               }
             }
@@ -297,7 +300,7 @@ Return JSON:
       {showSavedBanner && (
         <div className="fixed inset-0 flex items-center justify-center z-[9999] pointer-events-none">
           <div className="bg-green-500 text-white px-10 py-5 rounded-2xl shadow-2xl text-lg font-semibold flex items-center gap-3 animate-in fade-in zoom-in-95">
-            <span>✓ Lesson Saved!</span>
+            <span>&#10003; Lesson Saved!</span>
           </div>
         </div>
       )}
@@ -371,7 +374,7 @@ Return JSON:
                     disabled={saveMutation.isPending}
                   >
                     <Plus className="w-4 h-4 mr-2" />
-                    Save & Add New
+                    Save &amp; Add New
                   </Button>
                 </div>
 
@@ -566,10 +569,19 @@ Return JSON:
                     <ClipboardList className="w-5 h-5 text-blue-600" />
                     <div>
                       <h3 className="text-lg font-semibold text-slate-900">Pre-Test</h3>
-                      <p className="text-xs text-slate-500">Given before the lesson (up to 20 items)</p>
+                      <p className="text-xs text-slate-500">Given before the lesson (up to 5 items)</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-slate-500">Count:</span>
+                      <input
+                        type="number" min={3} max={10}
+                        value={testCount}
+                        onChange={(e) => setTestCount(Math.max(3, Math.min(10, Number(e.target.value))))}
+                        className="w-14 h-7 text-xs text-center border rounded px-1"
+                      />
+                    </div>
                     <Button
                       size="sm"
                       variant="outline"
@@ -597,7 +609,7 @@ Return JSON:
                     <QuizEditor
                       questions={formData.pre_test}
                       onChange={(pre_test) => setFormData(prev => ({ ...prev, pre_test }))}
-                      maxQuestions={20}
+                      maxQuestions={5}
                       label="Pre-Test"
                     />
                   </div>
@@ -694,7 +706,7 @@ Return JSON:
                     <FlaskConical className="w-5 h-5 text-green-600" />
                     <div>
                       <h3 className="text-lg font-semibold text-slate-900">Post-Test</h3>
-                      <p className="text-xs text-slate-500">Given after the lesson (up to 20 items)</p>
+                      <p className="text-xs text-slate-500">Given after the lesson (up to 5 items)</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -713,7 +725,7 @@ Return JSON:
                     <QuizEditor
                       questions={formData.post_test}
                       onChange={(post_test) => setFormData(prev => ({ ...prev, post_test }))}
-                      maxQuestions={20}
+                      maxQuestions={5}
                       label="Post-Test"
                     />
                   </div>
@@ -765,7 +777,7 @@ Return JSON:
                       className="bg-indigo-600 hover:bg-indigo-700"
                       onClick={() => { setShowSaveNewConfirm(false); validateAndSave(true); }}
                     >
-                      Save & Continue
+                      Save &amp; Continue
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
