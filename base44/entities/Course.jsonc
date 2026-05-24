@@ -1,0 +1,185 @@
+{
+  "name": "Course",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "cover_image": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "web-development",
+        "programming-basics",
+        "devops",
+        "data-science",
+        "mobile-development",
+        "robotics",
+        "arduino",
+        "raspberry-pi",
+        "other"
+      ]
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": [
+        "beginner",
+        "intermediate",
+        "advanced"
+      ],
+      "default": "beginner"
+    },
+    "is_published": {
+      "type": "boolean",
+      "default": false
+    },
+    "access_type": {
+      "type": "string",
+      "enum": [
+        "public",
+        "free",
+        "paid"
+      ],
+      "default": "free"
+    },
+    "course_code": {
+      "type": "string"
+    },
+    "enrolled_emails": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "lesson_order": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "collaborators": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "pre_test_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "post_test_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "pre_test": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "multiple_choice",
+              "true_false",
+              "multiple_answers",
+              "coding"
+            ],
+            "default": "multiple_choice"
+          },
+          "question": {
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "correct_answer": {
+            "type": "number"
+          },
+          "correct_answers": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "starter_code": {
+            "type": "string"
+          },
+          "solution": {
+            "type": "string"
+          },
+          "explanation": {
+            "type": "string"
+          },
+          "lesson_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "post_test": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "multiple_choice",
+              "true_false",
+              "multiple_answers",
+              "coding"
+            ],
+            "default": "multiple_choice"
+          },
+          "question": {
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "correct_answer": {
+            "type": "number"
+          },
+          "correct_answers": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "starter_code": {
+            "type": "string"
+          },
+          "solution": {
+            "type": "string"
+          },
+          "explanation": {
+            "type": "string"
+          },
+          "lesson_id": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "title"
+  ]
+}

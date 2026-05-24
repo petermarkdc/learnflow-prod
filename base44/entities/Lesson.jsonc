@@ -1,0 +1,272 @@
+{
+  "name": "Lesson",
+  "type": "object",
+  "properties": {
+    "course_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "is_subtopic": {
+      "type": "boolean",
+      "default": false
+    },
+    "parent_lesson_id": {
+      "type": "string"
+    },
+    "content": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "code",
+              "image",
+              "heading",
+              "link",
+              "divider",
+              "table",
+              "video",
+              "attachment",
+              "note",
+              "warning",
+              "tip",
+              "bullet_list",
+              "numbered_list"
+            ]
+          },
+          "content": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "language": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "alt": {
+            "type": "string"
+          },
+          "level": {
+            "type": "number"
+          },
+          "color": {
+            "type": "string"
+          },
+          "table_data": {
+            "type": "object",
+            "properties": {
+              "headers": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "rows": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "filename": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "activities": {
+      "type": "object",
+      "properties": {
+        "suggested_time": {
+          "type": "number"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "task": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "pre_test": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "multiple_choice",
+              "true_false",
+              "multiple_answers",
+              "coding"
+            ],
+            "default": "multiple_choice"
+          },
+          "question": {
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "correct_answer": {
+            "type": "number"
+          },
+          "correct_answers": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "starter_code": {
+            "type": "string"
+          },
+          "solution": {
+            "type": "string"
+          },
+          "explanation": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "post_test": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "multiple_choice",
+              "true_false",
+              "multiple_answers",
+              "coding"
+            ],
+            "default": "multiple_choice"
+          },
+          "question": {
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "correct_answer": {
+            "type": "number"
+          },
+          "correct_answers": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "starter_code": {
+            "type": "string"
+          },
+          "solution": {
+            "type": "string"
+          },
+          "explanation": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "quiz": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "multiple_choice",
+              "true_false",
+              "multiple_answers",
+              "coding"
+            ],
+            "default": "multiple_choice"
+          },
+          "question": {
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "correct_answer": {
+            "type": "number"
+          },
+          "correct_answers": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "starter_code": {
+            "type": "string"
+          },
+          "solution": {
+            "type": "string"
+          },
+          "explanation": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "order_index": {
+      "type": "number"
+    },
+    "estimated_time": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "course_id",
+    "title"
+  ]
+}

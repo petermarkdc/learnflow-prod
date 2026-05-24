@@ -30,6 +30,7 @@ import {
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription
 } from "@/components/ui/dialog";
+import CourseTestEditor from '../components/editor/CourseTestEditor';
 
 const ALL_CATEGORIES = [
   { value: 'web-development', label: 'Web Development' },
@@ -716,6 +717,11 @@ export default function CourseEditor() {
                   </DragDropContext>
                 )}
               </div>
+            )}
+
+            {/* Course-Level Tests */}
+            {courseId && (
+              <CourseTestEditor courseId={courseId} user={user} />
             )}
           </div>
         </div>
