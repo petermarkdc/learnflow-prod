@@ -12,6 +12,11 @@
       "type": "boolean",
       "default": false
     },
+    "is_hidden": {
+      "type": "boolean",
+      "default": false,
+      "description": "If true, lesson is hidden from students"
+    },
     "parent_lesson_id": {
       "type": "string"
     },

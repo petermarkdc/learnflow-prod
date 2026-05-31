@@ -10,12 +10,14 @@ export default function LessonSidebar({
   lessons, 
   currentLessonId, 
   completedLessons = [],
-  onClose 
+  onClose,
+  isTeacher = false
 }) {
+  const visibleLessons = isTeacher ? lessons : lessons.filter(l => !l.is_hidden);
   const completedSet = new Set(completedLessons);
 
   // Build ordered list: for each top-level lesson, inject its subtopics right after
-  const sortedAll = [...lessons].sort((a, b) => (a.order_index || 0) - (b.order_index || 0));
+  const sortedAll = [...visibleLessons].sort((a, b) => (a.order_index || 0) - (b.order_index || 0));
   const topLevel = sortedAll.filter(l => !l.is_subtopic);
   const orderedLessons = [];
   topLevel.forEach(parent => {

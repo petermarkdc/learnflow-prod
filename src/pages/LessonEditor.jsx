@@ -68,6 +68,7 @@ export default function LessonEditor() {
     estimated_time: '',
     is_subtopic: false,
     parent_lesson_id: '',
+    is_hidden: false,
   });
   const [isDirty, setIsDirty] = useState(false);
   const initialLoaded = React.useRef(false);
@@ -133,6 +134,7 @@ export default function LessonEditor() {
         estimated_time: lesson.estimated_time || '',
         is_subtopic: lesson.is_subtopic || false,
         parent_lesson_id: lesson.parent_lesson_id || '',
+        is_hidden: lesson.is_hidden || false,
       });
       if (preTest.length > 0) setShowPreTest(true);
       if (postTest.length > 0) setShowPostTest(true);
@@ -407,6 +409,16 @@ Return JSON with a "questions" array. Each question must have:
                   {isDirty && (
                     <p className="text-xs text-amber-600 bg-amber-50 rounded-lg px-2 py-1.5">Unsaved changes</p>
                   )}
+                  <div className={`flex items-center justify-between rounded-xl px-3 py-2.5 border ${formData.is_hidden ? 'bg-slate-100 border-slate-300' : 'bg-white border-slate-200'}`}>
+                    <div>
+                      <p className="text-sm font-medium text-slate-700">Hidden from students</p>
+                      <p className="text-xs text-slate-400">{formData.is_hidden ? 'Lesson is hidden' : 'Lesson is visible'}</p>
+                    </div>
+                    <Switch
+                      checked={formData.is_hidden || false}
+                      onCheckedChange={(v) => setFormData(prev => ({ ...prev, is_hidden: v }))}
+                    />
+                  </div>
                   <Button
                     onClick={() => validateAndSave(false)}
                     disabled={saveMutation.isPending}
