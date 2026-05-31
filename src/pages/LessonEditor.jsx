@@ -12,7 +12,8 @@ import {
   ArrowLeft, Save, Plus, Eye, Loader2,
   Type, Code, Image as ImageIcon, Link as LinkIcon, Heading, Minus,
   Table, Video, Paperclip, Info, AlertTriangle, Lightbulb, Indent, List, ListOrdered,
-  ClipboardList, FlaskConical, Sparkles, CheckSquare, Clock, Trash2, GripVertical, BookOpen
+  ClipboardList, FlaskConical, Sparkles, CheckSquare, Clock, Trash2, GripVertical, BookOpen,
+  ExternalLink, BookOpenCheck
 } from 'lucide-react';
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -68,6 +69,10 @@ export default function LessonEditor() {
     is_subtopic: false,
     parent_lesson_id: '',
   });
+  const [isDirty, setIsDirty] = useState(false);
+  const initialLoaded = React.useRef(false);
+  const [pendingNav, setPendingNav] = useState(null);
+  const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
   const [saveAndNew, setSaveAndNew] = useState(false);
   const [showSaveNewConfirm, setShowSaveNewConfirm] = useState(false);
   const [showSavedBanner, setShowSavedBanner] = useState(false);
@@ -79,6 +84,15 @@ export default function LessonEditor() {
   const [showPostTest, setShowPostTest] = useState(false);
   const [generatingTests, setGeneratingTests] = useState(false);
   const [testCount, setTestCount] = useState(5);
+
+  const handleNavWithGuard = (url) => {
+    if (isDirty) {
+      setPendingNav(url);
+      setShowUnsavedDialog(true);
+    } else {
+      navigate(url);
+    }
+  };
 
   const { data: lesson, isLoading: lessonLoading } = useQuery({
     queryKey: ['lesson', lessonId],
@@ -108,6 +122,7 @@ export default function LessonEditor() {
     if (lesson) {
       const preTest = lesson.pre_test || [];
       const postTest = lesson.post_test || [];
+      initialLoaded.current = false;
       setFormData({
         title: lesson.title || '',
         content: lesson.content || [],
@@ -121,8 +136,19 @@ export default function LessonEditor() {
       });
       if (preTest.length > 0) setShowPreTest(true);
       if (postTest.length > 0) setShowPostTest(true);
+      setTimeout(() => { initialLoaded.current = true; }, 0);
+    } else if (!lessonId) {
+      setTimeout(() => { initialLoaded.current = true; }, 0);
     }
   }, [lesson]);
+
+  // Track dirty state whenever formData changes after initial load
+  const prevFormData = React.useRef(null);
+  useEffect(() => {
+    if (!initialLoaded.current) return;
+    if (prevFormData.current !== null) setIsDirty(true);
+    prevFormData.current = formData;
+  }, [formData]);
 
   const validateAndSave = (andNew = false) => {
     const errors = [];
@@ -158,6 +184,7 @@ export default function LessonEditor() {
     onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ['lesson'] });
       queryClient.invalidateQueries({ queryKey: ['lessons'] });
+      setIsDirty(false);
       setShowSavedBanner(true);
       setTimeout(() => setShowSavedBanner(false), 2500);
       if (saveAndNew) {
@@ -321,6 +348,28 @@ Return JSON with a "questions" array. Each question must have:
             </div>
           </div>
           <div className="flex items-center gap-3">
+            {lessonId && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-1.5 text-indigo-600 border-indigo-200 hover:bg-indigo-50"
+                onClick={() => handleNavWithGuard(createPageUrl('LessonView') + `?id=${lessonId}`)}
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+                View Lesson
+              </Button>
+            )}
+            {effectiveCourseId && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-1.5 text-slate-600"
+                onClick={() => handleNavWithGuard(createPageUrl('CourseView') + `?id=${effectiveCourseId}`)}
+              >
+                <BookOpenCheck className="w-3.5 h-3.5" />
+                View Course
+              </Button>
+            )}
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               <TabsList>
                 <TabsTrigger value="edit">Edit</TabsTrigger>
@@ -354,7 +403,10 @@ Return JSON with a "questions" array. Each question must have:
               <div className="sticky top-16 space-y-4 max-h-[calc(100vh-5rem)] overflow-y-auto pb-4">
                 {/* Save Actions */}
                 <div className="bg-white rounded-2xl border p-4 space-y-2">
-                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Actions</p>
+                   <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Actions</p>
+                  {isDirty && (
+                    <p className="text-xs text-amber-600 bg-amber-50 rounded-lg px-2 py-1.5">Unsaved changes</p>
+                  )}
                   <Button
                     onClick={() => validateAndSave(false)}
                     disabled={saveMutation.isPending}
@@ -731,6 +783,48 @@ Return JSON with a "questions" array. Each question must have:
                   </div>
                 )}
               </div>
+
+              {/* Unsaved Changes Dialog */}
+              <AlertDialog open={showUnsavedDialog} onOpenChange={setShowUnsavedDialog}>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Unsaved changes</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      You have unsaved changes. Do you want to save before leaving, or leave without saving?
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+                    <AlertDialogCancel onClick={() => { setShowUnsavedDialog(false); setPendingNav(null); }}>
+                      Stay &amp; Keep Editing
+                    </AlertDialogCancel>
+                    <Button
+                      variant="outline"
+                      onClick={() => { setShowUnsavedDialog(false); if (pendingNav) navigate(pendingNav); setPendingNav(null); }}
+                    >
+                      Leave Without Saving
+                    </Button>
+                    <AlertDialogAction
+                      className="bg-indigo-600 hover:bg-indigo-700"
+                      onClick={() => {
+                        setShowUnsavedDialog(false);
+                        const dest = pendingNav;
+                        setPendingNav(null);
+                        const errors = [];
+                        if (!formData.title?.trim()) errors.push('title');
+                        setValidationErrors(errors);
+                        if (errors.length === 0) {
+                          setSaveAndNew(false);
+                          saveMutation.mutate(undefined, {
+                            onSuccess: () => { if (dest) navigate(dest); }
+                          });
+                        }
+                      }}
+                    >
+                      Save &amp; Leave
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
 
               {/* Post-Save "What's next?" Dialog */}
               <Dialog open={showPostSaveDialog} onOpenChange={setShowPostSaveDialog}>
