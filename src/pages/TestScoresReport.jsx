@@ -116,6 +116,9 @@ export default function TestScoresReport() {
   const [user, setUser] = useState(null);
   const [typeFilter, setTypeFilter] = useState('all');
   const [levelFilter, setLevelFilter] = useState('all');
+  const [courseFilter, setCourseFilter] = useState('all');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => setUser(null));
@@ -154,6 +157,13 @@ export default function TestScoresReport() {
     .filter(r => {
       if (levelFilter === 'course_level') return r.lesson_id === 'course_level';
       if (levelFilter === 'lesson_level') return r.lesson_id !== 'course_level';
+      return true;
+    })
+    .filter(r => courseFilter === 'all' || r.course_id === courseFilter)
+    .filter(r => {
+      const d = new Date(r.created_date);
+      if (dateFrom && d < new Date(dateFrom)) return false;
+      if (dateTo && d > new Date(dateTo + 'T23:59:59')) return false;
       return true;
     });
 
@@ -221,7 +231,18 @@ export default function TestScoresReport() {
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-2xl border p-4 mb-4 flex gap-3 flex-wrap">
+        <div className="bg-white rounded-2xl border p-4 mb-4 flex gap-3 flex-wrap items-center">
+          <Select value={courseFilter} onValueChange={setCourseFilter}>
+            <SelectTrigger className="w-52">
+              <SelectValue placeholder="All Courses" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Courses</SelectItem>
+              {courses.map(c => (
+                <SelectItem key={c.id} value={c.id}>{c.title}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <Select value={levelFilter} onValueChange={setLevelFilter}>
             <SelectTrigger className="w-48">
               <SelectValue placeholder="Level" />
@@ -233,7 +254,7 @@ export default function TestScoresReport() {
             </SelectContent>
           </Select>
           <Select value={typeFilter} onValueChange={setTypeFilter}>
-            <SelectTrigger className="w-48">
+            <SelectTrigger className="w-44">
               <SelectValue placeholder="Test type" />
             </SelectTrigger>
             <SelectContent>
@@ -242,6 +263,20 @@ export default function TestScoresReport() {
               <SelectItem value="post_test">Post-Test Only</SelectItem>
             </SelectContent>
           </Select>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-slate-500 whitespace-nowrap">From</span>
+            <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)}
+              className="h-9 px-3 rounded-md border border-input text-sm bg-background" />
+            <span className="text-xs text-slate-500 whitespace-nowrap">To</span>
+            <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)}
+              className="h-9 px-3 rounded-md border border-input text-sm bg-background" />
+          </div>
+          {(courseFilter !== 'all' || levelFilter !== 'all' || typeFilter !== 'all' || dateFrom || dateTo) && (
+            <button onClick={() => { setCourseFilter('all'); setLevelFilter('all'); setTypeFilter('all'); setDateFrom(''); setDateTo(''); }}
+              className="text-xs text-indigo-600 hover:underline whitespace-nowrap">
+              Clear filters
+            </button>
+          )}
         </div>
 
         {isLoading ? (
