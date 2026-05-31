@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Download, ClipboardList, FlaskConical, BarChart2, ChevronDown, ChevronRight } from 'lucide-react';
+import { Download, ClipboardList, FlaskConical, BarChart2, ChevronDown, ChevronRight, BookOpen, GraduationCap } from 'lucide-react';
 import { Skeleton } from "@/components/ui/skeleton";
 
 function downloadCSV(filename, rows) {
@@ -19,12 +19,16 @@ function downloadCSV(filename, rows) {
 function GroupedTable({ results, courses }) {
   const [expanded, setExpanded] = useState({});
 
+  const isCourseLevelResult = (r) => r.lesson_id === 'course_level';
+
   // Group by course then lesson
   const grouped = {};
   results.forEach(r => {
     const course = courses.find(c => c.id === r.course_id);
     const courseName = course?.title || r.course_id || 'Unknown Course';
-    const lessonName = r.lesson_title || r.lesson_id || 'Unknown Lesson';
+    const lessonName = r.lesson_id === 'course_level'
+      ? (r.test_type === 'pre_test' ? '📋 Course Pre-Test' : '🧪 Course Post-Test')
+      : (r.lesson_title || r.lesson_id || 'Unknown Lesson');
     if (!grouped[courseName]) grouped[courseName] = {};
     if (!grouped[courseName][lessonName]) grouped[courseName][lessonName] = [];
     grouped[courseName][lessonName].push(r);
@@ -51,9 +55,14 @@ function GroupedTable({ results, courses }) {
             <div className="border-t">
               {Object.entries(lessons).map(([lessonName, rows]) => (
                 <div key={lessonName} className="border-b last:border-0">
-                  <div className="px-5 py-2 bg-slate-50 flex items-center gap-2">
+                  <div className="px-5 py-2 bg-slate-50 flex items-center gap-2 flex-wrap">
                     <span className="text-sm font-medium text-indigo-700">{lessonName}</span>
                     <Badge className="text-xs bg-indigo-50 text-indigo-600">{rows.length}</Badge>
+                    {rows[0]?.lesson_id === 'course_level' && (
+                      <Badge className="text-xs bg-purple-100 text-purple-700 gap-1">
+                        <GraduationCap className="w-3 h-3" />Course Level
+                      </Badge>
+                    )}
                   </div>
                   <table className="w-full text-sm">
                     <thead className="bg-slate-50 border-b">
@@ -106,6 +115,7 @@ function GroupedTable({ results, courses }) {
 export default function TestScoresReport() {
   const [user, setUser] = useState(null);
   const [typeFilter, setTypeFilter] = useState('all');
+  const [levelFilter, setLevelFilter] = useState('all');
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => setUser(null));
@@ -139,18 +149,25 @@ export default function TestScoresReport() {
     enabled: !!user?.email && courses.length > 0,
   });
 
-  const filtered = typeFilter === 'all' ? results : results.filter(r => r.test_type === typeFilter);
+  const filtered = results
+    .filter(r => typeFilter === 'all' || r.test_type === typeFilter)
+    .filter(r => {
+      if (levelFilter === 'course_level') return r.lesson_id === 'course_level';
+      if (levelFilter === 'lesson_level') return r.lesson_id !== 'course_level';
+      return true;
+    });
 
   const avgScore = filtered.length > 0
     ? Math.round(filtered.reduce((acc, r) => acc + (r.score / r.total) * 100, 0) / filtered.length)
     : 0;
 
   const handleDownload = () => {
-    const headers = ['Course', 'Lesson', 'Student Email', 'Student Name', 'Test Type', 'Score', 'Total', 'Percentage', 'Date'];
+    const headers = ['Course', 'Level', 'Lesson', 'Student Email', 'Student Name', 'Test Type', 'Score', 'Total', 'Percentage', 'Date'];
     const rows = [headers, ...filtered.map(r => {
       const course = courses.find(c => c.id === r.course_id);
       return [
         course?.title || r.course_id,
+        r.lesson_id === 'course_level' ? 'Course Level' : 'Lesson Level',
         r.lesson_title || r.lesson_id,
         r.user_email,
         r.user_name || '',
@@ -203,8 +220,18 @@ export default function TestScoresReport() {
           </div>
         </div>
 
-        {/* Filter */}
-        <div className="bg-white rounded-2xl border p-4 mb-4">
+        {/* Filters */}
+        <div className="bg-white rounded-2xl border p-4 mb-4 flex gap-3 flex-wrap">
+          <Select value={levelFilter} onValueChange={setLevelFilter}>
+            <SelectTrigger className="w-48">
+              <SelectValue placeholder="Level" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Levels</SelectItem>
+              <SelectItem value="course_level">Course Level</SelectItem>
+              <SelectItem value="lesson_level">Lesson Level</SelectItem>
+            </SelectContent>
+          </Select>
           <Select value={typeFilter} onValueChange={setTypeFilter}>
             <SelectTrigger className="w-48">
               <SelectValue placeholder="Test type" />

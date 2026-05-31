@@ -11,6 +11,8 @@ import {
   Play, Edit, Copy, Trash2, ArrowLeft, Lock, Globe, Users
 } from 'lucide-react';
 import AccessGate from '../components/course/AccessGate';
+import PreTestModal from '../components/lesson/PreTestModal';
+import PostTestModal from '../components/lesson/PostTestModal';
 import CourseAuthors from '../components/course/CourseAuthors';
 import { motion } from 'framer-motion';
 import { cn } from "@/lib/utils";
@@ -37,6 +39,9 @@ export default function CourseView() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
+  const [showCoursePreTest, setShowCoursePreTest] = useState(false);
+  const [coursePreTestDone, setCoursePreTestDone] = useState(false);
+  const [showCoursePostTest, setShowCoursePostTest] = useState(false);
   const urlParams = new URLSearchParams(window.location.search);
   const courseId = urlParams.get('id');
 
@@ -65,11 +70,54 @@ export default function CourseView() {
     enabled: !!courseId && !!user?.email,
   });
 
+  // Check if course-level pre-test was already taken
+  const { data: existingCoursePreTest } = useQuery({
+    queryKey: ['course-pretest', courseId, user?.email],
+    queryFn: () => base44.entities.TestResult.filter({ course_id: courseId, user_email: user.email, test_type: 'pre_test', lesson_id: 'course_level' }),
+    enabled: !!courseId && !!user?.email,
+  });
+
   const { data: enrollment } = useQuery({
     queryKey: ['enrollment', courseId, user?.email],
     queryFn: () => base44.entities.Enrollment.filter({ course_id: courseId, user_email: user.email, status: 'active' }).then(r => r[0]),
     enabled: !!courseId && !!user?.email,
   });
+
+  // Trigger course-level pre-test when course loads
+  useEffect(() => {
+    if (course && user && !coursePreTestDone && existingCoursePreTest !== undefined) {
+      const alreadyTaken = existingCoursePreTest && existingCoursePreTest.length > 0;
+      if (!alreadyTaken && course.pre_test_enabled && course.pre_test?.length > 0) {
+        setShowCoursePreTest(true);
+        setCoursePreTestDone(true);
+      }
+    }
+  }, [course, user, existingCoursePreTest, coursePreTestDone]);
+
+  const handleCoursePreTestComplete = async ({ score, total, answers }) => {
+    await base44.entities.TestResult.create({
+      user_email: user.email,
+      user_name: user.full_name || user.email,
+      course_id: courseId,
+      lesson_id: 'course_level',
+      lesson_title: 'Course Pre-Test',
+      test_type: 'pre_test',
+      score, total, answers,
+    });
+    queryClient.invalidateQueries(['course-pretest', courseId, user?.email]);
+  };
+
+  const handleCoursePostTestComplete = async ({ score, total, answers }) => {
+    await base44.entities.TestResult.create({
+      user_email: user.email,
+      user_name: user.full_name || user.email,
+      course_id: courseId,
+      lesson_id: 'course_level',
+      lesson_title: 'Course Post-Test',
+      test_type: 'post_test',
+      score, total, answers,
+    });
+  };
 
   const sortedLessons = [...lessons].sort((a, b) => (a.order_index || 0) - (b.order_index || 0));
   const completedSet = new Set(progress?.completed_lessons || []);
@@ -177,8 +225,29 @@ export default function CourseView() {
   const accessGranted = hasAccess();
   const accessBadge = accessBadgeMap[course.access_type || 'free'];
 
+  // mock lesson-shaped object for reusing modals
+  const courseAsLesson = course ? { ...course, pre_test: course.pre_test || [], post_test: course.post_test || [], title: course.title } : null;
+
   return (
     <div className="min-h-screen bg-slate-50">
+      {/* Course-level Pre-Test Modal */}
+      {showCoursePreTest && courseAsLesson && user && (
+        <PreTestModal
+          lesson={courseAsLesson}
+          user={user}
+          onComplete={handleCoursePreTestComplete}
+          onSkip={() => setShowCoursePreTest(false)}
+        />
+      )}
+      {/* Course-level Post-Test Modal */}
+      {courseAsLesson && user && (
+        <PostTestModal
+          lesson={courseAsLesson}
+          open={showCoursePostTest}
+          onComplete={handleCoursePostTestComplete}
+          onClose={() => setShowCoursePostTest(false)}
+        />
+      )}
       {/* Hero */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-700" />
@@ -387,6 +456,23 @@ export default function CourseView() {
             );
           })}
         </div>
+
+        {/* Course-level Post-Test CTA */}
+        {course?.post_test_enabled && course?.post_test?.length > 0 && user && (
+          <div className="mt-6 bg-green-50 border border-green-200 rounded-2xl p-6 flex items-center justify-between">
+            <div>
+              <h3 className="font-semibold text-slate-900 mb-1">Course Post-Test</h3>
+              <p className="text-sm text-slate-500">Assess your overall understanding of this course.</p>
+            </div>
+            <Button
+              className="bg-green-600 hover:bg-green-700 gap-2 flex-shrink-0"
+              onClick={() => setShowCoursePostTest(true)}
+            >
+              <Play className="w-4 h-4" />
+              Take Post-Test
+            </Button>
+          </div>
+        )}
 
         {sortedLessons.length === 0 && (
           <div className="text-center py-12 bg-white rounded-2xl border-2 border-dashed">
