@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { 
   ArrowLeft, Save, Plus, GripVertical, Edit, Trash2, 
-  BookOpen, Upload, Loader2, Eye, Users, Globe, Lock, Indent, Copy, ArrowRightLeft, UserPlus, X, AlertTriangle
+  BookOpen, Upload, Loader2, Eye, EyeOff, Users, Globe, Lock, Indent, Copy, ArrowRightLeft, UserPlus, X, AlertTriangle
 } from 'lucide-react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { toast } from "sonner";
@@ -184,6 +184,15 @@ export default function CourseEditor() {
       queryClient.invalidateQueries(['lessons']);
     });
   };
+
+  const toggleHiddenMutation = useMutation({
+    mutationFn: (lesson) => base44.entities.Lesson.update(lesson.id, { is_hidden: !lesson.is_hidden }),
+    onSuccess: (_, lesson) => {
+      queryClient.invalidateQueries(['lessons']);
+      toast.success(lesson.is_hidden ? 'Lesson is now visible' : 'Lesson hidden from students');
+    },
+    onError: () => toast.error('Failed to update lesson visibility.'),
+  });
 
   const duplicateLessonMutation = useMutation({
     mutationFn: async (lesson) => {
@@ -642,7 +651,7 @@ export default function CourseEditor() {
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${
-                                    snapshot.isDragging ? 'shadow-lg border-indigo-300 bg-white' : 'border-transparent bg-slate-50'
+                                    snapshot.isDragging ? 'shadow-lg border-indigo-300 bg-white' : lesson.is_hidden ? 'border-transparent bg-slate-100' : 'border-transparent bg-slate-50'
                                   } ${lesson.is_subtopic ? 'ml-6' : ''}`}
                                 >
                                   <div {...provided.dragHandleProps} className="cursor-grab text-slate-400">
@@ -651,9 +660,12 @@ export default function CourseEditor() {
                                   <span className="text-sm font-medium text-slate-400 w-6 flex-shrink-0">
                                     {String(index + 1).padStart(2, '0')}
                                   </span>
-                                  <span className={`flex-1 font-medium text-slate-700 truncate ${lesson.is_subtopic ? 'text-sm' : ''}`}>
+                                  <span className={`flex-1 font-medium truncate ${lesson.is_subtopic ? 'text-sm' : ''} ${lesson.is_hidden ? 'text-slate-400 line-through' : 'text-slate-700'}`}>
                                     {lesson.title}
                                   </span>
+                                  {lesson.is_hidden && (
+                                    <span className="text-xs text-slate-400 bg-slate-200 px-2 py-0.5 rounded-full flex-shrink-0">Hidden</span>
+                                  )}
                                   <button
                                     title={lesson.is_subtopic ? 'Remove sub-topic indent' : 'Make sub-topic (indent)'}
                                     onClick={() => toggleSubtopic(lesson)}
@@ -662,6 +674,13 @@ export default function CourseEditor() {
                                     <Indent className="w-4 h-4" />
                                   </button>
                                   <div className="flex gap-1">
+                                     <Button
+                                       variant="ghost" size="icon" className={`h-8 w-8 flex-shrink-0 ${lesson.is_hidden ? 'text-slate-400 hover:text-green-600' : 'text-slate-400 hover:text-amber-600'}`}
+                                       title={lesson.is_hidden ? 'Show lesson' : 'Hide lesson from students'}
+                                       onClick={() => toggleHiddenMutation.mutate(lesson)}
+                                     >
+                                       {lesson.is_hidden ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                                     </Button>
                                      <Link to={createPageUrl('LessonEditor') + `?id=${lesson.id}`}>
                                        <Button variant="ghost" size="icon" className="h-8 w-8" title="Edit">
                                          <Edit className="w-4 h-4" />
