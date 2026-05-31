@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { 
   GraduationCap, Home, LayoutDashboard, 
-  LogOut, Menu, X, Plus, BookOpen, Tag, UserCircle, BarChart2, ClipboardList
+  LogOut, Menu, X, Plus, BookOpen, Tag, UserCircle, BarChart2, ClipboardList, Activity
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import {
@@ -166,6 +166,12 @@ export default function Layout({ children, currentPageName }) {
                           <DropdownMenuItem>
                             <BarChart2 className="w-4 h-4 mr-2" />
                             Enrollment Summary
+                          </DropdownMenuItem>
+                        </Link>
+                        <Link to={createPageUrl('StudentProgressDashboard')}>
+                          <DropdownMenuItem>
+                            <Activity className="w-4 h-4 mr-2" />
+                            Student Progress
                           </DropdownMenuItem>
                         </Link>
                         <Link to={createPageUrl('TestScoresReport')}>
