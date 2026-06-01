@@ -58,9 +58,12 @@ export default function TestResultDetailModal({ result, onClose }) {
           <div className="space-y-4">
             {questions.map((q, idx) => {
               const userAnswer = result.answers?.[idx];
+              const correctAnswerIdx = (q.correct_answer !== undefined && q.correct_answer !== null) ? Number(q.correct_answer) : -1;
+              const userAnswerIdx = (userAnswer !== undefined && userAnswer !== null && !Array.isArray(userAnswer)) ? Number(userAnswer) : -1;
+
               const isCorrect = q.type === 'multiple_answers'
                 ? JSON.stringify([...(q.correct_answers || [])].map(Number).sort()) === JSON.stringify([...(Array.isArray(userAnswer) ? userAnswer : [userAnswer])].map(Number).sort())
-                : Number(userAnswer) === Number(q.correct_answer);
+                : userAnswerIdx !== -1 && userAnswerIdx === correctAnswerIdx;
 
               return (
                 <div key={q.id || idx} className={`rounded-xl border p-4 ${isCorrect ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'}`}>
@@ -78,8 +81,12 @@ export default function TestResultDetailModal({ result, onClose }) {
                   {q.options && q.options.length > 0 && (
                     <div className="space-y-1.5 ml-7">
                       {q.options.map((opt, oi) => {
-                        const isUserChoice = Array.isArray(userAnswer) ? userAnswer.map(Number).includes(oi) : Number(userAnswer) === oi;
-                        const isCorrectChoice = Array.isArray(q.correct_answers) ? q.correct_answers.map(Number).includes(oi) : Number(q.correct_answer) === oi;
+                        const isUserChoice = Array.isArray(userAnswer)
+                          ? userAnswer.map(Number).includes(oi)
+                          : userAnswerIdx === oi;
+                        const isCorrectChoice = Array.isArray(q.correct_answers)
+                          ? q.correct_answers.map(Number).includes(oi)
+                          : correctAnswerIdx === oi;
 
                         let rowStyle = '';
                         let rowInlineStyle = {};
@@ -104,7 +111,13 @@ export default function TestResultDetailModal({ result, onClose }) {
                             </span>
                             <span className="flex-1">{opt}</span>
                             {isUserChoice && isCorrectChoice && (
-                              <Badge className="text-xs bg-green-200 text-green-800">Your answer ✓</Badge>
+                              <Badge style={{ background: '#bbf7d0', color: '#166534', border: 'none' }} className="text-xs">Your answer ✓</Badge>
+                            )}
+                            {isUserChoice && !isCorrectChoice && (
+                              <Badge style={{ background: '#fecaca', color: '#991b1b', border: 'none' }} className="text-xs">Your answer ✗</Badge>
+                            )}
+                            {isCorrectChoice && !isUserChoice && (
+                              <Badge style={{ background: '#bfdbfe', color: '#1e40af', border: 'none' }} className="text-xs font-semibold">Correct answer ✓</Badge>
                             )}
                             {isUserChoice && !isCorrectChoice && (
                               <Badge className="text-xs bg-red-200 text-red-700">Your answer ✗</Badge>
