@@ -61,7 +61,8 @@ export default function TestResultDetailModal({ result, onClose }) {
               const correctAnswerIdx = (q.correct_answer !== undefined && q.correct_answer !== null) ? Number(q.correct_answer) : -1;
               const userAnswerIdx = (userAnswer !== undefined && userAnswer !== null && !Array.isArray(userAnswer)) ? Number(userAnswer) : -1;
 
-              const isCorrect = q.type === 'multiple_answers'
+              const isMultipleAnswers = q.type === 'multiple_answers';
+              const isCorrect = isMultipleAnswers
                 ? JSON.stringify([...(q.correct_answers || [])].map(Number).sort()) === JSON.stringify([...(Array.isArray(userAnswer) ? userAnswer : [userAnswer])].map(Number).sort())
                 : userAnswerIdx !== -1 && userAnswerIdx === correctAnswerIdx;
 
@@ -81,37 +82,44 @@ export default function TestResultDetailModal({ result, onClose }) {
                   {q.options && q.options.length > 0 && (
                     <div className="space-y-1.5 ml-7">
                       {q.options.map((opt, oi) => {
-                        const isUserChoice = Array.isArray(userAnswer)
-                          ? userAnswer.map(Number).includes(oi)
+                        // Did the user choose this option?
+                        const isUserChoice = isMultipleAnswers
+                          ? (Array.isArray(userAnswer) ? userAnswer : [userAnswer]).map(Number).includes(oi)
                           : userAnswerIdx === oi;
 
-                        // Fallback: if question is correct overall and user chose this option, it must be the correct choice
-                        const isCorrectChoice = Array.isArray(q.correct_answers)
-                          ? q.correct_answers.map(Number).includes(oi)
-                          : correctAnswerIdx === oi || (isCorrect && isUserChoice);
+                        // Is this the correct option according to stored data?
+                        const isCorrectChoice = isMultipleAnswers
+                          ? (q.correct_answers || []).map(Number).includes(oi)
+                          : correctAnswerIdx === oi;
 
-                        let rowInlineStyle = { background: 'white', border: '1px solid #f1f5f9', color: '#475569' };
-                        if (isCorrectChoice && isUserChoice) {
-                          rowInlineStyle = { background: '#dcfce7', color: '#166534', border: '1px solid #86efac' };
-                        } else if (isCorrectChoice) {
-                          rowInlineStyle = { background: '#dbeafe', color: '#1e3a8a', border: '2px solid #3b82f6' };
-                        } else if (isUserChoice) {
-                          rowInlineStyle = { background: '#fee2e2', color: '#b91c1c', border: '1px solid #fca5a5' };
+                        // For single-answer: if overall correct & user chose it → it must be right
+                        const userAnswerIsRight = isUserChoice && (isCorrectChoice || (!isMultipleAnswers && isCorrect));
+                        const userAnswerIsWrong = isUserChoice && !userAnswerIsRight;
+                        // Show correct hint only when user got it wrong and we know the correct option
+                        const showCorrectHint = !isUserChoice && isCorrectChoice;
+
+                        let rowStyle = { background: 'white', border: '1px solid #f1f5f9', color: '#475569' };
+                        if (userAnswerIsRight) {
+                          rowStyle = { background: '#dcfce7', color: '#166534', border: '1px solid #86efac' };
+                        } else if (showCorrectHint) {
+                          rowStyle = { background: '#dbeafe', color: '#1e3a8a', border: '2px solid #3b82f6' };
+                        } else if (userAnswerIsWrong) {
+                          rowStyle = { background: '#fee2e2', color: '#b91c1c', border: '1px solid #fca5a5' };
                         }
 
                         return (
-                          <div key={oi} className="flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg font-medium" style={rowInlineStyle}>
+                          <div key={oi} className="flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg font-medium" style={rowStyle}>
                             <span className="w-5 h-5 rounded-full border flex items-center justify-center text-xs flex-shrink-0 font-bold">
                               {String.fromCharCode(65 + oi)}
                             </span>
                             <span className="flex-1">{opt}</span>
-                            {isUserChoice && isCorrectChoice && (
+                            {userAnswerIsRight && (
                               <Badge style={{ background: '#bbf7d0', color: '#166534', border: 'none' }} className="text-xs">Your answer ✓</Badge>
                             )}
-                            {isUserChoice && !isCorrectChoice && (
+                            {userAnswerIsWrong && (
                               <Badge style={{ background: '#fecaca', color: '#991b1b', border: 'none' }} className="text-xs">Your answer ✗</Badge>
                             )}
-                            {isCorrectChoice && !isUserChoice && (
+                            {showCorrectHint && (
                               <Badge style={{ background: '#bfdbfe', color: '#1e40af', border: 'none' }} className="text-xs">Correct answer ✓</Badge>
                             )}
                           </div>
