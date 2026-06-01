@@ -83,7 +83,7 @@ export default function TestResultDetailModal({ result, onClose }) {
 
                         let rowStyle = 'text-slate-600 bg-white border border-slate-100';
                         if (isCorrectChoice && isUserChoice) rowStyle = 'bg-green-100 text-green-800 font-medium border border-green-300';
-                        else if (isCorrectChoice) rowStyle = 'bg-green-200 text-green-900 font-semibold border-2 border-green-500 ring-1 ring-green-400';
+                        else if (isCorrectChoice) rowStyle = 'bg-blue-100 text-blue-900 font-semibold border-2 border-blue-500 ring-1 ring-blue-400';
                         else if (isUserChoice) rowStyle = 'bg-red-100 text-red-700 border border-red-300';
 
                         return (
@@ -99,7 +99,7 @@ export default function TestResultDetailModal({ result, onClose }) {
                               <Badge className="text-xs bg-red-200 text-red-700">Your answer ✗</Badge>
                             )}
                             {isCorrectChoice && !isUserChoice && (
-                              <Badge className="text-xs bg-green-300 text-green-900 font-semibold">Correct answer</Badge>
+                              <Badge className="text-xs bg-blue-200 text-blue-900 font-semibold">Correct answer</Badge>
                             )}
                           </div>
                         );
