@@ -80,21 +80,26 @@ export default function TestResultDetailModal({ result, onClose }) {
                       {q.options.map((opt, oi) => {
                         const isUserChoice = Array.isArray(userAnswer) ? userAnswer.includes(oi) : userAnswer === oi;
                         const isCorrectChoice = Array.isArray(q.correct_answers) ? q.correct_answers.includes(oi) : q.correct_answer === oi;
+
+                        let rowStyle = 'text-slate-600 bg-white border border-slate-100';
+                        if (isCorrectChoice && isUserChoice) rowStyle = 'bg-green-100 text-green-800 font-medium border border-green-300';
+                        else if (isCorrectChoice) rowStyle = 'bg-green-100 text-green-800 font-semibold border border-green-400';
+                        else if (isUserChoice) rowStyle = 'bg-red-100 text-red-700 border border-red-300';
+
                         return (
-                          <div key={oi} className={`flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg ${
-                            isCorrectChoice ? 'bg-green-100 text-green-800 font-medium' :
-                            isUserChoice ? 'bg-red-100 text-red-700' :
-                            'text-slate-600'
-                          }`}>
+                          <div key={oi} className={`flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg ${rowStyle}`}>
                             <span className="w-5 h-5 rounded-full border flex items-center justify-center text-xs flex-shrink-0 font-bold">
                               {String.fromCharCode(65 + oi)}
                             </span>
-                            <span>{opt}</span>
-                            {isUserChoice && !isCorrectChoice && (
-                              <Badge className="ml-auto text-xs bg-red-200 text-red-700">Your answer</Badge>
+                            <span className="flex-1">{opt}</span>
+                            {isUserChoice && isCorrectChoice && (
+                              <Badge className="text-xs bg-green-200 text-green-800">Your answer ✓</Badge>
                             )}
-                            {isCorrectChoice && (
-                              <Badge className="ml-auto text-xs bg-green-200 text-green-700">Correct</Badge>
+                            {isUserChoice && !isCorrectChoice && (
+                              <Badge className="text-xs bg-red-200 text-red-700">Your answer ✗</Badge>
+                            )}
+                            {isCorrectChoice && !isUserChoice && (
+                              <Badge className="text-xs bg-green-300 text-green-900 font-semibold">Correct answer</Badge>
                             )}
                           </div>
                         );
