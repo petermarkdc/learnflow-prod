@@ -59,8 +59,8 @@ export default function TestResultDetailModal({ result, onClose }) {
             {questions.map((q, idx) => {
               const userAnswer = result.answers?.[idx];
               const isCorrect = q.type === 'multiple_answers'
-                ? JSON.stringify([...(q.correct_answers || [])].sort()) === JSON.stringify([...(Array.isArray(userAnswer) ? userAnswer : [userAnswer])].sort())
-                : userAnswer === q.correct_answer;
+                ? JSON.stringify([...(q.correct_answers || [])].map(Number).sort()) === JSON.stringify([...(Array.isArray(userAnswer) ? userAnswer : [userAnswer])].map(Number).sort())
+                : Number(userAnswer) === Number(q.correct_answer);
 
               return (
                 <div key={q.id || idx} className={`rounded-xl border p-4 ${isCorrect ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'}`}>
@@ -78,8 +78,8 @@ export default function TestResultDetailModal({ result, onClose }) {
                   {q.options && q.options.length > 0 && (
                     <div className="space-y-1.5 ml-7">
                       {q.options.map((opt, oi) => {
-                        const isUserChoice = Array.isArray(userAnswer) ? userAnswer.includes(oi) : userAnswer === oi;
-                        const isCorrectChoice = Array.isArray(q.correct_answers) ? q.correct_answers.includes(oi) : q.correct_answer === oi;
+                        const isUserChoice = Array.isArray(userAnswer) ? userAnswer.map(Number).includes(oi) : Number(userAnswer) === oi;
+                        const isCorrectChoice = Array.isArray(q.correct_answers) ? q.correct_answers.map(Number).includes(oi) : Number(q.correct_answer) === oi;
 
                         let rowStyle = 'text-slate-600 bg-white border border-slate-100';
                         if (isCorrectChoice && isUserChoice) rowStyle = 'bg-green-100 text-green-800 font-medium border border-green-300';
