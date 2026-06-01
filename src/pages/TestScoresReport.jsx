@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Download, ClipboardList, FlaskConical, BarChart2, ChevronDown, ChevronRight, BookOpen, GraduationCap } from 'lucide-react';
+import TestResultDetailModal from '../components/TestResultDetailModal';
 import { Skeleton } from "@/components/ui/skeleton";
 
 function downloadCSV(filename, rows) {
@@ -18,6 +19,7 @@ function downloadCSV(filename, rows) {
 
 function GroupedTable({ results, courses }) {
   const [expanded, setExpanded] = useState({});
+  const [selectedResult, setSelectedResult] = useState(null);
 
   const isCourseLevelResult = (r) => r.lesson_id === 'course_level';
 
@@ -38,6 +40,7 @@ function GroupedTable({ results, courses }) {
 
   return (
     <div className="space-y-3">
+      {selectedResult && <TestResultDetailModal result={selectedResult} onClose={() => setSelectedResult(null)} />}
       {Object.entries(grouped).map(([courseName, lessons]) => (
         <div key={courseName} className="bg-white rounded-2xl border overflow-hidden">
           <button
@@ -78,7 +81,7 @@ function GroupedTable({ results, courses }) {
                       {rows.map(r => {
                         const pct = Math.round((r.score / r.total) * 100);
                         return (
-                          <tr key={r.id} className="hover:bg-slate-50">
+                          <tr key={r.id} className="hover:bg-indigo-50 cursor-pointer transition-colors" onClick={() => setSelectedResult(r)}>
                             <td className="px-5 py-2.5">
                               <div className="font-medium text-slate-900">{r.user_name || r.user_email}</div>
                               <div className="text-xs text-slate-400">{r.user_email}</div>
