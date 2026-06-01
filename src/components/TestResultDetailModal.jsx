@@ -81,13 +81,24 @@ export default function TestResultDetailModal({ result, onClose }) {
                         const isUserChoice = Array.isArray(userAnswer) ? userAnswer.map(Number).includes(oi) : Number(userAnswer) === oi;
                         const isCorrectChoice = Array.isArray(q.correct_answers) ? q.correct_answers.map(Number).includes(oi) : Number(q.correct_answer) === oi;
 
-                        let rowStyle = 'text-slate-600 bg-white border border-slate-100';
-                        if (isCorrectChoice && isUserChoice) rowStyle = 'bg-green-100 text-green-800 font-medium border border-green-300';
-                        else if (isCorrectChoice) rowStyle = 'bg-blue-100 text-blue-900 font-semibold border-2 border-blue-500 ring-1 ring-blue-400';
-                        else if (isUserChoice) rowStyle = 'bg-red-100 text-red-700 border border-red-300';
+                        let rowStyle = '';
+                        let rowInlineStyle = {};
+                        if (isCorrectChoice && isUserChoice) {
+                          rowStyle = 'font-medium';
+                          rowInlineStyle = { background: '#dcfce7', color: '#166534', border: '1px solid #86efac' };
+                        } else if (isCorrectChoice) {
+                          rowStyle = 'font-semibold';
+                          rowInlineStyle = { background: '#dbeafe', color: '#1e3a8a', border: '2px solid #3b82f6' };
+                        } else if (isUserChoice) {
+                          rowStyle = '';
+                          rowInlineStyle = { background: '#fee2e2', color: '#b91c1c', border: '1px solid #fca5a5' };
+                        } else {
+                          rowStyle = 'text-slate-600';
+                          rowInlineStyle = { background: 'white', border: '1px solid #f1f5f9' };
+                        }
 
                         return (
-                          <div key={oi} className={`flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg ${rowStyle}`}>
+                          <div key={oi} className={`flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg ${rowStyle}`} style={rowInlineStyle}>
                             <span className="w-5 h-5 rounded-full border flex items-center justify-center text-xs flex-shrink-0 font-bold">
                               {String.fromCharCode(65 + oi)}
                             </span>
