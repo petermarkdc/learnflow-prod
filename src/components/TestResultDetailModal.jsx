@@ -83,7 +83,7 @@ export default function TestResultDetailModal({ result, onClose }) {
 
                         let rowStyle = 'text-slate-600 bg-white border border-slate-100';
                         if (isCorrectChoice && isUserChoice) rowStyle = 'bg-green-100 text-green-800 font-medium border border-green-300';
-                        else if (isCorrectChoice) rowStyle = 'bg-green-100 text-green-800 font-semibold border border-green-400';
+                        else if (isCorrectChoice) rowStyle = 'bg-green-200 text-green-900 font-semibold border-2 border-green-500 ring-1 ring-green-400';
                         else if (isUserChoice) rowStyle = 'bg-red-100 text-red-700 border border-red-300';
 
                         return (
