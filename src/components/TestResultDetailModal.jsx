@@ -84,28 +84,23 @@ export default function TestResultDetailModal({ result, onClose }) {
                         const isUserChoice = Array.isArray(userAnswer)
                           ? userAnswer.map(Number).includes(oi)
                           : userAnswerIdx === oi;
+
+                        // Fallback: if question is correct overall and user chose this option, it must be the correct choice
                         const isCorrectChoice = Array.isArray(q.correct_answers)
                           ? q.correct_answers.map(Number).includes(oi)
-                          : correctAnswerIdx === oi;
+                          : correctAnswerIdx === oi || (isCorrect && isUserChoice);
 
-                        let rowStyle = '';
-                        let rowInlineStyle = {};
+                        let rowInlineStyle = { background: 'white', border: '1px solid #f1f5f9', color: '#475569' };
                         if (isCorrectChoice && isUserChoice) {
-                          rowStyle = 'font-medium';
                           rowInlineStyle = { background: '#dcfce7', color: '#166534', border: '1px solid #86efac' };
                         } else if (isCorrectChoice) {
-                          rowStyle = 'font-semibold';
                           rowInlineStyle = { background: '#dbeafe', color: '#1e3a8a', border: '2px solid #3b82f6' };
                         } else if (isUserChoice) {
-                          rowStyle = '';
                           rowInlineStyle = { background: '#fee2e2', color: '#b91c1c', border: '1px solid #fca5a5' };
-                        } else {
-                          rowStyle = 'text-slate-600';
-                          rowInlineStyle = { background: 'white', border: '1px solid #f1f5f9' };
                         }
 
                         return (
-                          <div key={oi} className={`flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg ${rowStyle}`} style={rowInlineStyle}>
+                          <div key={oi} className="flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg font-medium" style={rowInlineStyle}>
                             <span className="w-5 h-5 rounded-full border flex items-center justify-center text-xs flex-shrink-0 font-bold">
                               {String.fromCharCode(65 + oi)}
                             </span>
@@ -117,13 +112,7 @@ export default function TestResultDetailModal({ result, onClose }) {
                               <Badge style={{ background: '#fecaca', color: '#991b1b', border: 'none' }} className="text-xs">Your answer ✗</Badge>
                             )}
                             {isCorrectChoice && !isUserChoice && (
-                              <Badge style={{ background: '#bfdbfe', color: '#1e40af', border: 'none' }} className="text-xs font-semibold">Correct answer ✓</Badge>
-                            )}
-                            {isUserChoice && !isCorrectChoice && (
-                              <Badge className="text-xs bg-red-200 text-red-700">Your answer ✗</Badge>
-                            )}
-                            {isCorrectChoice && !isUserChoice && (
-                              <Badge className="text-xs bg-blue-200 text-blue-900 font-semibold">Correct answer</Badge>
+                              <Badge style={{ background: '#bfdbfe', color: '#1e40af', border: 'none' }} className="text-xs">Correct answer ✓</Badge>
                             )}
                           </div>
                         );
