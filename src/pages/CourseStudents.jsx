@@ -46,7 +46,7 @@ export default function CourseStudents() {
 
   const { data: allUsers = [] } = useQuery({
     queryKey: ['users'],
-    queryFn: () => base44.entities.User.list(),
+    queryFn: () => base44.entities.User.list('-created_date', 200),
   });
 
   const { data: progressList = [] } = useQuery({
@@ -147,6 +147,12 @@ export default function CourseStudents() {
   // Students who submitted tests but are NOT enrolled
   const enrolledEmails_set = new Set(enrollments.map(e => e.user_email));
   const testOnlyEmails = [...new Set(testResults.map(r => r.user_email))].filter(e => !enrolledEmails_set.has(e));
+
+  // All registered students (role='student') not yet enrolled in this course
+  const notEnrolledStudents = allUsers.filter(u =>
+    (u.role === 'student' || u.role === 'user') &&
+    !enrolledEmails_set.has(u.email)
+  );
 
   if (user && !isTeacher) return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center">
@@ -330,6 +336,31 @@ export default function CourseStudents() {
             </div>
           )}
         </div>
+
+        {/* Registered students not yet enrolled in this course */}
+        {notEnrolledStudents.length > 0 && (
+          <div className="bg-white rounded-2xl border p-6">
+            <h2 className="font-semibold text-slate-700 text-lg mb-1 flex items-center gap-2">
+              <Users className="w-5 h-5 text-slate-400" />
+              Registered but Not Yet Enrolled ({notEnrolledStudents.length})
+            </h2>
+            <p className="text-sm text-slate-500 mb-3">These users have accounts but haven't used the course code yet.</p>
+            <div className="space-y-2 max-h-64 overflow-y-auto">
+              {notEnrolledStudents.map(u => (
+                <div key={u.id} className="flex items-center gap-3 p-2.5 bg-slate-50 rounded-lg">
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback className="bg-slate-200 text-slate-600 text-xs">{(u.full_name || u.email)?.[0]?.toUpperCase()}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-slate-800 truncate">{u.full_name || u.email}</p>
+                    <p className="text-xs text-slate-400 truncate">{u.email}</p>
+                  </div>
+                  <Badge className="bg-slate-100 text-slate-500 text-xs flex-shrink-0">Not enrolled</Badge>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Students who submitted tests but aren't enrolled */}
         {testOnlyEmails.length > 0 && (
