@@ -19,19 +19,19 @@ export default function CourseEnrollmentSummary() {
 
   const { data: courses = [], isLoading: coursesLoading } = useQuery({
     queryKey: ['all-courses-summary'],
-    queryFn: () => base44.entities.Course.list(),
+    queryFn: () => base44.entities.Course.list('-created_date', 500),
     enabled: !!user,
   });
 
   const { data: enrollments = [], isLoading: enrollmentsLoading } = useQuery({
     queryKey: ['all-enrollments-summary'],
-    queryFn: () => base44.entities.Enrollment.list(),
+    queryFn: () => base44.entities.Enrollment.list('-created_date', 1000),
     enabled: !!user,
   });
 
   const { data: lessons = [] } = useQuery({
     queryKey: ['all-lessons-summary'],
-    queryFn: () => base44.entities.Lesson.list(),
+    queryFn: () => base44.entities.Lesson.list('-created_date', 1000),
     enabled: !!user,
   });
 
