@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
@@ -27,6 +27,8 @@ export default function LessonView() {
   const [showPreTest, setShowPreTest] = useState(false);
   const [preTestDone, setPreTestDone] = useState(false);
   const [showPostTest, setShowPostTest] = useState(false);
+  const [autoCompleted, setAutoCompleted] = useState(false);
+  const contentBottomRef = useRef(null);
   
   const urlParams = new URLSearchParams(window.location.search);
   const lessonId = urlParams.get('id');
@@ -80,6 +82,45 @@ export default function LessonView() {
     }
   }, [lesson, user, existingPreTest, pretestLoading, preTestDone]);
 
+  // Auto-mark complete when student scrolls to bottom
+  const markCompleteOnly = useCallback(() => {
+    if (!user || !lesson || isTeacher) return;
+    if (!autoCompleted && !isCompleted) {
+      setAutoCompleted(true);
+      markCompleteMutation.mutate();
+    }
+  }, [user, lesson, isTeacher, autoCompleted, isCompleted]);
+
+  useEffect(() => {
+    if (!contentBottomRef.current || !user || isTeacher) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) markCompleteOnly(); },
+      { threshold: 0.5 }
+    );
+    observer.observe(contentBottomRef.current);
+    return () => observer.disconnect();
+  }, [contentBottomRef.current, user, isTeacher, markCompleteOnly]);
+
+  const handleNextLesson = (nextId) => {
+    if (!isCompleted && !autoCompleted && user && !isTeacher) {
+      markCompleteMutation.mutateAsync().catch(() => {}).finally(() => {
+        navigate(createPageUrl('LessonView') + `?id=${nextId}`);
+      });
+    } else {
+      navigate(createPageUrl('LessonView') + `?id=${nextId}`);
+    }
+  };
+
+  const handleFinishCourse = () => {
+    if (!isCompleted && !autoCompleted && user && !isTeacher) {
+      markCompleteMutation.mutateAsync().catch(() => {}).finally(() => {
+        navigate(createPageUrl('CourseView') + `?id=${lesson.course_id}`);
+      });
+    } else {
+      navigate(createPageUrl('CourseView') + `?id=${lesson.course_id}`);
+    }
+  };
+
   const sortedLessons = [...allLessons].sort((a, b) => (a.order_index || 0) - (b.order_index || 0));
   const currentIndex = sortedLessons.findIndex(l => l.id === lessonId);
   const prevLesson = currentIndex > 0 ? sortedLessons[currentIndex - 1] : null;
@@ -87,6 +128,8 @@ export default function LessonView() {
   const completedLessons = progress?.completed_lessons || [];
   const isCompleted = completedLessons.includes(lessonId);
   const isTeacher = user?.role === 'teacher' || user?.role === 'admin';
+  // Reset autoCompleted when lesson changes
+  useEffect(() => { setAutoCompleted(false); }, [lessonId]);
   // Admin can edit any lesson; teacher can edit lessons in their own or collaborated courses
   const isOwner = user?.role === 'admin' || 
     (isTeacher && course && (course.created_by === user?.email || (course.collaborators || []).includes(user?.email)));
@@ -338,6 +381,9 @@ export default function LessonView() {
 
               <ContentRenderer blocks={lesson.content || []} />
 
+              {/* Scroll sentinel — triggers auto-complete */}
+              <div ref={contentBottomRef} className="h-1" />
+
               {/* Activities Section */}
               {lesson.activities?.items?.length > 0 && (
                 <div className="mt-12 pt-8 border-t">
@@ -419,20 +465,22 @@ export default function LessonView() {
             )}
 
             {nextLesson ? (
-              <Link to={createPageUrl('LessonView') + `?id=${nextLesson.id}`}>
-                <Button className="gap-2 bg-indigo-600 hover:bg-indigo-700">
-                  <span className="hidden sm:inline">Next:</span>
-                  <span className="max-w-[150px] truncate">{nextLesson.title}</span>
-                  <ChevronRight className="w-4 h-4" />
-                </Button>
-              </Link>
+              <Button
+                className="gap-2 bg-indigo-600 hover:bg-indigo-700"
+                onClick={() => handleNextLesson(nextLesson.id)}
+              >
+                <span className="hidden sm:inline">Next:</span>
+                <span className="max-w-[150px] truncate">{nextLesson.title}</span>
+                <ChevronRight className="w-4 h-4" />
+              </Button>
             ) : (
-              <Link to={createPageUrl('CourseView') + `?id=${lesson.course_id}`}>
-                <Button className="gap-2 bg-green-600 hover:bg-green-700">
-                  <CheckCircle2 className="w-4 h-4" />
-                  Finish Course
-                </Button>
-              </Link>
+              <Button
+                className="gap-2 bg-green-600 hover:bg-green-700"
+                onClick={handleFinishCourse}
+              >
+                <CheckCircle2 className="w-4 h-4" />
+                Finish Course
+              </Button>
             )}
           </div>
         </div>
