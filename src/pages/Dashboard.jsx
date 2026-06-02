@@ -465,6 +465,7 @@ export default function Dashboard() {
       {/* Pre-Test Modal */}
       {activePreTest && (
         <PreTestModal
+          key={activePreTest.id}
           lesson={activePreTest}
           user={user}
           onComplete={async ({ score, total, answers }) => {
@@ -487,6 +488,7 @@ export default function Dashboard() {
       {/* Post-Test Modal */}
       {activePostTest && (
         <PostTestModal
+          key={activePostTest.id}
           lesson={activePostTest}
           open={true}
           onComplete={async ({ score, total, answers }) => {

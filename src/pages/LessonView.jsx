@@ -130,8 +130,13 @@ export default function LessonView() {
   const currentIndex = sortedLessons.findIndex(l => l.id === lessonId);
   const prevLesson = currentIndex > 0 ? sortedLessons[currentIndex - 1] : null;
   const nextLesson = currentIndex < sortedLessons.length - 1 ? sortedLessons[currentIndex + 1] : null;
-  // Reset autoCompleted when lesson changes
-  useEffect(() => { setAutoCompleted(false); }, [lessonId]);
+  // Reset state when lesson changes
+  useEffect(() => {
+    setAutoCompleted(false);
+    setPreTestDone(false);
+    setShowPreTest(false);
+    setShowPostTest(false);
+  }, [lessonId]);
   // Admin can edit any lesson; teacher can edit lessons in their own or collaborated courses
   const isOwner = user?.role === 'admin' || 
     (isTeacher && course && (course.created_by === user?.email || (course.collaborators || []).includes(user?.email)));
