@@ -253,28 +253,46 @@ export default function Dashboard() {
             .map(c => c.id);
           const enrolledCourseIds = [...new Set([...enrolledViaProgress, ...enrolledViaEntity, ...enrolledViaEmail])];
 
+          // Only show tests that have already been taken (for retaking)
           const lessonTests = lessons
             .filter(l => enrolledCourseIds.includes(l.course_id))
             .flatMap(lesson => {
               const rows = [];
               const preResult = testResults.find(r => r.lesson_id === lesson.id && r.test_type === 'pre_test');
               const postResult = testResults.find(r => r.lesson_id === lesson.id && r.test_type === 'post_test');
-              if (lesson.pre_test?.length > 0) {
+              if (lesson.pre_test?.length > 0 && preResult) {
                 rows.push({ lesson, type: 'pre_test', result: preResult });
               }
-              if (lesson.post_test?.length > 0) {
+              if (lesson.post_test?.length > 0 && postResult) {
                 rows.push({ lesson, type: 'post_test', result: postResult });
               }
               return rows;
             });
 
-          if (!lessonTests.length) return null;
+          // Also include course-level tests that were taken
+          const courseTests = enrolledCourseIds.flatMap(courseId => {
+            const course = courses.find(c => c.id === courseId);
+            if (!course) return [];
+            const rows = [];
+            const preResult = testResults.find(r => r.course_id === courseId && r.lesson_id === 'course_level' && r.test_type === 'pre_test');
+            const postResult = testResults.find(r => r.course_id === courseId && r.lesson_id === 'course_level' && r.test_type === 'post_test');
+            if (course.pre_test?.length > 0 && preResult) {
+              rows.push({ lesson: { ...course, pre_test: course.pre_test, post_test: [], id: courseId, title: `${course.title} — Course Pre-Test`, course_id: courseId, isCourseLevel: true }, type: 'pre_test', result: preResult });
+            }
+            if (course.post_test?.length > 0 && postResult) {
+              rows.push({ lesson: { ...course, post_test: course.post_test, pre_test: [], id: courseId, title: `${course.title} — Course Post-Test`, course_id: courseId, isCourseLevel: true }, type: 'post_test', result: postResult });
+            }
+            return rows;
+          });
+
+          const allTests = [...courseTests, ...lessonTests];
+          if (!allTests.length) return null;
 
           return (
             <div className="mb-8">
               <h2 className="text-xl font-bold text-slate-900 mb-4">My Tests</h2>
               <div className="grid md:grid-cols-2 gap-4">
-                {lessonTests.map(({ lesson, type, result }) => {
+                {allTests.map(({ lesson, type, result }) => {
                   const isPreTest = type === 'pre_test';
                   const Icon = isPreTest ? ClipboardList : FlaskConical;
                   const color = isPreTest ? 'text-blue-600' : 'text-green-600';
@@ -300,25 +318,15 @@ export default function Dashboard() {
                           )}
                         </div>
                         <div className="flex-shrink-0">
-                          {!result ? (
-                            <Button
-                              size="sm"
-                              className={isPreTest ? 'bg-blue-600 hover:bg-blue-700' : 'bg-green-600 hover:bg-green-700'}
-                              onClick={() => isPreTest ? setActivePreTest(lesson) : setActivePostTest(lesson)}
-                            >
-                              Take Test
-                            </Button>
-                          ) : !isPreTest ? (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="gap-1"
-                              onClick={() => setActivePostTest(lesson)}
-                            >
-                              <RotateCcw className="w-3 h-3" />
-                              Retry
-                            </Button>
-                          ) : null}
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="gap-1"
+                            onClick={() => isPreTest ? setActivePreTest(lesson) : setActivePostTest(lesson)}
+                          >
+                            <RotateCcw className="w-3 h-3" />
+                            Retry
+                          </Button>
                         </div>
                       </CardContent>
                     </Card>
