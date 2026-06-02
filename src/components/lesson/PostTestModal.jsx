@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -25,6 +25,16 @@ export default function PostTestModal({ lesson, open, onComplete, onClose }) {
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
   const [saving, setSaving] = useState(false);
+
+  // Reset state every time the modal is opened
+  useEffect(() => {
+    if (open) {
+      setCurrent(0);
+      setAnswers({});
+      setSubmitted(false);
+      setScore(0);
+    }
+  }, [open]);
 
   if (!questions.length) return null;
 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -24,6 +25,7 @@ export default function PreTestModal({ lesson, user, onComplete, onSkip }) {
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
+  const [saving, setSaving] = useState(false);
 
   if (!questions.length) return null;
 
@@ -50,12 +52,19 @@ export default function PreTestModal({ lesson, user, onComplete, onSkip }) {
     setAnswers(prev => ({ ...prev, [current]: checked ? [...curr, i] : curr.filter(x => x !== i) }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     let correct = 0;
     questions.forEach((q, i) => { if (scoreQuestion(q, answers[i])) correct++; });
     setScore(correct);
-    setSubmitted(true);
-    onComplete({ score: correct, total: questions.length, answers: Object.values(answers) });
+    setSaving(true);
+    try {
+      await onComplete({ score: correct, total: questions.length, answers: Object.values(answers) });
+      setSubmitted(true);
+    } catch (e) {
+      toast.error('Failed to save your test result. Please try again.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   if (submitted) {
@@ -152,8 +161,8 @@ export default function PreTestModal({ lesson, user, onComplete, onSkip }) {
                 Next <ChevronRight className="w-4 h-4 ml-1" />
               </Button>
             ) : (
-              <Button className="flex-1 bg-green-600 hover:bg-green-700" disabled={!allAnswered} onClick={handleSubmit}>
-                Submit Pre-Test
+              <Button className="flex-1 bg-green-600 hover:bg-green-700" disabled={!allAnswered || saving} onClick={handleSubmit}>
+                {saving ? 'Saving...' : 'Submit Pre-Test'}
               </Button>
             )}
             <Button variant="ghost" size="sm" onClick={onSkip} className="text-slate-400">Skip</Button>

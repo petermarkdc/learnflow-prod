@@ -176,43 +176,33 @@ export default function LessonView() {
   });
 
   const handlePreTestComplete = async ({ score, total, answers }) => {
-    try {
-      await base44.entities.TestResult.create({
-        user_email: user.email,
-        user_name: user.full_name || user.email,
-        course_id: lesson.course_id,
-        lesson_id: lessonId,
-        lesson_title: lesson.title,
-        test_type: 'pre_test',
-        score,
-        total,
-        answers,
-      });
-      queryClient.invalidateQueries(['pretest', lessonId, user?.email]);
-    } catch (e) {
-      console.error('Failed to save pre-test', e);
-    }
-    // Note: setShowPreTest(false) is called from within the modal after submit
+    await base44.entities.TestResult.create({
+      user_email: user.email,
+      user_name: user.full_name || user.email,
+      course_id: lesson.course_id,
+      lesson_id: lessonId,
+      lesson_title: lesson.title,
+      test_type: 'pre_test',
+      score,
+      total,
+      answers,
+    });
+    queryClient.invalidateQueries(['pretest', lessonId, user?.email]);
   };
 
   const handlePostTestComplete = async ({ score, total, answers }) => {
-    try {
-      await base44.entities.TestResult.create({
-        user_email: user.email,
-        user_name: user.full_name || user.email,
-        course_id: lesson.course_id,
-        lesson_id: lessonId,
-        lesson_title: lesson.title,
-        test_type: 'post_test',
-        score,
-        total,
-        answers,
-      });
-      queryClient.invalidateQueries(['pretest', lessonId, user?.email]);
-    } catch (e) {
-      console.error('Failed to save post-test', e);
-    }
-    // Modal handles showing result; onClose will be called when user clicks Continue
+    await base44.entities.TestResult.create({
+      user_email: user.email,
+      user_name: user.full_name || user.email,
+      course_id: lesson.course_id,
+      lesson_id: lessonId,
+      lesson_title: lesson.title,
+      test_type: 'post_test',
+      score,
+      total,
+      answers,
+    });
+    queryClient.invalidateQueries(['posttest', lessonId, user?.email]);
   };
 
   const handleQuizComplete = async (score) => {
