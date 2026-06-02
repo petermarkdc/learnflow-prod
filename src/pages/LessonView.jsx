@@ -82,6 +82,11 @@ export default function LessonView() {
     }
   }, [lesson, user, existingPreTest, pretestLoading, preTestDone]);
 
+  // Derive key values early so useCallback and useEffect can safely reference them
+  const completedLessons = progress?.completed_lessons || [];
+  const isCompleted = completedLessons.includes(lessonId);
+  const isTeacher = user?.role === 'teacher' || user?.role === 'admin';
+
   // Auto-mark complete when student scrolls to bottom
   const markCompleteOnly = useCallback(() => {
     if (!user || !lesson || isTeacher) return;
@@ -125,9 +130,6 @@ export default function LessonView() {
   const currentIndex = sortedLessons.findIndex(l => l.id === lessonId);
   const prevLesson = currentIndex > 0 ? sortedLessons[currentIndex - 1] : null;
   const nextLesson = currentIndex < sortedLessons.length - 1 ? sortedLessons[currentIndex + 1] : null;
-  const completedLessons = progress?.completed_lessons || [];
-  const isCompleted = completedLessons.includes(lessonId);
-  const isTeacher = user?.role === 'teacher' || user?.role === 'admin';
   // Reset autoCompleted when lesson changes
   useEffect(() => { setAutoCompleted(false); }, [lessonId]);
   // Admin can edit any lesson; teacher can edit lessons in their own or collaborated courses
