@@ -95,16 +95,17 @@ export default function CourseView() {
     });
   }, [user, course, enrollment, enrollmentLoaded]);
 
-  // Trigger course-level pre-test when course loads
+  // Trigger course-level pre-test only AFTER student is enrolled
   useEffect(() => {
-    if (course && user && !coursePreTestDone && existingCoursePreTest !== undefined) {
+    if (course && user && !coursePreTestDone && existingCoursePreTest !== undefined && enrollmentLoaded) {
       const alreadyTaken = existingCoursePreTest && existingCoursePreTest.length > 0;
-      if (!alreadyTaken && course.pre_test_enabled && course.pre_test?.length > 0) {
+      const isEnrolled = isTeacher || !!enrollment;
+      if (!alreadyTaken && isEnrolled && course.pre_test_enabled && course.pre_test?.length > 0) {
         setShowCoursePreTest(true);
         setCoursePreTestDone(true);
       }
     }
-  }, [course, user, existingCoursePreTest, coursePreTestDone]);
+  }, [course, user, existingCoursePreTest, coursePreTestDone, enrollment, enrollmentLoaded]);
 
   const handleCoursePreTestComplete = async ({ score, total, answers }) => {
     await base44.entities.TestResult.create({
