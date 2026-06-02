@@ -55,6 +55,12 @@ export default function CourseStudents() {
     enabled: !!courseId,
   });
 
+  const { data: testResults = [] } = useQuery({
+    queryKey: ['course-test-results', courseId],
+    queryFn: () => base44.entities.TestResult.list('-created_date', 500).then(all => all.filter(r => r.course_id === courseId)),
+    enabled: !!courseId,
+  });
+
   const { data: lessons = [] } = useQuery({
     queryKey: ['lessons', courseId],
     queryFn: () => base44.entities.Lesson.filter({ course_id: courseId }),
@@ -132,6 +138,15 @@ export default function CourseStudents() {
     const total = lessons.length;
     return { completed, total, percent: total > 0 ? Math.round((completed / total) * 100) : 0 };
   };
+
+  const getTestStatus = (email) => ({
+    pre: testResults.some(r => r.user_email === email && r.test_type === 'pre_test'),
+    post: testResults.some(r => r.user_email === email && r.test_type === 'post_test'),
+  });
+
+  // Students who submitted tests but are NOT enrolled
+  const enrolledEmails_set = new Set(enrollments.map(e => e.user_email));
+  const testOnlyEmails = [...new Set(testResults.map(r => r.user_email))].filter(e => !enrolledEmails_set.has(e));
 
   if (user && !isTeacher) return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center">
@@ -277,6 +292,12 @@ export default function CourseStudents() {
                       <p className="font-medium text-slate-900 truncate">{displayName}</p>
                       <p className="text-xs text-slate-500 truncate">{enrollment.user_email}</p>
                     </div>
+                    <div className="flex gap-1 flex-shrink-0">
+                      {(() => { const ts = getTestStatus(enrollment.user_email); return (<>
+                        <Badge className={ts.pre ? 'bg-blue-100 text-blue-700 text-xs' : 'bg-slate-100 text-slate-400 text-xs'}>{ts.pre ? '✓' : '–'} Pre</Badge>
+                        <Badge className={ts.post ? 'bg-green-100 text-green-700 text-xs' : 'bg-slate-100 text-slate-400 text-xs'}>{ts.post ? '✓' : '–'} Post</Badge>
+                      </>); })()}
+                    </div>
                     <div className="text-right min-w-[80px]">
                       <p className="text-sm font-medium text-indigo-600">{prog.percent}%</p>
                       <p className="text-xs text-slate-400">{prog.completed}/{prog.total} lessons</p>
@@ -309,6 +330,33 @@ export default function CourseStudents() {
             </div>
           )}
         </div>
+
+        {/* Students who submitted tests but aren't enrolled */}
+        {testOnlyEmails.length > 0 && (
+          <div className="bg-white rounded-2xl border p-6">
+            <h2 className="font-semibold text-amber-700 text-lg mb-3 flex items-center gap-2">
+              <span>⚠️</span> Submitted Tests But Not Enrolled ({testOnlyEmails.length})
+            </h2>
+            <p className="text-sm text-slate-500 mb-3">These students have test results but no active enrollment record.</p>
+            <div className="space-y-2">
+              {testOnlyEmails.map(email => {
+                const ts = getTestStatus(email);
+                return (
+                  <div key={email} className="flex items-center gap-3 p-3 bg-amber-50 rounded-xl border border-amber-100">
+                    <Avatar className="h-8 w-8">
+                      <AvatarFallback className="bg-amber-100 text-amber-700 text-xs">{email[0].toUpperCase()}</AvatarFallback>
+                    </Avatar>
+                    <span className="text-sm text-slate-700 flex-1">{email}</span>
+                    <div className="flex gap-1">
+                      <Badge className={ts.pre ? 'bg-blue-100 text-blue-700 text-xs' : 'bg-slate-100 text-slate-400 text-xs'}>{ts.pre ? '✓' : '–'} Pre</Badge>
+                      <Badge className={ts.post ? 'bg-green-100 text-green-700 text-xs' : 'bg-slate-100 text-slate-400 text-xs'}>{ts.post ? '✓' : '–'} Post</Badge>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
