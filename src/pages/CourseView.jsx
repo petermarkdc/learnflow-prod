@@ -77,11 +77,23 @@ export default function CourseView() {
     enabled: !!courseId && !!user?.email,
   });
 
-  const { data: enrollment } = useQuery({
+  const { data: enrollment, isSuccess: enrollmentLoaded } = useQuery({
     queryKey: ['enrollment', courseId, user?.email],
     queryFn: () => base44.entities.Enrollment.filter({ course_id: courseId, user_email: user.email, status: 'active' }).then(r => r[0]),
     enabled: !!courseId && !!user?.email,
   });
+
+  // Auto-enroll students who access free courses (so they appear in enrollment summary)
+  useEffect(() => {
+    if (!user || !course || course.access_type !== 'free' || !enrollmentLoaded || enrollment) return;
+    base44.entities.Enrollment.filter({ course_id: course.id, user_email: user.email }).then(existing => {
+      if (existing.length === 0) {
+        base44.entities.Enrollment.create({ course_id: course.id, user_email: user.email, enrolled_by: 'self', status: 'active' });
+      } else if (existing[0].status === 'removed') {
+        base44.entities.Enrollment.update(existing[0].id, { status: 'active' });
+      }
+    });
+  }, [user, course, enrollment, enrollmentLoaded]);
 
   // Trigger course-level pre-test when course loads
   useEffect(() => {
