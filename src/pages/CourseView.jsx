@@ -86,20 +86,24 @@ export default function CourseView() {
   // Auto-enroll students who access free courses (so they appear in enrollment summary)
   useEffect(() => {
     if (!user || !course || course.access_type !== 'free' || !enrollmentLoaded || enrollment) return;
-    base44.entities.Enrollment.filter({ course_id: course.id, user_email: user.email }).then(existing => {
+    base44.entities.Enrollment.filter({ course_id: course.id, user_email: user.email }).then(async existing => {
       if (existing.length === 0) {
-        base44.entities.Enrollment.create({ course_id: course.id, user_email: user.email, enrolled_by: 'self', status: 'active' });
+        await base44.entities.Enrollment.create({ course_id: course.id, user_email: user.email, enrolled_by: 'self', status: 'active' });
       } else if (existing[0].status === 'removed') {
-        base44.entities.Enrollment.update(existing[0].id, { status: 'active' });
+        await base44.entities.Enrollment.update(existing[0].id, { status: 'active' });
       }
+      queryClient.invalidateQueries(['enrollment']);
     });
   }, [user, course, enrollment, enrollmentLoaded]);
 
-  // Trigger course-level pre-test only AFTER student is enrolled
+  // Trigger course-level pre-test only when the student has access
+  // For paid courses: must be enrolled first (entered code)
+  // For free/public courses: just needs to be logged in
   useEffect(() => {
     if (course && user && !coursePreTestDone && existingCoursePreTest !== undefined && enrollmentLoaded) {
       const alreadyTaken = existingCoursePreTest && existingCoursePreTest.length > 0;
-      const isEnrolled = isTeacher || !!enrollment;
+      const isPaidCourse = course.access_type === 'paid';
+      const isEnrolled = isTeacher || !isPaidCourse || !!enrollment;
       if (!alreadyTaken && isEnrolled && course.pre_test_enabled && course.pre_test?.length > 0) {
         setShowCoursePreTest(true);
         setCoursePreTestDone(true);
