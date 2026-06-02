@@ -1,0 +1,26 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "teacher",
+        "student"
+      ],
+      "default": "student"
+    },
+    "bio": {
+      "type": "string"
+    },
+    "avatar_url": {
+      "type": "string"
+    },
+    "nickname": {
+      "type": "string",
+      "description": "Display name / nickname shown on courses"
+    }
+  },
+  "required": []
+}

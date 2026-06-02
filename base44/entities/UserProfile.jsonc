@@ -1,0 +1,55 @@
+{
+  "name": "UserProfile",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "The user's email (unique identifier)"
+    },
+    "nickname": {
+      "type": "string",
+      "description": "Display name shown on courses"
+    },
+    "avatar_url": {
+      "type": "string",
+      "description": "Public profile photo URL"
+    },
+    "school_organization": {
+      "type": "string",
+      "description": "School or organization the user belongs to"
+    }
+  },
+  "required": [
+    "user_email"
+  ],
+  "rls": {
+    "create": {
+      "data.user_email": "{{user.email}}"
+    },
+    "read": {},
+    "update": {
+      "$or": [
+        {
+          "data.user_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.user_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

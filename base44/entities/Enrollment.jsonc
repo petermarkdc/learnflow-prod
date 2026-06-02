@@ -1,0 +1,28 @@
+{
+  "name": "Enrollment",
+  "type": "object",
+  "properties": {
+    "course_id": {
+      "type": "string"
+    },
+    "user_email": {
+      "type": "string"
+    },
+    "enrolled_by": {
+      "type": "string",
+      "description": "teacher email or 'invite_link' or 'course_code'"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "removed"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "course_id",
+    "user_email"
+  ]
+}

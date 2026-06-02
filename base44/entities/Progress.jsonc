@@ -1,0 +1,33 @@
+{
+  "name": "Progress",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "User email"
+    },
+    "course_id": {
+      "type": "string",
+      "description": "Course ID"
+    },
+    "completed_lessons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of completed lesson IDs"
+    },
+    "quiz_scores": {
+      "type": "object",
+      "description": "Quiz scores by lesson ID"
+    },
+    "last_lesson_id": {
+      "type": "string",
+      "description": "Last accessed lesson ID"
+    }
+  },
+  "required": [
+    "user_email",
+    "course_id"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "name": "TestResult",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "user_name": {
+      "type": "string"
+    },
+    "course_id": {
+      "type": "string"
+    },
+    "lesson_id": {
+      "type": "string"
+    },
+    "lesson_title": {
+      "type": "string"
+    },
+    "test_type": {
+      "type": "string",
+      "enum": [
+        "pre_test",
+        "post_test"
+      ],
+      "description": "pre_test or post_test"
+    },
+    "score": {
+      "type": "number",
+      "description": "Number of correct answers"
+    },
+    "total": {
+      "type": "number",
+      "description": "Total number of questions"
+    },
+    "answers": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "description": "User's answer indices"
+    }
+  },
+  "required": [
+    "user_email",
+    "lesson_id",
+    "test_type",
+    "score",
+    "total"
+  ]
+}

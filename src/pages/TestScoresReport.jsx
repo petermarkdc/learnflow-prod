@@ -144,15 +144,15 @@ export default function TestScoresReport() {
   });
 
   const { data: results = [], isLoading } = useQuery({
-    queryKey: ['test-results-all', user?.email, isAdmin, courses.map(c => c.id).join(',')],
+    queryKey: ['test-results-all', user?.email, isAdmin],
     queryFn: async () => {
-      if (!courses.length) return [];
-      const all = await Promise.all(
-        courses.map(c => base44.entities.TestResult.filter({ course_id: c.id }))
-      );
-      return all.flat();
+      // Fetch all results then filter by accessible courses
+      const allResults = await base44.entities.TestResult.list('-created_date', 500);
+      if (isAdmin) return allResults;
+      const courseIds = new Set(courses.map(c => c.id));
+      return allResults.filter(r => courseIds.has(r.course_id));
     },
-    enabled: !!user?.email && courses.length > 0,
+    enabled: !!user?.email && (isAdmin || courses.length > 0),
   });
 
   const filtered = results
